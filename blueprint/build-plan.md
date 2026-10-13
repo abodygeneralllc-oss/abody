@@ -1,0 +1,53 @@
+# Build Plan
+
+- [x] 1. **Product & Service Catalog** - Create the database models and APIs for digital products and services, including name, slug, description, price, category, images, files, and status.
+- [x] 2. **Product & Service Details** - Build customer-facing product and service detail pages with pricing, descriptions, features, images, and purchase actions.
+- [x] 3. **Multi-Language Support** - Make the customer website available in English and Arabic with a header language switcher, right-to-left layout for Arabic, the Tajawal font for Arabic text, and translated interface text that every later customer page builds on.
+  - [x] 3a. **Bilingual Routing and Interface** - Serve every customer page under `/en` and `/ar`, pick the language from the visitor's saved choice or browser (English otherwise), add a minimal header with the language switcher, right-to-left layout and the Tajawal font for Arabic, and translate the existing interface text.
+  - [x] 3b. **Bilingual Product Content** - Store product and service name, descriptions, what's included, and requirements in English and Arabic, and show the content that matches the page language.
+- [x] 4. **Shopping Cart** - Build the cart functionality for adding, removing, updating, and reviewing products and services before checkout.
+- [x] 26. **Storefront Design Alignment** - Bring the customer site in line with the approved mockups in `prototypes/` in English and Arabic: the full header (navigation, sign in, cart, trust bar), the footer, the home page, the products and services listing pages, and the product and service detail pages.
+  - [x] 26a. **Site Header and Footer** - Full header (navigation, sign in, cart, language switcher), trust bar, footer, and page canvas, shared by every customer page.
+  - [x] 26b. **Store Listing Pages** - Shared product card, the `/products` and `/services` listing pages with a category filter, and related items using the card.
+  - [x] 26c. **Product and Service Detail Pages** - Detail layout with the buy panel, chips, and How it works from the mockup.
+  - [x] 26d. **Home Page** - Hero, categories, featured products, services, value proposition, How it works, social proof, and call to action.
+- [x] 22. **SEO & Social Sharing** - Add per-page titles and meta descriptions in English and Arabic, Open Graph and social images, language alternates (`hreflang`) between `/en` and `/ar` pages, canonical URLs, a sitemap covering both languages, robots configuration, and product structured data.
+- [x] 5. **Stripe Checkout** - Integrate Stripe Checkout for secure customer payments and support successful, cancelled, and failed checkout states.
+- [x] 6. **Stripe Webhooks & Orders** - Process Stripe webhooks, verify payments, and automatically create and update orders after successful payment.
+- [x] 7. **Digital Product Delivery** - Store digital files securely and provide customers with protected download access after payment.
+- [x] 8. **Customer Authentication** - Add customer registration, login, logout, password/account management, and protected customer routes.
+  - [x] 8a. **Sign-up, Sign-in, and Sessions** - Customer accounts with email and password (built-in database sessions, no auth vendor), `/<lang>/login` and `/<lang>/register`, sign out, the header Sign in/Account link, a protected `/<lang>/account` page, and orders placed while signed in linked to the account. Guest checkout stays; guest orders are not attached by email.
+  - [x] 8b. **Account Settings** - Signed-in customers edit their name and email, change their password (current password required), and sign out their other sessions. Forgot-password reset waits for email (19).
+- [x] 9. **Customer Account Dashboard** - Build the customer dashboard with profile information, orders, purchased products, downloads, and services.
+- [x] 10. **Service Purchase & Onboarding** - Create post-purchase onboarding forms for services such as Ads Management and Account Management.
+- [x] 11. **Customer Service Tracking** - Allow customers to view purchased services, submitted requirements, service status, and updates.
+- [x] 12. **Admin Dashboard** - Build the protected admin dashboard with revenue, orders, customers, products, services, and recent activity.
+- [x] 13. **Admin Product Management** - Allow admins to create, edit, publish, unpublish, and delete digital products with pricing, images, descriptions, and downloadable files.
+- [x] 14. **Admin Service Management** - Allow admins to create and manage services, packages, pricing, duration, requirements, and availability.
+- [x] 15. **Admin Order Management** - Allow admins to view and manage orders, customers, purchased items, payment status, order status, and refunds.
+  - [x] 15a. **Order List and Fulfilment** - `/admin/orders` list and order detail (customer, items, amount, payment and order status, date, Stripe payment reference), and moving a paid order between Paid, Processing, and Completed. Pending, Cancelled, and Refunded stay set only by Stripe events and refunds.
+  - [x] 15b. **Refunds** - Full refund of a paid order from the admin through the Stripe Refunds API, and the verified `charge.refunded` webhook marking orders Refunded (including refunds made in the Stripe dashboard), which ends download access.
+- [x] 16. **Admin Service Management** - Allow admins to manage service orders, customer requirements, notes, progress, and completion status.
+- [x] 17. **Customer Management** - Allow admins to view customers, profiles, orders, purchases, downloads, and active services.
+- [x] 18. **Secure File Storage** - Implement private storage for digital products with protected, authenticated download URLs.
+- [x] 19. **Email Notifications** - Send transactional emails for orders, payments, digital downloads, service purchases, and service status updates.
+  - [x] 19a. **Order Emails** - Send transactional email through Resend: the customer's bilingual order and payment confirmation when an order is paid (with a link to the order page for downloads, and service next steps), and an admin new-order email (including new service purchases) to one configured address, both triggered by the verified Stripe webhook.
+  - [x] 19b. **Service Emails** - Email the customer when an admin changes their service status, and email the admin address when a customer submits service requirements.
+- [x] 20. **Discount & Coupon System** - Allow admins to create, edit, activate, deactivate, and apply discount codes to eligible products or services.
+- [x] 21. **Website Content Management** - Allow admins to manage featured products, homepage sections, promotional content, and basic website settings.
+  - [x] 21a. **Featured Picks** - Admins give products and services an optional featured position (1, 2, 3...); the home page hero card, Featured products row, and Services row show published picks in that order, and fall back to the newest items when nothing is picked.
+  - [x] 21b. **Homepage Sections and Promotion** - Admins edit the home hero and call-to-action text in English and Arabic, show or hide home sections, and manage one site-wide announcement bar above the header (English and Arabic text, optional link, on/off).
+  - [x] 21c. **Site Settings** - `/admin/settings` where admins set the public contact email shown in the footer.
+- [x] 27. **Information Pages** - Add About, Contact, Terms and Conditions, Privacy Policy, and Return Policy pages in English and Arabic, linked from the header navigation and the footer.
+- [x] 23. **Analytics & Sales Reporting** - Track product views, cart activity, purchases, revenue, customers, and basic ecommerce performance.
+- [x] 24. **Security & Access Control** - Protect customer and admin routes, APIs, database operations, digital files, and Stripe webhook endpoints.
+  - [x] 24a. **Access Control Sweep** - Automated tests proving every admin page, action, and route refuses anyone but an admin and every customer-owned page, action, and route refuses signed-out visitors and other customers, plus the server-only guard on session code and the image path check (findings F-12 and F-04).
+  - [x] 24b. **Rate Limiting** - Database-backed rate limits on public writes: registration, discount code entry, and the analytics beacon (with a byte-accurate body limit, finding F-38). The existing sign-in limiter stays.
+  - [x] 24c. **Security Headers** - HSTS in production, `X-Content-Type-Options: nosniff`, frame blocking, `Referrer-Policy`, and `Permissions-Policy` on every response. No Content Security Policy for now.
+- [x] 28. **Forgot Password** - A "Forgot password?" link on `/<lang>/login` leads to a page where customers enter their email. Customers get a bilingual reset email through Resend with a single-use link that expires. The link opens `/<lang>/reset-password`, where they set a new password, which signs out their existing sessions. The response is the same whether or not the email has an account, and requests are rate-limited.
+- [x] 25. **Production Testing & Launch** - Test the complete customer and admin workflows, Stripe payments, webhooks, downloads, emails, permissions, mobile layouts, and production deployment.
+  - [x] 25a. **End-to-End Browser Tests** - Playwright tests of the main customer and admin flows (browse, cart, checkout, order and download, service onboarding, account, admin order and service handling, access denial) in English and Arabic and at phone width, with Stripe stubbed at the server boundary.
+  - [x] 25b. **Production Deployment** - Deploy to Vercel: host config, environment variable review, `prisma migrate deploy`, the live Stripe webhook endpoint, the private file bucket, `RATE_LIMIT_IP_HEADER`, and a post-deploy smoke test (prepared with `/release`; the deploy itself needs a separate yes).
+- [x] 29. **Catalog Discovery** - Help customers find products faster on the home page and the store listings.
+  - [x] 29a. **Featured Product Tabs** - The home page Featured products section gets Best sellers / New / Templates tabs, as in the prototype. Best sellers ranks published products by units sold in paid orders, then the newest; New is newest first; Templates shows the "Templates" category and is hidden when no product uses it. Works in English and Arabic.
+  - [x] 29b. **Listing Search and Sort** - `/products` and `/services` get a search box (`?q=`) that matches name, short description, and category in English and Arabic, and a Sort by menu (`?sort=`): Newest (default), Price: low to high, Price: high to low. Search, sort, and the category filter work together, live in the URL, and show an empty state with a clear-search link.

@@ -1,0 +1,376 @@
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("@/lib/db", () => ({ db: {} }));
+
+import {
+  centsToPriceInput,
+  isOwnUploadKey,
+  isUploadKeyFor,
+  parsePriceToCents,
+  parseProductForm,
+  productFileKey,
+  uploadFileName,
+} from "./admin-products";
+import { productFileExtension } from "./admin-product-rules";
+
+const valid = {
+  name: "Facebook Ads Guide",
+  slug: "facebook-ads-guide",
+  shortDescription: "A short guide.",
+  description: "The full description.",
+  price: "49",
+  category: "Guides",
+  image: "",
+  included: "PDF guide\n\n  Checklist  \n",
+  nameAr: "",
+  categoryAr: "",
+  shortDescriptionAr: "",
+  descriptionAr: "",
+  includedAr: "",
+};
+
+function form(fields: Record<string, string>): FormData {
+  const data = new FormData();
+  for (const [key, value] of Object.entries(fields)) data.set(key, value);
+  return data;
+}
+
+function errorsFor(fields: Record<string, string>) {
+  const parsed = parseProductForm(form({ ...valid, ...fields }), "DIGITAL_PRODUCT");
+  if (parsed.ok) throw new Error("expected a failure");
+  return parsed.fieldErrors;
+}
+
+describe("parsePriceToCents", () => {
+  it.each([
+    ["0.50", 50],
+    ["49", 4900],
+    ["49.5", 4950],
+    ["49.50", 4950],
+    [" 1.05 ", 105],
+    ["99999.99", 9_999_999],
+  ])("reads %s as %i cents", (input, cents) => {
+    expect(parsePriceToCents(input)).toBe(cents);
+  });
+
+  it.each(["0.49", "0", "1.234", "-1", "1e3", "100000", "", "abc", "1,000", ".5"])(
+    "rejects %s",
+    (input) => {
+      expect(parsePriceToCents(input)).toBeNull();
+    },
+  );
+
+  it("round-trips with the form's dollar text", () => {
+    expect(centsToPriceInput(4950)).toBe("49.50");
+    expect(centsToPriceInput(50)).toBe("0.50");
+    expect(parsePriceToCents(centsToPriceInput(123_456))).toBe(123_456);
+  });
+});
+
+describe("parseProductForm", () => {
+  it("parses valid input", () => {
+    const parsed = parseProductForm(form(valid), "DIGITAL_PRODUCT");
+    expect(parsed).toMatchObject({
+      ok: true,
+      data: {
+        name: "Facebook Ads Guide",
+        slug: "facebook-ads-guide",
+        shortDescription: "A short guide.",
+        description: "The full description.",
+        priceCents: 4900,
+        category: "Guides",
+        image: null,
+        included: ["PDF guide", "Checklist"],
+        nameAr: null,
+        categoryAr: null,
+        shortDescriptionAr: null,
+        descriptionAr: null,
+        includedAr: [],
+        featuredRank: null,
+      },
+    });
+  });
+
+  it.each([
+    ["DIGITAL_PRODUCT", "1", 1],
+    ["DIGITAL_PRODUCT", " 99 ", 99],
+    ["DIGITAL_PRODUCT", "", null],
+    ["SERVICE", "7", 7],
+    ["SERVICE", "  ", null],
+  ] as const)("reads a %s featured position %j as %j", (type, input, rank) => {
+    const parsed = parseProductForm(form({ ...valid, featuredRank: input }), type);
+    expect(parsed.ok && parsed.data.featuredRank).toBe(rank);
+  });
+
+  it.each(["DIGITAL_PRODUCT", "SERVICE"] as const)(
+    "rejects an invalid %s featured position",
+    (type) => {
+      for (const input of ["0", "100", "1.5", "-1", "abc", "1e1", "007"]) {
+        const parsed = parseProductForm(form({ ...valid, featuredRank: input }), type);
+        expect(parsed).toMatchObject({
+          ok: false,
+          fieldErrors: { featuredRank: "invalid_featured_rank" },
+          values: { featuredRank: input },
+        });
+      }
+    },
+  );
+
+  it("keeps Arabic content and an image", () => {
+    const parsed = parseProductForm(
+      form({
+        ...valid,
+        image: "https://cdn.example.com/a.png",
+        nameAr: " دليل إعلانات فيسبوك ",
+        includedAr: "دليل\nقائمة",
+      }),
+      "DIGITAL_PRODUCT",
+    );
+    expect(parsed.ok && parsed.data).toMatchObject({
+      image: "https://cdn.example.com/a.png",
+      nameAr: "دليل إعلانات فيسبوك",
+      includedAr: ["دليل", "قائمة"],
+    });
+  });
+
+  it.each(["name", "slug", "shortDescription", "description", "price", "category"])(
+    "requires %s",
+    (field) => {
+      expect(errorsFor({ [field]: "   " })[field as "name"]).toBe("required");
+    },
+  );
+
+  it("treats a missing field as empty", () => {
+    const data = form(valid);
+    data.delete("name");
+    const parsed = parseProductForm(data, "DIGITAL_PRODUCT");
+    expect(!parsed.ok && parsed.fieldErrors.name).toBe("required");
+  });
+
+  it("rejects over-length values", () => {
+    expect(
+      errorsFor({
+        name: "x".repeat(121),
+        nameAr: "x".repeat(121),
+        category: "x".repeat(61),
+        shortDescription: "x".repeat(301),
+      }),
+    ).toEqual({
+      name: "too_long",
+      nameAr: "too_long",
+      category: "too_long",
+      shortDescription: "too_long",
+    });
+    expect(parseProductForm(form({ ...valid, name: "x".repeat(120) }), "DIGITAL_PRODUCT").ok).toBe(true);
+  });
+
+  it.each(["Facebook-Ads", "ads guide", "-ads", "ads--guide", "ads_guide"])(
+    "rejects the slug %s",
+    (slug) => {
+      expect(errorsFor({ slug }).slug).toBe("invalid_slug");
+    },
+  );
+
+  it("rejects an invalid price", () => {
+    expect(errorsFor({ price: "0.49" }).price).toBe("invalid_price");
+  });
+
+  it.each([
+    "http://cdn.example.com/a.png",
+    "//evil.example/a.png",
+    "javascript:alert(1)",
+    "seed/a.png",
+  ])("rejects the image %s", (image) => {
+    expect(errorsFor({ image }).image).toBe("invalid_image");
+  });
+
+  it("rejects a Mega link with its own message", () => {
+    expect(errorsFor({ image: "https://mega.nz/file/o2ZGgTaL#key" }).image).toBe(
+      "unsupported_image_host",
+    );
+  });
+
+  it("stores a Google Drive share link as entered", () => {
+    const image = "https://drive.google.com/file/d/1wg_FpZ/view?usp=sharing";
+    const parsed = parseProductForm(form({ ...valid, image }), "DIGITAL_PRODUCT");
+    expect(parsed.ok && parsed.data.image).toBe(image);
+  });
+
+  it("accepts a local image path", () => {
+    const parsed = parseProductForm(form({ ...valid, image: "/seed/a.svg" }), "DIGITAL_PRODUCT");
+    expect(parsed.ok && parsed.data.image).toBe("/seed/a.svg");
+  });
+
+  it("limits What's Included lines", () => {
+    const lines = (count: number) =>
+      Array.from({ length: count }, (_, i) => `Item ${i}`).join("\n");
+    expect(parseProductForm(form({ ...valid, included: lines(20) }), "DIGITAL_PRODUCT").ok).toBe(true);
+    expect(errorsFor({ included: lines(21) }).included).toBe("too_many_lines");
+    expect(errorsFor({ includedAr: "x".repeat(201) }).includedAr).toBe("too_long");
+  });
+
+  it("counts a submitted CRLF line break as one character", () => {
+    const description = `${"x".repeat(4999)}\r\n${"y".repeat(5000)}`;
+    const parsed = parseProductForm(form({ ...valid, description }), "DIGITAL_PRODUCT");
+    expect(parsed.ok && parsed.data.description).toBe(
+      `${"x".repeat(4999)}\n${"y".repeat(5000)}`,
+    );
+    const tooLong = `${"x".repeat(5000)}\r\n${"y".repeat(5000)}`;
+    expect(errorsFor({ description: tooLong }).description).toBe("too_long");
+  });
+
+  it("echoes the typed values on failure", () => {
+    const parsed = parseProductForm(form({ ...valid, price: "abc", name: " Guide " }), "DIGITAL_PRODUCT");
+    expect(parsed).toMatchObject({
+      ok: false,
+      values: { price: "abc", name: "Guide", slug: "facebook-ads-guide" },
+    });
+  });
+});
+
+describe("parseProductForm for services", () => {
+  const service = {
+    ...valid,
+    name: "Facebook Ads Management",
+    slug: "facebook-ads-management",
+    durationDays: "30",
+    requirements: "Business name\r\n\n  Ad account access  \n",
+    requirementsAr: "",
+  };
+
+  function serviceErrors(fields: Record<string, string>) {
+    const parsed = parseProductForm(form({ ...service, ...fields }), "SERVICE");
+    if (parsed.ok) throw new Error("expected a failure");
+    return parsed.fieldErrors;
+  }
+
+  it("parses duration and requirements", () => {
+    const parsed = parseProductForm(form(service), "SERVICE");
+    expect(parsed).toMatchObject({
+      ok: true,
+      data: {
+        slug: "facebook-ads-management",
+        durationDays: 30,
+        requirements: "Business name\nAd account access",
+        requirementsAr: null,
+      },
+    });
+  });
+
+  it("keeps Arabic requirements", () => {
+    const parsed = parseProductForm(
+      form({ ...service, requirementsAr: " اسم النشاط \r\nحساب الإعلانات" }),
+      "SERVICE",
+    );
+    expect(parsed.ok && parsed.data.requirementsAr).toBe("اسم النشاط\nحساب الإعلانات");
+  });
+
+  it("treats empty duration and requirements as null", () => {
+    const parsed = parseProductForm(
+      form({ ...service, durationDays: "  ", requirements: "\n \n" }),
+      "SERVICE",
+    );
+    expect(parsed.ok && parsed.data).toMatchObject({ durationDays: null, requirements: null });
+  });
+
+  it.each([
+    ["1", 1],
+    ["365", 365],
+    [" 30 ", 30],
+  ])("reads the duration %s as %i days", (durationDays, days) => {
+    const parsed = parseProductForm(form({ ...service, durationDays }), "SERVICE");
+    expect(parsed.ok && parsed.data.durationDays).toBe(days);
+  });
+
+  it.each(["0", "366", "1.5", "-1", "1e2", "abc", "1000"])(
+    "rejects the duration %s",
+    (durationDays) => {
+      expect(serviceErrors({ durationDays }).durationDays).toBe("invalid_duration");
+    },
+  );
+
+  it("limits requirements lines", () => {
+    const lines = Array.from({ length: 21 }, (_, i) => `Need ${i}`).join("\n");
+    expect(serviceErrors({ requirements: lines }).requirements).toBe("too_many_lines");
+    expect(serviceErrors({ requirementsAr: "x".repeat(201) }).requirementsAr).toBe("too_long");
+  });
+
+  it("echoes service values on failure", () => {
+    const parsed = parseProductForm(form({ ...service, durationDays: "0" }), "SERVICE");
+    expect(parsed).toMatchObject({ ok: false, values: { durationDays: "0" } });
+  });
+
+  it("ignores posted service fields for a digital product", () => {
+    const parsed = parseProductForm(form(service), "DIGITAL_PRODUCT");
+    expect(parsed.ok && parsed.data).toMatchObject({
+      durationDays: null,
+      requirements: null,
+      requirementsAr: null,
+    });
+    expect(parsed.values).not.toHaveProperty("durationDays");
+  });
+});
+
+describe("upload file names and keys", () => {
+  it("accepts only PDF and ZIP extensions", () => {
+    expect(productFileExtension("Guide.PDF")).toBe(".pdf");
+    expect(productFileExtension("pack.zip")).toBe(".zip");
+    expect(productFileExtension("guide.pdf.exe")).toBeNull();
+    expect(productFileExtension("guide")).toBeNull();
+    // A dot file has no extension, so it never reaches uploadFileName.
+    expect(productFileExtension(".pdf")).toBeNull();
+  });
+
+  it.each([
+    ["Facebook Ads Guide (v2).pdf", "Facebook-Ads-Guide-v2.pdf"],
+    ["../../etc/passwd.pdf", "passwd.pdf"],
+    ["C:\\Users\\me\\Guide.PDF", "Guide.pdf"],
+    ["دليل.pdf", "download.pdf"],
+    ["...hidden.zip", "hidden.zip"],
+    ["--.pdf", "download.pdf"],
+  ])("makes %s safe as %s", (input, expected) => {
+    expect(uploadFileName(input)).toBe(expected);
+  });
+
+  it("caps the file name length", () => {
+    const name = uploadFileName(`${"a".repeat(300)}.pdf`);
+    expect(name).toHaveLength(100);
+    expect(name.endsWith(".pdf")).toBe(true);
+  });
+
+  it("builds a per-upload key under the product", () => {
+    expect(productFileKey("p1", "0a1b2c3d4e5f6a7b", "Guide.pdf")).toBe(
+      "products/p1/0a1b2c3d4e5f6a7b/Guide.pdf",
+    );
+  });
+
+  it("deletes only this product's own uploads", () => {
+    expect(isOwnUploadKey("p1", "products/p1/abc/Guide.pdf")).toBe(true);
+    expect(isOwnUploadKey("p1", "seed/facebook-ads-guide.pdf")).toBe(false);
+    expect(isOwnUploadKey("p1", "products/p12/abc/Guide.pdf")).toBe(false);
+    expect(isOwnUploadKey("p1", null)).toBe(false);
+  });
+
+  it("accepts only the exact key shape of this product's direct uploads", () => {
+    const token = "0123456789abcdef";
+    expect(isUploadKeyFor("p1", productFileKey("p1", token, "Guide.pdf"))).toBe(true);
+    expect(isUploadKeyFor("p1", `products/p1/${token}/pack.zip`)).toBe(true);
+    for (const key of [
+      `products/p2/${token}/Guide.pdf`,
+      `products/p12/${token}/Guide.pdf`,
+      "products/p1/0123456789abcde/Guide.pdf",
+      "products/p1/0123456789ABCDEF/Guide.pdf",
+      `products/p1/${token}/extra/Guide.pdf`,
+      `products/p1/${token}/../Guide.pdf`,
+      `products/p1/${token}/Guide.exe`,
+      `products/p1/${token}/Guide.PDF`,
+      `products/p1/${token}/a b.pdf`,
+      "seed/facebook-ads-guide.pdf",
+      "",
+      null,
+      42,
+    ]) {
+      expect(isUploadKeyFor("p1", key), String(key)).toBe(false);
+    }
+  });
+});

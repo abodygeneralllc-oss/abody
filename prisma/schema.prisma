@@ -1,0 +1,270 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProductType {
+  DIGITAL_PRODUCT
+  SERVICE
+}
+
+enum ProductStatus {
+  PUBLISHED
+  UNPUBLISHED
+}
+
+model Product {
+  id                 String        @id @default(cuid())
+  name               String
+  slug               String        @unique
+  shortDescription   String
+  description        String        @db.Text
+  // Whole US cents: 4900 is $49.00.
+  priceCents         Int
+  type               ProductType
+  category           String
+  image              String?
+  // Private storage reference. Never select this for public responses.
+  digitalFile        String?
+  // Short plain-text lines shown under "What's Included".
+  included           String[]      @default([])
+  // Services only.
+  durationDays       Int?
+  requirements       String?       @db.Text
+  // Arabic content. Optional: a missing value falls back to the English field.
+  nameAr             String?
+  categoryAr         String?
+  shortDescriptionAr String?
+  descriptionAr      String?       @db.Text
+  includedAr         String[]      @default([])
+  requirementsAr     String?       @db.Text
+  // Home page order (feature 21a): 1-99, lowest first. Null: not featured.
+  // Not unique; equal positions show the newer item first.
+  featuredRank       Int?
+  status             ProductStatus
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  orderItems         OrderItem[]
+  analyticsEvents    AnalyticsEvent[]
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+model Order {
+  id                      String      @id @default(cuid())
+  // Shown as #1001. The migration restarts the sequence at 1001.
+  number                  Int         @unique @default(autoincrement())
+  // Set when the customer was signed in at checkout; null for guest orders.
+  userId                  String?
+  user                    User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  // From Stripe's customer_details.email; how a guest order reaches an account.
+  customerEmail           String?
+  status                  OrderStatus @default(PENDING)
+  // Whole cents of `currency`, from the session's amount_total.
+  totalCents              Int
+  currency                String
+  stripeCheckoutSessionId String      @unique
+  stripePaymentIntentId   String?
+  // The discount code used at checkout (feature 20), if any.
+  couponId                String?
+  coupon                  Coupon?     @relation(fields: [couponId], references: [id], onDelete: Restrict)
+  // Whole cents taken off the list prices; 0 without a coupon.
+  discountCents           Int         @default(0)
+  items                   OrderItem[]
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt
+
+  @@index([userId])
+  @@index([couponId])
+}
+
+enum CouponScope {
+  ALL
+  DIGITAL_PRODUCTS
+  SERVICES
+}
+
+// A percentage discount code (feature 20). Never deleted: orders reference it.
+model Coupon {
+  id              String      @id @default(cuid())
+  // Uppercase A-Z, 0-9, and single hyphens; 3-32 characters. Fixed after creation.
+  code            String      @unique
+  // Whole percent, 1-99.
+  percentOff      Int
+  appliesTo       CouponScope
+  active          Boolean     @default(false)
+  // Last valid day, inclusive, in UTC. Null: never expires.
+  expiresOn       DateTime?   @db.Date
+  // Null: unlimited.
+  maxRedemptions  Int?
+  // Paid orders that used this code; refunds do not give a use back.
+  redemptionCount Int         @default(0)
+  orders          Order[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model OrderItem {
+  id         String  @id @default(cuid())
+  orderId    String
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  // Unit price paid, in cents, from the Stripe line item.
+  priceCents Int
+  quantity   Int
+  // Service items only, once the customer has sent their onboarding details.
+  service    Service?
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+enum ServiceStatus {
+  NEW
+  WAITING_FOR_INFORMATION
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+// A purchased service being delivered. The catalog entry is a Product with
+// type SERVICE; this is the work record for one paid order item, created when
+// the customer first sends their onboarding details.
+model Service {
+  id            String        @id @default(cuid())
+  orderItemId   String        @unique
+  orderItem     OrderItem     @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  status        ServiceStatus @default(NEW)
+  // Onboarding answers; the shape is OnboardingRequirements in lib/onboarding.ts.
+  requirements  Json
+  adminNotes    String?       @db.Text
+  startDate     DateTime?
+  completedDate DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+model User {
+  id                  String               @id @default(cuid())
+  name                String
+  // Trimmed and lowercased before every write and lookup.
+  email               String               @unique
+  // "scrypt$N$r$p$salt$hash", salt and hash base64url (lib/password.ts).
+  passwordHash        String
+  role                Role                 @default(CUSTOMER)
+  sessions            Session[]
+  orders              Order[]
+  passwordResetTokens PasswordResetToken[]
+  createdAt           DateTime             @default(now())
+}
+
+// Forgot-password links (feature 28). Single use, one hour; requesting a new
+// link deletes the user's older ones.
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  // SHA-256 hex of the emailed token; the raw token is never stored.
+  tokenHash String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  // SHA-256 hex of the cookie token; the raw token is never stored.
+  tokenHash String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// Admin-edited home page text and the announcement bar (feature 21b). One row,
+// id 1; with no row the store uses its built-in text. Blank text is null and
+// shows the built-in text for that language.
+model SiteContent {
+  id                  Int      @id @default(1)
+  heroEyebrow         String?
+  heroEyebrowAr       String?
+  heroTitle           String?
+  heroTitleAr         String?
+  heroLead            String?
+  heroLeadAr          String?
+  ctaTitle            String?
+  ctaTitleAr          String?
+  ctaBody             String?
+  ctaBodyAr           String?
+  ctaAction           String?
+  ctaActionAr         String?
+  showCategories      Boolean  @default(true)
+  showFeatured        Boolean  @default(true)
+  showServices        Boolean  @default(true)
+  showValues          Boolean  @default(true)
+  showHowItWorks      Boolean  @default(true)
+  showCta             Boolean  @default(true)
+  announcementEnabled Boolean  @default(false)
+  announcementText    String?
+  announcementTextAr  String?
+  // A store path without the language ("/products") or an https:// URL.
+  announcementLink    String?
+  // The public contact email in the store footer (feature 21c); stored
+  // trimmed and lowercase.
+  contactEmail        String?
+  updatedAt           DateTime @updatedAt
+}
+
+enum AnalyticsEventType {
+  PAGE_VIEW
+  ADD_TO_CART
+  CHECKOUT_STARTED
+}
+
+// Store activity counts (feature 23). Never holds a visitor, user, session,
+// IP, or cookie value.
+model AnalyticsEvent {
+  id        String             @id @default(cuid())
+  type      AnalyticsEventType
+  // PAGE_VIEW only: the pathname as visited, with its language ("/ar/products/x").
+  path      String?
+  // Detail-page views and ADD_TO_CART. A deleted product leaves the event as a
+  // plain count.
+  productId String?
+  product   Product?           @relation(fields: [productId], references: [id], onDelete: SetNull)
+  createdAt DateTime           @default(now())
+
+  @@index([type, createdAt])
+  @@index([productId])
+}
+
+// Fixed-window counters for anonymous public writes (feature 24b). The key is
+// a hash; no IP address or other visitor value is stored.
+model RateLimit {
+  // SHA-256 hex of "<action>:<client>".
+  key     String   @id
+  count   Int
+  resetAt DateTime
+
+  @@index([resetAt])
+}

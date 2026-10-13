@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+/* Tokens ported from prototypes/theme.css. Radius, shadow, and container keys
+   are named so they do not replace Tailwind's own defaults. */
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: oklch(21% 0.02 252);
+  --color-canvas: oklch(96% 0.012 248);
+  --color-panel: #ffffff;
+  --color-surface: oklch(97.5% 0.008 248);
+  --color-border: oklch(91% 0.012 248);
+  --color-ink: oklch(23% 0.04 252);
+  --color-ink-raised: oklch(32% 0.07 252);
+  --color-ink-text: oklch(96% 0.01 248);
+  --color-ink-muted: oklch(78% 0.025 248);
+  --color-muted: oklch(40% 0.02 248);
+  --color-faint: oklch(52% 0.02 248);
+
+  --color-primary: oklch(59% 0.13 248);
+  /* Darker shade of the brand color: text and filled buttons need AA contrast. */
+  --color-primary-strong: oklch(48% 0.13 248);
+  --color-primary-soft: oklch(95% 0.03 248);
+
+  --color-success: oklch(47% 0.11 155);
+  --color-success-soft: oklch(95% 0.04 155);
+  --color-warning: oklch(48% 0.1 70);
+  --color-warning-soft: oklch(95% 0.05 85);
+  --color-danger: oklch(50% 0.17 25);
+  --color-danger-soft: oklch(95% 0.03 25);
+
+  --color-tint-1: oklch(94% 0.035 248);
+  --color-tint-2: oklch(94% 0.035 200);
+  --color-tint-3: oklch(94% 0.035 285);
+  --color-tint-4: oklch(95% 0.04 85);
+
+  --radius-control: 8px;
+  --radius-card: 14px;
+  --radius-panel: 20px;
+  --shadow-soft: 0 1px 2px oklch(23% 0.04 252 / 0.05);
+  --shadow-raised: 0 10px 30px -12px oklch(23% 0.04 252 / 0.22);
+  --container-site: 1200px;
+
+  /* Mockup type scale: body copy at 1.65, headings at 1.2. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.65;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.65;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.65;
+  --text-lg: 1.1875rem;
+  --text-lg--line-height: 1.65;
+  --text-xl: 1.5rem;
+  --text-xl--line-height: 1.2;
+  --text-2xl: 1.875rem;
+  --text-2xl--line-height: 1.2;
+  --text-3xl: 2.5rem;
+  --text-3xl--line-height: 1.2;
+  --text-4xl: 3.25rem;
+  --text-4xl--line-height: 1.2;
+}
+
+@theme inline {
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+:root {
+  --font-body:
+    var(--font-geist-sans), var(--font-tajawal), system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+}
+
+:root:lang(ar) {
+  --font-body: var(--font-tajawal), var(--font-geist-sans), system-ui, sans-serif;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-foreground);
+  font-size: var(--text-base);
+  line-height: 1.65;
+}
+
+/* Arabic text inside an English page (the language switcher) would otherwise
+   stop at Geist's Arial fallback, which has Arabic letters, before Tajawal. */
+@layer base {
+  [lang="ar"] {
+    font-family:
+      var(--font-tajawal), var(--font-geist-sans), system-ui, sans-serif;
+  }
+}
+
+/* Letter-spacing breaks Arabic letter joining, and Arabic needs taller lines.
+   Unlayered on purpose so it wins over tracking and leading utilities. */
+:lang(ar) :is(h1, h2, h3) {
+  letter-spacing: 0;
+  line-height: 1.4;
+}
