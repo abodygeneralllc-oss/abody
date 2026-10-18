@@ -67,7 +67,7 @@ export interface AdminRecentOrder {
 }
 
 export interface AdminOverview {
-  // Paid, processing, and completed orders only; all orders are USD.
+  // Paid, processing, and completed orders only; orders are in GBP (any earlier USD test orders are summed as-is).
   revenueCents: number;
   paidOrders: number;
   pendingOrders: number;

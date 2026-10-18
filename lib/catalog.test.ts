@@ -80,7 +80,7 @@ describe("isProductType", () => {
 });
 
 describe("toPublicProduct", () => {
-  it("passes cents through, adds USD, and formats dates as ISO strings", () => {
+  it("passes pence through, adds GBP, and formats dates as ISO strings", () => {
     expect(toPublicProduct(row, "en")).toEqual({
       id: "p1",
       name: "Digital Marketing Template",

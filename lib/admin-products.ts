@@ -81,7 +81,7 @@ const PRICE_PATTERN = /^(\d{1,5})(?:\.(\d{1,2}))?$/;
 const DURATION_PATTERN = /^\d{1,3}$/;
 const FEATURED_RANK_PATTERN = /^\d{1,2}$/;
 
-// Dollars as typed ("49", "49.5", "49.50") to whole cents with integer math.
+// Pounds as typed ("49", "49.5", "49.50") to whole pence with integer math.
 export function parsePriceToCents(input: string): number | null {
   const match = PRICE_PATTERN.exec(input.trim());
   if (!match) return null;
@@ -90,7 +90,7 @@ export function parsePriceToCents(input: string): number | null {
   return cents >= PRICE_MIN_CENTS && cents <= PRICE_MAX_CENTS ? cents : null;
 }
 
-// Cents back to the form's dollar text, such as 4950 to "49.50".
+// Pence back to the form's pounds text, such as 4950 to "49.50".
 export function centsToPriceInput(cents: number): string {
   return `${Math.floor(cents / 100)}.${String(cents % 100).padStart(2, "0")}`;
 }

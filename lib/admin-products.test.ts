@@ -60,7 +60,7 @@ describe("parsePriceToCents", () => {
     },
   );
 
-  it("round-trips with the form's dollar text", () => {
+  it("round-trips with the form's pounds text", () => {
     expect(centsToPriceInput(4950)).toBe("49.50");
     expect(centsToPriceInput(50)).toBe("0.50");
     expect(parsePriceToCents(centsToPriceInput(123_456))).toBe(123_456);

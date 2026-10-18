@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { formatPriceCents } from "@/lib/money";
 
 describe("formatPriceCents", () => {
-  it("formats whole dollars", () => {
+  it("formats whole pounds", () => {
     expect(formatPriceCents(4900)).toBe("£49.00");
   });
 

@@ -295,10 +295,10 @@
 **Suggested fix:** Take the same lock first in `resetPassword`'s transaction (`await tx.$queryRaw\`SELECT id FROM "User" WHERE id = ${row.userId} FOR UPDATE\`` before the token claim), so both actions lock the user row before any token row, and extend the existing order assertion to `resetPassword`. Requirement lost: None.
 **Resolution:**
 
-### F-48 [P3] open - Stale "USD" and dollar wording left in lib/ after the GBP switch
+### F-48 [P3] fixed - Stale "USD" and dollar wording left in lib/ after the GBP switch
 
 **File:** lib/admin.ts:70
 **Found:** 2026-10-18 by /audit independent (scope: current; lens: quality)
 **Why it matters:** The fix's "Done when" says a repo search for `USD` in `lib/` finds no store-currency use. Some still do. The `AdminOverview.revenueCents` comment says "all orders are USD", which is now wrong in two ways: new orders are GBP, and any older USD test orders get summed into a revenue figure shown with `£`. Two test names also still describe USD: `lib/catalog.test.ts:83` "passes cents through, adds USD, ..." (it now asserts GBP) and `lib/money.test.ts:5` "formats whole dollars". These are comments and test names only, so runtime behaviour is unchanged. The risk is that someone later trusts the comment when changing the revenue sums.
 **Suggested fix:** Change the comment to something like "Paid, processing, and completed orders only; all orders are in the store currency (GBP; earlier test orders may be USD and are summed as-is)". Rename the two tests to say GBP and pounds. Requirement lost: None.
-**Resolution:**
+**Resolution:** Fixed 2026-10-18 by fix/remove-stale-usd-wording: the `lib/admin.ts` revenue comment now says orders are in GBP and earlier USD test orders are summed as-is; the `lib/catalog.test.ts` and `lib/money.test.ts` test names say GBP and pounds; the same leftover wording in `lib/admin-products.ts` (two comments) and `lib/admin-products.test.ts` (one test name) is also reworded. `pnpm test` (1373 passed), `pnpm lint`, and `pnpm build` pass. Awaiting `/audit` re-review to close.
