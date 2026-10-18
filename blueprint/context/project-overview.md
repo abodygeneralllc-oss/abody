@@ -1,6 +1,6 @@
 # Abody Digital Ecommerce Platform - Project Overview
 
-<!-- blueprint:source-hash 6317f9707147ec8ce0ffaed4264bf62497fe5b67bf59bdb05780e4c8ecd96791 -->
+<!-- blueprint:source-hash ac72ff9305524de018308e075ab61b71dd4b2776b75852e90c47443b8e662585 -->
 
 > A bilingual (English and Arabic) storefront where customers buy Abody's
 > downloadable digital products and digital services with Stripe, plus an admin
@@ -34,8 +34,7 @@ no web request grants the role.
 
 ## Features
 
-In `build-plan.md` order. Every item is shipped; the build plan has no
-remaining work.
+In `build-plan.md` order. Everything through 29 is shipped; 30 is next.
 
 1. **Product & Service Catalog** (done) - models and catalog API.
 2. **Product & Service Details** (done) - detail pages with purchase actions.
@@ -102,6 +101,16 @@ remaining work.
       (name, short description, category, English and Arabic) and `?sort=`
       (Newest default, price low to high, price high to low), combined with
       `?category=` in the URL; empty state with a clear-search link.
+30. **Listing Layout and Pagination** (next) - `/products` and `/services`.
+    - 30a **Roomier Listing Grid** - two cards per row on desktop beside the
+      280px category sidebar (today three, about 270px each, look cramped),
+      larger card images and more spacing, one per row on phones, both
+      languages, no sideways scroll at phone width.
+    - 30b **Listing Pagination** - 12 items per page via `?page=`, combined
+      with `q`, `sort`, and `category`; previous, next, and page-number links
+      keep the other parameters; changing search, sort, or category returns to
+      page 1; page 1 has no `?page=`; invalid or past-the-end pages fall back
+      safely; controls hidden on a single page; arrows mirror in RTL.
 
 ## Data model
 
@@ -283,7 +292,7 @@ Routes. Customer pages live under `/en` or `/ar`; unprefixed customer URLs
 redirect. `/admin` and `/api` are never prefixed.
 
 - `/<lang>`, `/products[/slug]`, `/services[/slug]`, `/cart`; listings take
-  `?category=`, plus `?q=` and `?sort=` (29b)
+  `?category=`, plus `?q=` and `?sort=` (29b) and `?page=` (30b)
 - `/<lang>/checkout/return`, `/success` - Stripe return and downloads
 - `/<lang>/login`, `/register`, `/forgot-password`, `/reset-password`,
   `/account`, `.../orders`, `.../downloads`, `.../services[/itemId]`,
@@ -338,6 +347,7 @@ Plan-level gaps; resolve in the plans, then re-run `/overview`.
 8. **Legal copy.** Terms, Privacy, and Returns text is a draft for Abody to
    review before launch; Privacy predates analytics (feature 23).
 9. **Heading typo.** Project-plan "9. Stripe Payment Flow" lacks its `##`.
-10. **Catalog discovery not in the project plan.** Build-plan 29 adds home
-    tabs, listing search, and sort; the project plan's Homepage and Product
-    Store sections mention none of them.
+10. **Catalog discovery partly in the project plan.** Its Product Store
+    section now covers the two-per-row listing and 12-item pages and refers to
+    search and sort, but the Homepage section still doesn't mention the
+    Featured products tabs (29a).

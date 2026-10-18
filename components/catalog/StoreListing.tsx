@@ -239,7 +239,7 @@ export async function StoreListing({
                 {text.all}
               </Link>
             ) : view === "results" ? (
-              <ul className="grid gap-6 min-[600px]:grid-cols-2 min-[960px]:grid-cols-3">
+              <ul className="grid gap-6 min-[600px]:grid-cols-2 min-[960px]:gap-8">
                 {shown.map((item, index) => (
                   <li key={item.id}>
                     <ProductCard
