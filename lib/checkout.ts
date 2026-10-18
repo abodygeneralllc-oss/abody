@@ -12,7 +12,7 @@ const SESSION_ID_MAX_LENGTH = 255;
 export interface CheckoutLineItem {
   quantity: number;
   price_data: {
-    currency: "usd";
+    currency: "gbp";
     unit_amount: number;
     product_data: { name: string; metadata: { productId: string } };
   };
@@ -31,7 +31,7 @@ export function checkoutLineItems(
   return view.lines.map((line) => ({
     quantity: line.quantity,
     price_data: {
-      currency: "usd",
+      currency: "gbp",
       unit_amount: discounted.get(line.product.id) ?? line.product.priceCents,
       product_data: {
         name: line.product.name,

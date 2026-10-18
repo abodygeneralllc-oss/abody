@@ -98,7 +98,7 @@ describe("sendOrderPaidEmails", () => {
 
     const admin = sent("admin");
     expect(admin.to).toBe("team@abody.test");
-    expect(admin.subject).toBe("New order #1001 - $337.00 (includes a service)");
+    expect(admin.subject).toBe("New order #1001 - £337.00 (includes a service)");
     expect(admin.html).toContain("Facebook Ads Guide");
     expect(admin.text).toContain("https://abody.test/admin/orders/o1");
     expect(admin.text).toContain("https://abody.test/admin/service-orders/item_2");

@@ -41,7 +41,7 @@ export interface PublicProduct {
   shortDescription: string;
   description: string;
   priceCents: number;
-  currency: "USD";
+  currency: "GBP";
   type: ProductType;
   // Language-neutral key for filters, URLs, and related items.
   category: string;
@@ -162,7 +162,7 @@ export function toPublicProduct(
         ? row.descriptionAr
         : row.description,
     priceCents: row.priceCents,
-    currency: "USD",
+    currency: "GBP",
     type: row.type,
     category: row.category,
     categoryLabel:

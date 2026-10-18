@@ -123,7 +123,7 @@ export function evaluateCoupon(
   if (!eligible) return { ok: false, reason: "not_eligible" };
 
   const totalCents = view.totalCents - discountCents;
-  // Stripe's minimum USD charge.
+  // The store's minimum charge (above Stripe's GBP minimum).
   if (totalCents < PRICE_MIN_CENTS) return { ok: false, reason: "below_minimum" };
 
   return {

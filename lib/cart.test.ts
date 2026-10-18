@@ -24,7 +24,7 @@ function product(overrides: Partial<PublicProduct>): PublicProduct {
     shortDescription: "Short",
     description: "Long",
     priceCents: 4900,
-    currency: "USD",
+    currency: "GBP",
     type: "DIGITAL_PRODUCT",
     category: "Templates",
     categoryLabel: "Templates",

@@ -9,7 +9,7 @@ export const CATEGORY_MAX = 60;
 export const IMAGE_MAX = 500;
 export const INCLUDED_MAX_LINES = 20;
 export const INCLUDED_LINE_MAX = 200;
-// Stripe's minimum USD charge is $0.50.
+// Stripe's minimum GBP charge is £0.30; the store keeps £0.50.
 export const PRICE_MIN_CENTS = 50;
 export const PRICE_MAX_CENTS = 9_999_999;
 // Services only (feature 14): an optional whole number of days.

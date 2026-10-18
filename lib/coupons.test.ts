@@ -19,7 +19,7 @@ function product(overrides: Partial<PublicProduct>): PublicProduct {
     shortDescription: "Short",
     description: "Long",
     priceCents: 4900,
-    currency: "USD",
+    currency: "GBP",
     type: "DIGITAL_PRODUCT",
     category: "Templates",
     categoryLabel: "Templates",
@@ -195,7 +195,7 @@ describe("evaluateCoupon", () => {
     expect(result).toEqual({ ok: false, reason: "not_eligible" });
   });
 
-  it("rejects a total under Stripe's $0.50 minimum", () => {
+  it("rejects a total under the £0.50 minimum", () => {
     const cheap = product({ id: "p2", priceCents: 50 });
     expect(evaluateCoupon(coupon({ percentOff: 50 }), cart([cheap, 1]), NOW)).toEqual({
       ok: false,

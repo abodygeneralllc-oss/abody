@@ -43,17 +43,17 @@ describe("customerOrderEmail", () => {
     for (const part of [
       "Facebook Ads Guide",
       "Ads Management",
-      "$38.00",
-      "$299.00",
-      "$337.00",
+      "£38.00",
+      "£299.00",
+      "£337.00",
       "Payment received",
       `href="${URL}"`,
       "View your order",
     ]) {
       expect(email.html).toContain(part);
     }
-    expect(email.text).toContain("Facebook Ads Guide (Qty: 2) - $38.00");
-    expect(email.text).toContain("Total paid: $337.00");
+    expect(email.text).toContain("Facebook Ads Guide (Qty: 2) - £38.00");
+    expect(email.text).toContain("Total paid: £337.00");
     expect(email.text).toContain(`View your order: ${URL}`);
     expect(email.html).toContain('src="https://abody.test/Logo-0.jpg"');
     expect(email.html).toContain("Payment received for order #1001.");
@@ -76,7 +76,7 @@ describe("customerOrderEmail", () => {
     expect(email.html).toContain('<html lang="ar" dir="rtl">');
     expect(email.html).toContain("دليل إعلانات فيسبوك");
     expect(email.html).toContain('<span dir="ltr">#1001</span>');
-    expect(email.html).toContain('<span dir="ltr">$38.00</span>');
+    expect(email.html).toContain('<span dir="ltr">£38.00</span>');
     expect(email.html).toContain("عرض طلبك");
     expect(email.text).toContain(`عرض طلبك: ${arabicUrl}`);
     expect(email.html).toContain("منتج رقمي");
@@ -116,7 +116,7 @@ describe("adminOrderEmail", () => {
   it("flags a service purchase and links each service order", () => {
     const email = adminOrderEmail(order([GUIDE, ADS]), adminUrl, serviceUrl, BRAND);
 
-    expect(email.subject).toBe("New order #1001 - $337.00 (includes a service)");
+    expect(email.subject).toBe("New order #1001 - £337.00 (includes a service)");
     expect(email.html).toContain("buyer@example.com");
     expect(email.html).toContain("Facebook Ads Guide");
     expect(email.html).toContain("Includes a service");
@@ -125,7 +125,7 @@ describe("adminOrderEmail", () => {
     expect(email.html).toContain(`href="${serviceUrl("item_2")}"`);
     expect(email.html).not.toContain(serviceUrl("item_1"));
     expect(email.html).toContain(`href="${adminUrl}"`);
-    expect(email.text).toContain(`- Ads Management - Service x 1 - $299.00 - ${serviceUrl("item_2")}`);
+    expect(email.text).toContain(`- Ads Management - Service x 1 - £299.00 - ${serviceUrl("item_2")}`);
   });
 
   it("has a plain subject without services and handles a missing email", () => {
@@ -135,7 +135,7 @@ describe("adminOrderEmail", () => {
       serviceUrl,
       BRAND,
     );
-    expect(email.subject).toBe("New order #1001 - $38.00");
+    expect(email.subject).toBe("New order #1001 - £38.00");
     expect(email.html).not.toContain("Includes a service");
     expect(email.html).toContain("No email on the order");
     expect(email.text).toContain("Customer: No email on the order");

@@ -115,7 +115,7 @@ function fieldSpecs(type: ProductType) {
       : []),
   ];
   const pricing: FieldSpec[] = [
-    { field: "price", label: "Price (USD)", hint: "For example 49 or 49.99.", max: 9, required: true, inputMode: "decimal", dir: "ltr" },
+    { field: "price", label: "Price (GBP)", hint: "For example 49 or 49.99.", max: 9, required: true, inputMode: "decimal", dir: "ltr" },
     ...(isService
       ? [
           {

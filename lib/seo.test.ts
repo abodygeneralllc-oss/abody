@@ -23,7 +23,7 @@ const product: PublicProduct = {
   shortDescription: "A ready-made plan.",
   description: "Long description.",
   priceCents: 1900,
-  currency: "USD",
+  currency: "GBP",
   type: ProductType.DIGITAL_PRODUCT,
   category: "Templates",
   categoryLabel: "Templates",
@@ -163,7 +163,7 @@ describe("productJsonLd", () => {
       offers: {
         "@type": "Offer",
         price: "19.00",
-        priceCurrency: "USD",
+        priceCurrency: "GBP",
         availability: "https://schema.org/InStock",
         url,
       },

@@ -55,7 +55,7 @@ export default async function SuccessPage({
   // Only the amount is shown: no email, name, or other customer details.
   const total =
     state === "paid" &&
-    session.currency === "usd" &&
+    session.currency === "gbp" &&
     session.amount_total !== null
       ? formatPriceCents(session.amount_total)
       : null;

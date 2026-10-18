@@ -547,7 +547,7 @@ export const en = {
     },
     hints: {
       adAccount: "Your ad account ID or page name. Never enter a password.",
-      budget: "For example, $1,000 per month.",
+      budget: "For example, £1,000 per month.",
     },
     notProvided: "Not provided",
     submit: "Send details",

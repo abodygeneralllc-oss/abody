@@ -124,7 +124,7 @@ One model for both types; `type` decides delivery.
 - `name`, `shortDescription`, `description` (text) - English, as are the other
   unsuffixed text fields
 - `slug` (unique) - shared by both languages
-- `priceCents` (int) - whole US cents; store currency is USD
+- `priceCents` (int) - whole pence; store currency is GBP (relabelled from USD, not converted)
 - `type` (enum `DIGITAL_PRODUCT`, `SERVICE`), `status` (enum `PUBLISHED`,
   `UNPUBLISHED`); a published digital product must have a `digitalFile`
 - `category` (string) - language-neutral key for filters and related items

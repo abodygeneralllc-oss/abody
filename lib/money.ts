@@ -1,8 +1,8 @@
-const usd = new Intl.NumberFormat("en-US", {
+const gbp = new Intl.NumberFormat("en-GB", {
   style: "currency",
-  currency: "USD",
+  currency: "GBP",
 });
 
 export function formatPriceCents(priceCents: number): string {
-  return usd.format(priceCents / 100);
+  return gbp.format(priceCents / 100);
 }

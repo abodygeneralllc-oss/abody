@@ -24,7 +24,7 @@ function product(overrides: Partial<PublicProduct>): PublicProduct {
     shortDescription: "",
     description: "",
     priceCents: 4900,
-    currency: "USD",
+    currency: "GBP",
     type: ProductType.DIGITAL_PRODUCT,
     category: "Templates",
     categoryLabel: "Templates",
@@ -75,7 +75,7 @@ describe("checkoutLineItems", () => {
       {
         quantity: 3,
         price_data: {
-          currency: "usd",
+          currency: "gbp",
           unit_amount: 4900,
           product_data: {
             name: "قالب التسويق الرقمي",
@@ -86,7 +86,7 @@ describe("checkoutLineItems", () => {
       {
         quantity: 1,
         price_data: {
-          currency: "usd",
+          currency: "gbp",
           unit_amount: 29900,
           product_data: {
             name: "Ads Management",

@@ -108,7 +108,7 @@ describe("applyCoupon", () => {
     expect(store.set).not.toHaveBeenCalled();
   });
 
-  it("returns below_minimum for a total under $0.50", async () => {
+  it("returns below_minimum for a total under £0.50", async () => {
     listPublishedProductsByIds.mockResolvedValue([{ ...digital, priceCents: 50 }]);
     store.get.mockImplementation((name: string) =>
       name === "cart" ? { name, value: JSON.stringify([["p1", 1]]) } : undefined,

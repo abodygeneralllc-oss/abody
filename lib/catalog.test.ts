@@ -88,7 +88,7 @@ describe("toPublicProduct", () => {
       shortDescription: "Short",
       description: "Long",
       priceCents: 4900,
-      currency: "USD",
+      currency: "GBP",
       type: "DIGITAL_PRODUCT",
       category: "Templates",
       categoryLabel: "Templates",
@@ -183,7 +183,7 @@ describe("listPublishedProducts", () => {
     expect(query.select).not.toHaveProperty("digitalFile");
     expect(query.select).not.toHaveProperty("status");
     expect(result).toHaveLength(1);
-    expect(result[0].currency).toBe("USD");
+    expect(result[0].currency).toBe("GBP");
   });
 
   describe("with a search query", () => {
