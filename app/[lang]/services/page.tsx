@@ -6,6 +6,7 @@ import {
 import { ProductType } from "@/lib/generated/prisma/enums";
 import {
   parseCategoryParam,
+  parsePageParam,
   parseSearchParam,
   parseSortParam,
 } from "@/lib/listing";
@@ -17,13 +18,14 @@ export function generateMetadata(): Promise<Metadata> {
 export default async function ServicesPage({
   searchParams,
 }: PageProps<"/[lang]/services">) {
-  const { category, q, sort } = await searchParams;
+  const { category, q, sort, page } = await searchParams;
   return (
     <StoreListing
       type={ProductType.SERVICE}
       category={parseCategoryParam(category)}
       q={parseSearchParam(q)}
       sort={parseSortParam(sort)}
+      page={parsePageParam(page)}
     />
   );
 }

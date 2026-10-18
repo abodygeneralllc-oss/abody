@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   filterByCategory,
+  LISTING_PAGE_SIZE,
   listingHref,
   matchesSearch,
+  paginate,
   parseCategoryParam,
+  parsePageParam,
   parseSearchParam,
   parseSortParam,
   SEARCH_MAX_LENGTH,
@@ -170,6 +173,74 @@ describe("sortProducts", () => {
   });
 });
 
+describe("parsePageParam", () => {
+  it.each([
+    ["1", 1],
+    ["2", 2],
+    ["12", 12],
+    ["007", 7],
+  ])("reads %s as page %i", (value, page) => {
+    expect(parsePageParam(value)).toBe(page);
+  });
+
+  it.each([
+    undefined,
+    "",
+    ["2", "3"],
+    "0",
+    "-1",
+    "2.5",
+    "abc",
+    "1e3",
+    " 2",
+    "99999999999999999999",
+  ])("falls back to page 1 for %j", (value) => {
+    expect(parsePageParam(value)).toBe(1);
+  });
+});
+
+describe("paginate", () => {
+  const items = (count: number) => Array.from({ length: count }, (_, i) => i);
+
+  it("uses 12 items per page", () => {
+    expect(LISTING_PAGE_SIZE).toBe(12);
+  });
+
+  it("returns the first page", () => {
+    expect(paginate(items(30), 1)).toEqual({
+      items: items(12),
+      page: 1,
+      pageCount: 3,
+    });
+  });
+
+  it("returns a partial last page", () => {
+    expect(paginate(items(30), 3)).toEqual({
+      items: [24, 25, 26, 27, 28, 29],
+      page: 3,
+      pageCount: 3,
+    });
+  });
+
+  it("fills an exact multiple without an empty extra page", () => {
+    const result = paginate(items(24), 2);
+    expect(result.pageCount).toBe(2);
+    expect(result.items).toEqual(items(24).slice(12));
+  });
+
+  it("shows the last page for a page past the end", () => {
+    expect(paginate(items(13), 99)).toEqual({
+      items: [12],
+      page: 2,
+      pageCount: 2,
+    });
+  });
+
+  it("treats an empty list as one empty page", () => {
+    expect(paginate([], 4)).toEqual({ items: [], page: 1, pageCount: 1 });
+  });
+});
+
 describe("listingHref", () => {
   const none = { category: null, q: null, sort: "newest" as const };
 
@@ -188,6 +259,23 @@ describe("listingHref", () => {
         category: "Guides",
       }),
     ).toBe("/en/products?category=Guides&q=ads&sort=price-desc");
+  });
+
+  it("leaves out page 1 and puts later pages last", () => {
+    expect(listingHref("/en/products", { ...none, page: 1 })).toBe(
+      "/en/products",
+    );
+    expect(listingHref("/en/products", { ...none, page: 2 })).toBe(
+      "/en/products?page=2",
+    );
+    expect(
+      listingHref("/en/products", {
+        category: "Guides",
+        q: "ads",
+        sort: "price-asc",
+        page: 3,
+      }),
+    ).toBe("/en/products?category=Guides&q=ads&sort=price-asc&page=3");
   });
 
   it.each(["Guides", "Tips & Tricks", "Ads plus more", "قوالب"])(

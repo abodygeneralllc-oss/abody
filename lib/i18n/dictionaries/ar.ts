@@ -88,6 +88,12 @@ export const ar: Dictionary = {
     },
     searchEmpty: "لا توجد نتائج لـ",
     clearSearch: "مسح البحث",
+    pagination: {
+      label: "الصفحات",
+      previous: "السابق",
+      next: "التالي",
+      page: "صفحة {page}",
+    },
     types: {
       DIGITAL_PRODUCT: {
         title: "المنتجات",

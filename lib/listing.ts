@@ -88,15 +88,51 @@ export function sortProducts<T extends { priceCents: number }>(
   );
 }
 
-// Only non-default values go in the URL, always in the same order.
+// 12 fills complete rows of two or three cards.
+export const LISTING_PAGE_SIZE = 12;
+
+// The `page` query value. Only a single run of digits naming page 1 or later
+// counts; anything else means page 1, so a hand-edited URL never errors.
+export function parsePageParam(value: string | string[] | undefined): number {
+  if (typeof value !== "string" || !/^\d+$/.test(value)) return 1;
+  const page = Number(value);
+  return Number.isSafeInteger(page) && page >= 1 ? page : 1;
+}
+
+// A page past the end shows the last page rather than nothing.
+export function paginate<T>(
+  items: T[],
+  page: number,
+  pageSize = LISTING_PAGE_SIZE,
+): { items: T[]; page: number; pageCount: number } {
+  const pageCount = Math.max(1, Math.ceil(items.length / pageSize));
+  const current = Math.min(page, pageCount);
+  const start = (current - 1) * pageSize;
+  return {
+    items: items.slice(start, start + pageSize),
+    page: current,
+    pageCount,
+  };
+}
+
+// Only non-default values go in the URL, always in the same order. Leaving
+// out `page` lands on page 1.
 export function listingHref(
   basePath: string,
-  state: { category: string | null; q: string | null; sort: ListingSort },
+  state: {
+    category: string | null;
+    q: string | null;
+    sort: ListingSort;
+    page?: number;
+  },
 ): string {
   const params = new URLSearchParams();
   if (state.category !== null) params.set("category", state.category);
   if (state.q !== null) params.set("q", state.q);
   if (state.sort !== "newest") params.set("sort", state.sort);
+  if (state.page !== undefined && state.page > 1) {
+    params.set("page", String(state.page));
+  }
   const query = params.toString();
   return query === "" ? basePath : `${basePath}?${query}`;
 }

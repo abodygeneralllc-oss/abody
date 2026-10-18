@@ -88,6 +88,12 @@ export const en = {
     },
     searchEmpty: "No results for",
     clearSearch: "Clear search",
+    pagination: {
+      label: "Pages",
+      previous: "Previous",
+      next: "Next",
+      page: "Page {page}",
+    },
     types: {
       DIGITAL_PRODUCT: {
         title: "Products",
