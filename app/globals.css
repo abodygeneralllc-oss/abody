@@ -77,10 +77,12 @@
   --font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
 }
 
-/* Macan ships only once its webfont is licensed; until then English renders
-   in Helvetica, or Arial on Windows. */
+/* English uses Inter (SIL OFL, loaded by next/font in the root layouts). Inter
+   has no Arabic letters, so Arabic names in English pages fall to Tajawal. */
 :root {
-  --font-body: "Macan", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body:
+    var(--font-inter), var(--font-tajawal), "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
 }
 
 :root:lang(ar) {

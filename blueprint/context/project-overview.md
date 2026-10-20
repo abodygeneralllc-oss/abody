@@ -1,6 +1,6 @@
 # Abody Digital Ecommerce Platform - Project Overview
 
-<!-- blueprint:source-hash cb1ec427a6c9232726b1a098979fc0d6963a6eccc2e8982031bec401c189a419 -->
+<!-- blueprint:source-hash ac7325114e58a426f52808ae5fd64cdf7ff27ae844183359576413bb432c8275 -->
 
 > A bilingual (English and Arabic) storefront where customers buy Abody's
 > downloadable digital products and digital services with Stripe, plus an admin
@@ -107,7 +107,7 @@ In `build-plan.md` order. Everything through 30 is shipped; 31 is next.
 31. **Marketplace Redesign** (next) - visual restyle only (no data, route, or
     behavior change) following `prototypes/redesign/`; RTL keeps working.
     - 31a **Theme, Type, and Site Shell** - port `prototypes/redesign/theme.css`
-      into `app/globals.css`; English Macan with Helvetica/Arial fallback,
+      into `app/globals.css`; English Inter with Helvetica/Arial fallback,
       Arabic Tajawal; header (with search) and footer; logo `public/Logo-0.jpg`;
       no Stripe mentions in customer-facing text.
     - 31b **Home Page** - navy hero with pill search and chips, category icon
@@ -294,8 +294,8 @@ existing Abody brand.
 - Core flow: Discover, Understand, Purchase, Receive, Manage.
 - Redesign (31): Fiverr-inspired marketplace look on the brand blue - flat
   white canvas, smaller radii, navy ink hero, pill search and chips, dense
-  cards. English Macan, Helvetica/Arial fallback (Macan needs a webfont
-  license before its files ship); Arabic stays Tajawal.
+  cards. English Inter (SIL OFL, `next/font/google`), Helvetica/Arial
+  fallback; Arabic stays Tajawal.
 - `prototypes/` (untracked) holds static mockups; the app never imports it.
 
 Routes. Customer pages live under `/en` or `/ar`; unprefixed customer URLs
