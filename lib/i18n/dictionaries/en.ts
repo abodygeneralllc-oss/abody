@@ -143,8 +143,12 @@ export const en = {
       eyebrow: "Digital products and services",
       title: "Marketing tools and done-for-you services",
       lead: "Download templates and guides the moment you pay, or hand your ads to the Abody team and follow the work from your account.",
-      browseProducts: "Browse products",
-      exploreServices: "Explore services",
+      search: {
+        label: "Find a digital product",
+        placeholder: "What are you looking for?",
+        submit: "Search",
+      },
+      browse: "Browse:",
     },
     categories: "Shop by category",
     viewAll: "View all",
@@ -158,30 +162,18 @@ export const en = {
       },
     },
     services: {
-      title: "Services",
       intro: "Buy online, tell us what we need, and we get started.",
-      viewAll: "View all services",
       promoEyebrow: "Done for you",
       promoTitle: "Hand it to the Abody team",
-      promoBody:
-        "Every service comes with a clear scope, a fixed price, and status updates in your account.",
+      points: [
+        "A clear scope and a fixed price",
+        "A short brief after checkout, then we get started",
+        "Status updates in your account",
+      ],
       promoAction: "See how services work",
     },
+    // Labels the hero trust row, which shows the header.trust lines.
     why: "Why Abody",
-    values: {
-      instant: {
-        title: "Delivered instantly",
-        body: "Your files are ready in your account as soon as the payment is confirmed.",
-      },
-      secure: {
-        title: "Secure payment",
-        body: "Your payment is encrypted. Abody never sees or stores your card details.",
-      },
-      people: {
-        title: "Real people on your services",
-        body: "The Abody team does the work and keeps the status up to date.",
-      },
-    },
     howItWorks: "How it works",
     steps: [
       {

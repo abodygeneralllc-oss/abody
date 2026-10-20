@@ -10,7 +10,7 @@ export interface FeaturedTab {
 }
 
 interface FeaturedTabsProps {
-  // The section title and intro, laid out opposite the tabs.
+  // The section title, intro, and link, shown above the tabs.
   head: ReactNode;
   label: string;
   dir: "ltr" | "rtl";
@@ -45,33 +45,32 @@ export function FeaturedTabs({ head, label, dir, tabs }: FeaturedTabsProps) {
 
   return (
     <>
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-        {head}
-        <div
-          role="tablist"
-          aria-label={label}
-          onKeyDown={onKeyDown}
-          className="flex flex-wrap gap-2"
-        >
-          {tabs.map((tab, index) => (
-            <button
-              key={tab.id}
-              ref={(node) => {
-                buttons.current[index] = node;
-              }}
-              type="button"
-              role="tab"
-              id={`${baseId}-tab-${tab.id}`}
-              aria-selected={index === selected}
-              aria-controls={`${baseId}-panel-${tab.id}`}
-              tabIndex={index === selected ? 0 : -1}
-              onClick={() => select(index)}
-              className="cursor-pointer rounded-full border border-border bg-panel px-4 py-2 text-sm font-medium text-muted outline-offset-2 hover:border-primary hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong aria-[selected=true]:border-primary-strong aria-[selected=true]:bg-primary-strong aria-[selected=true]:text-white"
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+      {head}
+      {/* Underline tabs on a bottom rule; they scroll sideways if they overflow. */}
+      <div
+        role="tablist"
+        aria-label={label}
+        onKeyDown={onKeyDown}
+        className="mb-6 flex gap-6 overflow-x-auto border-b border-border"
+      >
+        {tabs.map((tab, index) => (
+          <button
+            key={tab.id}
+            ref={(node) => {
+              buttons.current[index] = node;
+            }}
+            type="button"
+            role="tab"
+            id={`${baseId}-tab-${tab.id}`}
+            aria-selected={index === selected}
+            aria-controls={`${baseId}-panel-${tab.id}`}
+            tabIndex={index === selected ? 0 : -1}
+            onClick={() => select(index)}
+            className="-mb-px cursor-pointer border-b-3 border-transparent pb-3 font-bold whitespace-nowrap text-muted -outline-offset-2 hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong aria-selected:border-primary aria-selected:text-foreground"
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
       {tabs.map((tab, index) => (
         <div

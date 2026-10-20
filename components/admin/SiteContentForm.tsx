@@ -41,7 +41,7 @@ const SECTION_LABELS: Record<SectionFlag, string> = {
   showCategories: "Shop by category",
   showFeatured: "Featured products",
   showServices: "Services",
-  showValues: "Why Abody (the three value panels)",
+  showValues: "Why Abody (the trust points in the hero)",
   showHowItWorks: "How it works",
   showCta: "Call to action",
 };
