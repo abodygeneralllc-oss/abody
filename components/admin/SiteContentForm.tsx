@@ -1,10 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import { useActionState, useEffect, useRef, type ReactNode } from "react";
 import { saveSiteContent, type SiteContentActionResult } from "@/actions/admin-site-content";
 import { INPUT_BASE } from "@/components/auth/AuthForm";
+import { HeroStyle, type HeroPhoto } from "@/lib/generated/prisma/enums";
 import {
   ANNOUNCEMENT_LINK_MAX,
+  HERO_PHOTOS,
   textLimit,
   type SectionFlag,
   type SiteContentField,
@@ -20,6 +23,16 @@ const SUBMIT =
   "h-11 rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
 const CARD = "grid gap-5 rounded-card border border-border bg-panel p-5 shadow-soft min-[600px]:p-6";
 const CHECKBOX = "size-4.5 shrink-0 accent-primary-strong";
+const RADIO = `${CHECKBOX} cursor-pointer`;
+const CHOICE =
+  "flex cursor-pointer items-start gap-3 rounded-control border border-border p-3 text-sm hover:border-border-strong has-checked:border-primary-strong has-checked:bg-primary-soft has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary-strong";
+const CHOICE_ERROR = "Pick one of the options.";
+
+const HERO_STYLES: { style: HeroStyle; label: string; hint: string }[] = [
+  { style: HeroStyle.NAVY, label: "Navy", hint: "Dark navy with white text." },
+  { style: HeroStyle.LIGHT, label: "Light", hint: "Soft blue tint with dark text." },
+  { style: HeroStyle.PHOTO, label: "Photo", hint: "The photo below under a navy fade." },
+];
 
 const FORM_ERRORS: Record<Exclude<SiteContentActionResult, null | { success: true }>["error"], string> = {
   invalid_fields: "Some fields need attention. Fix them and save again.",
@@ -28,6 +41,8 @@ const FORM_ERRORS: Record<Exclude<SiteContentActionResult, null | { success: tru
 
 function fieldError(field: SiteContentField, error: SiteContentFieldError): string {
   switch (error) {
+    case "invalid_choice":
+      return CHOICE_ERROR;
     case "too_long":
       return `Use ${field === "announcementLink" ? ANNOUNCEMENT_LINK_MAX : textLimit(field)} characters or fewer.`;
     case "required":
@@ -191,6 +206,79 @@ export function SiteContentForm({
         {textPair("heroEyebrow")}
         {textPair("heroTitle")}
         {textPair("heroLead")}
+        <fieldset
+          className="grid gap-3"
+          aria-describedby={errors.heroStyle ? "site-heroStyle-error" : undefined}
+        >
+          <legend className="mb-1.5 text-sm font-medium">Background</legend>
+          <div className="grid gap-3 min-[700px]:grid-cols-3">
+            {HERO_STYLES.map(({ style, label, hint }) => (
+              <label key={style} className={CHOICE}>
+                <input
+                  type="radio"
+                  name="heroStyle"
+                  value={style}
+                  defaultChecked={values.heroStyle === style}
+                  className={RADIO}
+                />
+                <span className="grid gap-0.5">
+                  <span className="font-medium">{label}</span>
+                  <span className="text-xs text-muted">{hint}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+          {errors.heroStyle && (
+            <p id="site-heroStyle-error" className="text-sm text-danger">
+              {CHOICE_ERROR}
+            </p>
+          )}
+        </fieldset>
+        <fieldset
+          className="grid gap-3"
+          aria-describedby={[
+            "site-heroPhoto-hint",
+            errors.heroPhoto && "site-heroPhoto-error",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <legend className="mb-1.5 text-sm font-medium">Photo</legend>
+          <p id="site-heroPhoto-hint" className="-mt-1.5 text-xs text-muted">
+            Used when the background is Photo.
+          </p>
+          <div className="grid grid-cols-3 gap-3">
+            {(Object.keys(HERO_PHOTOS) as HeroPhoto[]).map((photo) => (
+              <label key={photo} className={`${CHOICE} flex-col items-stretch`}>
+                <span className="relative block aspect-16/10 overflow-hidden rounded-control bg-surface">
+                  <Image
+                    src={HERO_PHOTOS[photo].src}
+                    alt=""
+                    fill
+                    sizes="(min-width: 700px) 220px, 30vw"
+                    className="object-cover"
+                    style={{ objectPosition: HERO_PHOTOS[photo].position }}
+                  />
+                </span>
+                <span className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="heroPhoto"
+                    value={photo}
+                    defaultChecked={values.heroPhoto === photo}
+                    className={RADIO}
+                  />
+                  <span className="font-medium">{HERO_PHOTOS[photo].label}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+          {errors.heroPhoto && (
+            <p id="site-heroPhoto-error" className="text-sm text-danger">
+              {CHOICE_ERROR}
+            </p>
+          )}
+        </fieldset>
       </section>
 
       <fieldset className={CARD}>

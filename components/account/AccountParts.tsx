@@ -15,7 +15,7 @@ export const ACCOUNT_PANEL =
   "grid min-w-0 gap-6 rounded-panel bg-panel p-5 shadow-soft min-[600px]:p-6 min-[960px]:p-8";
 
 export const TEXT_LINK =
-  "rounded-control font-semibold text-primary-strong underline-offset-4 outline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-strong";
+  "cursor-pointer rounded-control font-semibold text-primary-strong outline-offset-2 transition-colors hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong";
 
 const STATUS_TONES: Record<OrderStatus, string> = {
   PENDING: "bg-warning-soft text-warning",

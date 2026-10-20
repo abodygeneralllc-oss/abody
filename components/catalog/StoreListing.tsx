@@ -26,7 +26,7 @@ const FIELD =
 const BUTTON =
   "h-11 shrink-0 rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong";
 const TEXT_LINK =
-  "rounded-control font-semibold text-primary-strong outline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-strong";
+  "rounded-control font-semibold text-primary-strong outline-offset-2 transition-colors hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong";
 const PAGE_BASE =
   "flex h-11 min-w-11 items-center justify-center gap-1.5 rounded-full border px-4 font-medium";
 const PAGE_ITEM = `${PAGE_BASE} border-border bg-panel text-muted outline-offset-2 hover:border-primary hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong`;

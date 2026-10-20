@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Tajawal } from "next/font/google";
+import { Geist, Tajawal } from "next/font/google";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,8 +20,8 @@ import "../globals.css";
 
 // Same fonts as the storefront: --font-body names both, and Arabic customer
 // names in admin tables need Tajawal.
-const inter = Inter({
-  variable: "--font-inter",
+const geist = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
 });
 
@@ -82,7 +82,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
     <html
       lang="en"
       dir="ltr"
-      className={`${inter.variable} ${tajawal.variable} h-full antialiased`}
+      className={`${geist.variable} ${tajawal.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-canvas font-sans">
         {isAdmin ? (

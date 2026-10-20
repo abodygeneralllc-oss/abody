@@ -174,20 +174,30 @@ export const en = {
     },
     // Labels the hero trust row, which shows the header.trust lines.
     why: "Why Abody",
+    howItWorksEyebrow: "Simple steps",
     howItWorks: "How it works",
+    howItWorksIntro:
+      "From picking a product to seeing results in four steps, with no hassle.",
     steps: [
       {
         title: "Discover",
         body: "Browse products and services and pick what fits.",
+        tag: "Templates, guides, services",
       },
-      { title: "Purchase", body: "Pay securely in a few clicks." },
+      {
+        title: "Purchase",
+        body: "Pay securely in a few clicks.",
+        tag: "Encrypted payment",
+      },
       {
         title: "Receive",
         body: "Download your files or fill in the service brief.",
+        tag: "Within seconds",
       },
       {
         title: "Manage",
         body: "Find orders, downloads, and services in your account.",
+        tag: "Email updates",
       },
     ],
     cta: {

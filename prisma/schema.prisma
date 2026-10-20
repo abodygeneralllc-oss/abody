@@ -232,7 +232,24 @@ model SiteContent {
   // The public contact email in the store footer (feature 21c); stored
   // trimmed and lowercase.
   contactEmail        String?
+  // Home hero background. The photo is kept whatever the style and used only
+  // when the style is PHOTO.
+  heroStyle           HeroStyle @default(NAVY)
+  heroPhoto           HeroPhoto @default(BROWSING)
   updatedAt           DateTime @updatedAt
+}
+
+enum HeroStyle {
+  NAVY
+  LIGHT
+  PHOTO
+}
+
+// Bundled photos in public/home/ (HERO_PHOTOS in lib/site-content-rules.ts).
+enum HeroPhoto {
+  BROWSING
+  TEAM
+  LAPTOP
 }
 
 enum AnalyticsEventType {

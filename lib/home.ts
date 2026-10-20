@@ -2,8 +2,8 @@
 import { ProductType } from "@/lib/generated/prisma/enums";
 import { summarizeCategories } from "@/lib/listing";
 
-// Row sizes: three featured products, two service cards.
-const FEATURED_LIMIT = 3;
+// Row sizes: four featured products, two service cards.
+const FEATURED_LIMIT = 4;
 const SERVICES_LIMIT = 2;
 // Admins type the category key, so the match ignores case and outer spaces.
 const TEMPLATES_CATEGORY = "templates";

@@ -1,4 +1,5 @@
 // No next/* or db imports here: Vitest loads this module directly.
+import { HeroPhoto, HeroStyle } from "@/lib/generated/prisma/enums";
 import { isLocale, localizedPath, type Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries/en";
 
@@ -40,14 +41,44 @@ export type Flag = SectionFlag | "announcementEnabled";
 
 export const FLAGS: Flag[] = [...SECTION_FLAGS, "announcementEnabled"];
 
+// Hero background (radio groups). The photo is saved whatever the style and
+// used only when the style is PHOTO.
+export interface HeroChoice {
+  heroStyle: HeroStyle;
+  heroPhoto: HeroPhoto;
+}
+
+export type HeroChoiceField = keyof HeroChoice;
+
+// Bundled photos in public/home/, all Unsplash License; the comment is each
+// photo's Unsplash ID. Each frames its subject differently, so each has its
+// own focus point.
+export const HERO_PHOTOS: Record<HeroPhoto, { src: string; label: string; position: string }> = {
+  // photo-1563986768609-322da13575f3
+  [HeroPhoto.BROWSING]: { src: "/home/hero-browsing.jpg", label: "Browsing", position: "center 55%" },
+  // photo-1522202176988-66273c2fd55f
+  [HeroPhoto.TEAM]: { src: "/home/hero-team.jpg", label: "Team", position: "center 35%" },
+  // photo-1515378791036-0648a3ef77b2
+  [HeroPhoto.LAPTOP]: { src: "/home/hero-laptop.jpg", label: "Laptop", position: "center 45%" },
+};
+
+// A missing row, and every row saved before the setting existed, shows navy.
+const DEFAULT_HERO: HeroChoice = { heroStyle: HeroStyle.NAVY, heroPhoto: HeroPhoto.BROWSING };
+
 export type SiteContentField = TextField | "announcementLink";
-export type SiteContentFieldError = "too_long" | "required" | "invalid_link";
-export type SiteContentFieldErrors = Partial<Record<SiteContentField, SiteContentFieldError>>;
+export type SiteContentFieldError = "too_long" | "required" | "invalid_link" | "invalid_choice";
+export type SiteContentFieldErrors = Partial<
+  Record<SiteContentField | HeroChoiceField, SiteContentFieldError>
+>;
 
 // What the form shows: the saved row, or what was typed after a failed save.
-export type SiteContentFormValues = Record<SiteContentField, string> & Record<Flag, boolean>;
+export type SiteContentFormValues = Record<SiteContentField, string> &
+  Record<Flag, boolean> &
+  HeroChoice;
 
-export type SiteContentData = Record<SiteContentField, string | null> & Record<Flag, boolean>;
+export type SiteContentData = Record<SiteContentField, string | null> &
+  Record<Flag, boolean> &
+  HeroChoice;
 
 export type ParsedSiteContentForm =
   | { ok: true; data: SiteContentData; values: SiteContentFormValues }
@@ -82,7 +113,13 @@ export function siteContentFormValues(row: SiteContentRow | null): SiteContentFo
   values.announcementLink = row?.announcementLink ?? "";
   for (const flag of SECTION_FLAGS) values[flag] = row?.[flag] ?? true;
   values.announcementEnabled = row?.announcementEnabled ?? false;
+  values.heroStyle = row?.heroStyle ?? DEFAULT_HERO.heroStyle;
+  values.heroPhoto = row?.heroPhoto ?? DEFAULT_HERO.heroPhoto;
   return values;
+}
+
+function enumValue<T extends string>(options: Record<string, T>, raw: FormDataEntryValue | null): T | null {
+  return (Object.values(options) as string[]).includes(raw as string) ? (raw as T) : null;
 }
 
 export function parseSiteContentForm(formData: FormData): ParsedSiteContentForm {
@@ -111,6 +148,15 @@ export function parseSiteContentForm(formData: FormData): ParsedSiteContentForm 
     data[flag] = values[flag];
   }
 
+  // The radios always send a listed value, so anything else is a tampered
+  // request. The form then shows the default again.
+  const heroStyle = enumValue(HeroStyle, formData.get("heroStyle"));
+  const heroPhoto = enumValue(HeroPhoto, formData.get("heroPhoto"));
+  values.heroStyle = data.heroStyle = heroStyle ?? DEFAULT_HERO.heroStyle;
+  values.heroPhoto = data.heroPhoto = heroPhoto ?? DEFAULT_HERO.heroPhoto;
+  if (!heroStyle) fieldErrors.heroStyle = "invalid_choice";
+  if (!heroPhoto) fieldErrors.heroPhoto = "invalid_choice";
+
   // The bar shows customer text, which must exist in both languages.
   if (data.announcementEnabled) {
     for (const field of ["announcementText", "announcementTextAr"] as const) {
@@ -123,7 +169,7 @@ export function parseSiteContentForm(formData: FormData): ParsedSiteContentForm 
 }
 
 export interface HomeContent {
-  hero: { eyebrow: string; title: string; lead: string };
+  hero: { eyebrow: string; title: string; lead: string; style: HeroStyle; photo: HeroPhoto };
   cta: { title: string; body: string; action: string };
   show: Record<SectionFlag, boolean>;
 }
@@ -144,6 +190,8 @@ export function resolveHomeContent(
       eyebrow: pick("heroEyebrow", home.hero.eyebrow),
       title: pick("heroTitle", home.hero.title),
       lead: pick("heroLead", home.hero.lead),
+      style: row?.heroStyle ?? DEFAULT_HERO.heroStyle,
+      photo: row?.heroPhoto ?? DEFAULT_HERO.heroPhoto,
     },
     cta: {
       title: pick("ctaTitle", home.cta.title),

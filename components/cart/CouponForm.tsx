@@ -34,7 +34,7 @@ const FIELD =
 const BUTTON =
   "h-11 shrink-0 rounded-control border border-border bg-surface px-4 text-sm font-semibold text-foreground outline-offset-2 hover:border-primary hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
 const LINK_BUTTON =
-  "shrink-0 rounded-control text-sm font-semibold text-primary-strong underline-offset-4 outline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
+  "shrink-0 cursor-pointer rounded-control text-sm font-semibold text-primary-strong outline-offset-2 transition-colors hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
 
 export function CouponForm({ saved, text }: { saved: SavedCoupon; text: CouponFormText }) {
   const [state, apply, applying] = useActionState(applyCoupon, null);

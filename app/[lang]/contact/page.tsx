@@ -24,7 +24,7 @@ export default async function ContactPage() {
           <a
             href={`mailto:${contactEmail}`}
             dir="ltr"
-            className="rounded-control font-semibold text-primary-strong outline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-strong"
+            className="rounded-control font-semibold text-primary-strong outline-offset-2 transition-colors hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong"
           >
             {contactEmail}
           </a>

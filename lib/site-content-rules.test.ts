@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { HeroPhoto, HeroStyle } from "@/lib/generated/prisma/enums";
 import { ar } from "@/lib/i18n/dictionaries/ar";
 import { en } from "@/lib/i18n/dictionaries/en";
 import {
@@ -11,9 +12,11 @@ import {
   type SiteContentRow,
 } from "./site-content-rules";
 
+// The hero radios always send a value, so every form starts with one.
 function form(fields: Record<string, string>): FormData {
   const data = new FormData();
-  for (const [key, value] of Object.entries(fields)) data.set(key, value);
+  const all = { heroStyle: "NAVY", heroPhoto: "BROWSING", ...fields };
+  for (const [key, value] of Object.entries(all)) data.set(key, value);
   return data;
 }
 
@@ -85,6 +88,25 @@ describe("parseSiteContentForm", () => {
     const blank = parseSiteContentForm(form({ announcementLink: "  " }));
     expect(blank.ok && blank.data.announcementLink).toBeNull();
   });
+
+  it("saves the hero style and photo", () => {
+    const parsed = parseSiteContentForm(form({ heroStyle: "PHOTO", heroPhoto: "LAPTOP" }));
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) return;
+    expect(parsed.data.heroStyle).toBe(HeroStyle.PHOTO);
+    expect(parsed.data.heroPhoto).toBe(HeroPhoto.LAPTOP);
+  });
+
+  it("rejects a hero style or photo outside the lists, including a missing one", () => {
+    const parsed = parseSiteContentForm(form({ heroStyle: "photo", heroPhoto: "BEACH" }));
+    expect(parsed.ok).toBe(false);
+    if (parsed.ok) return;
+    expect(parsed.fieldErrors).toEqual({ heroStyle: "invalid_choice", heroPhoto: "invalid_choice" });
+    expect(parsed.values.heroStyle).toBe(HeroStyle.NAVY);
+
+    const missing = new FormData();
+    expect(parseSiteContentForm(missing).ok).toBe(false);
+  });
 });
 
 describe("parseAnnouncementLink", () => {
@@ -120,6 +142,8 @@ describe("resolveHomeContent", () => {
       eyebrow: en.home.hero.eyebrow,
       title: en.home.hero.title,
       lead: en.home.hero.lead,
+      style: HeroStyle.NAVY,
+      photo: HeroPhoto.BROWSING,
     });
     expect(content.cta).toEqual(en.home.cta);
     expect(Object.values(content.show).every(Boolean)).toBe(true);
@@ -135,6 +159,16 @@ describe("resolveHomeContent", () => {
     const arabic = resolveHomeContent(saved, "ar", ar.home);
     expect(arabic.hero.title).toBe(ar.home.hero.title);
     expect(arabic.cta.action).toBe("تسوق الآن");
+  });
+
+  it("uses the saved hero style and photo", () => {
+    const content = resolveHomeContent(
+      row({ heroStyle: HeroStyle.LIGHT, heroPhoto: HeroPhoto.TEAM }),
+      "ar",
+      ar.home,
+    );
+    expect(content.hero.style).toBe(HeroStyle.LIGHT);
+    expect(content.hero.photo).toBe(HeroPhoto.TEAM);
   });
 
   it("hides the sections the row turns off", () => {
@@ -182,5 +216,7 @@ describe("siteContentFormValues", () => {
     expect(values.heroTitle).toBe("");
     expect(values.showHowItWorks).toBe(true);
     expect(values.announcementEnabled).toBe(false);
+    expect(values.heroStyle).toBe(HeroStyle.NAVY);
+    expect(values.heroPhoto).toBe(HeroPhoto.BROWSING);
   });
 });

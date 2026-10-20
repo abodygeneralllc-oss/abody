@@ -13,9 +13,11 @@ vi.mock("next/cache", () => ({ revalidatePath }));
 
 import { saveSiteContent } from "./admin-site-content";
 
+// The hero radios always send a value, so every form starts with one.
 function form(fields: Record<string, string>): FormData {
   const data = new FormData();
-  for (const [key, value] of Object.entries(fields)) data.set(key, value);
+  const all = { heroStyle: "NAVY", heroPhoto: "BROWSING", ...fields };
+  for (const [key, value] of Object.entries(all)) data.set(key, value);
   return data;
 }
 
@@ -54,7 +56,13 @@ describe("saveSiteContent", () => {
   it("upserts row 1 with null for blank text and refreshes the store", async () => {
     const result = await saveSiteContent(
       null,
-      form({ heroTitle: " Grow ", heroTitleAr: "", showFeatured: "on" }),
+      form({
+        heroTitle: " Grow ",
+        heroTitleAr: "",
+        showFeatured: "on",
+        heroStyle: "PHOTO",
+        heroPhoto: "TEAM",
+      }),
     );
 
     expect(result).toEqual({ success: true });
@@ -67,6 +75,8 @@ describe("saveSiteContent", () => {
       showFeatured: true,
       showCta: false,
       announcementLink: null,
+      heroStyle: "PHOTO",
+      heroPhoto: "TEAM",
     });
     expect(call.update).not.toHaveProperty("id");
     expect(revalidatePath).toHaveBeenCalledWith("/[lang]", "layout");

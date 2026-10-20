@@ -86,7 +86,7 @@ export async function SiteFooter() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="rounded-control outline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-primary-strong"
+                      className="rounded-control outline-offset-2 transition-colors hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong"
                     >
                       {link.label}
                     </Link>

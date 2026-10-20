@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Tajawal } from "next/font/google";
+import { Geist, Tajawal } from "next/font/google";
 import { PageViewTracker } from "@/components/analytics/PageViewTracker";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -9,8 +9,8 @@ import { getDictionary, getLocale } from "@/lib/i18n/dictionaries";
 import { defaultSocialImage, siteUrl } from "@/lib/seo";
 import "../globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const geist = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
 });
 
@@ -53,7 +53,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
     <html
       lang={locale}
       dir={localeDirection(locale)}
-      className={`${inter.variable} ${tajawal.variable} h-full antialiased`}
+      className={`${geist.variable} ${tajawal.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <AnnouncementBar />

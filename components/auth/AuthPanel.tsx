@@ -24,7 +24,7 @@ const TAB =
   "rounded-full border px-4 py-2 text-sm font-medium outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary-strong";
 
 export const TEXT_LINK =
-  "rounded-control font-semibold text-primary-strong underline-offset-2 outline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-strong";
+  "cursor-pointer rounded-control font-semibold text-primary-strong outline-offset-2 transition-colors hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong";
 
 // The sign-in and register pages share this panel; the tabs are links, so
 // each mode has its own URL and works without JavaScript.

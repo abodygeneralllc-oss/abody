@@ -1,4 +1,4 @@
-import { BoltIcon, ChartIcon } from "@/components/icons";
+import { ChartIcon } from "@/components/icons";
 import {
   formatDurationDays,
   publicImageSrc,
@@ -32,7 +32,7 @@ export function ProductCover({ product, locale, index, alt }: ProductCoverProps)
 
   return (
     <div
-      className={`relative grid aspect-[4/3] place-items-center overflow-hidden rounded-card ${coverColor}`}
+      className={`relative isolate grid aspect-[4/3] place-items-center overflow-hidden rounded-card ${coverColor}`}
     >
       {src ? (
         // Same reason as ProductImage: image hosts are not configured yet.
@@ -46,18 +46,18 @@ export function ProductCover({ product, locale, index, alt }: ProductCoverProps)
           <ChartIcon className="size-1/2" />
         </span>
       ) : (
-        <>
-          <span
-            aria-hidden="true"
-            className="absolute aspect-[3/4] w-[34%] translate-x-[18%] rotate-[8deg] rounded-control bg-panel/55"
-          />
-          <span
-            aria-hidden="true"
-            className="relative grid aspect-[3/4] w-[34%] -rotate-[4deg] place-items-center rounded-control bg-panel text-primary shadow-raised"
-          >
-            <BoltIcon className="size-2/5" />
-          </span>
-        </>
+        // Two stacked sheets: a front page with document lines and a sheet
+        // behind it that fans out when the store card is hovered.
+        <span
+          aria-hidden="true"
+          className="relative grid h-[72%] aspect-[3/4] content-start gap-[7%] rounded-control bg-panel px-[10%] py-[11%] shadow-[0_14px_28px_-14px_oklch(22%_0.05_256/0.4)]"
+        >
+          <span className="absolute inset-0 -z-10 translate-x-[16%] translate-y-[3%] rotate-[7deg] rounded-control bg-panel/60 shadow-[0_10px_22px_-14px_oklch(22%_0.05_256/0.35)] transition-[translate,rotate] duration-300 group-hover/card:translate-x-[22%] group-hover/card:translate-y-[2%] group-hover/card:rotate-[11deg] motion-reduce:transition-none rtl:-translate-x-[16%] rtl:-rotate-[7deg] rtl:group-hover/card:-translate-x-[22%] rtl:group-hover/card:-rotate-[11deg]" />
+          <span className="block h-1.75 w-[60%] rounded-full bg-primary" />
+          <span className="block h-1.25 rounded-full bg-border" />
+          <span className="block h-1.25 w-[85%] rounded-full bg-border" />
+          <span className="block h-1.25 w-[70%] rounded-full bg-border" />
+        </span>
       )}
       {durationDays && (
         <span className="absolute start-3 top-3 rounded-full bg-panel px-3 py-1 text-xs font-semibold whitespace-nowrap text-muted">

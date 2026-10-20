@@ -31,7 +31,7 @@ export async function RelatedProducts({ product }: RelatedProductsProps) {
         </h2>
         <Link
           href={localizedPath(locale, listingPath)}
-          className="inline-flex items-center gap-1 rounded-control font-semibold text-primary-strong outline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-strong"
+          className="inline-flex items-center gap-1 rounded-control font-semibold text-primary-strong outline-offset-2 transition-colors hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong"
         >
           {text.viewAll}
           <ArrowIcon className="size-[1.1em] rtl:-scale-x-100" />

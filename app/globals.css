@@ -28,6 +28,8 @@
   --color-primary-strong: oklch(48% 0.13 248);
   --color-primary-hover: oklch(43% 0.13 248);
   --color-primary-soft: oklch(95.5% 0.025 248);
+  /* Hovered card borders and the how-it-works connectors. */
+  --color-primary-line: oklch(80% 0.07 248);
 
   --color-success: oklch(47% 0.11 155);
   --color-success-soft: oklch(95.5% 0.04 155);
@@ -77,16 +79,39 @@
   --font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
 }
 
-/* English uses Inter (SIL OFL, loaded by next/font in the root layouts). Inter
+/* English uses Geist (SIL OFL, loaded by next/font in the root layouts). Geist
    has no Arabic letters, so Arabic names in English pages fall to Tajawal. */
 :root {
   --font-body:
-    var(--font-inter), var(--font-tajawal), "Helvetica Neue", Helvetica, Arial,
+    var(--font-geist), var(--font-tajawal), "Helvetica Neue", Helvetica, Arial,
     sans-serif;
 }
 
 :root:lang(ar) {
   --font-body: var(--font-tajawal), "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Light home hero (admin Site content): a soft brand gradient whose glow sits
+   behind the product card, mirrored in Arabic, and a faint dot grid that
+   fades out downward. */
+@utility hero-light {
+  background:
+    radial-gradient(55% 75% at 88% 30%, oklch(90% 0.07 248 / 0.9), transparent 70%),
+    radial-gradient(45% 60% at 0% 100%, oklch(93% 0.06 200 / 0.8), transparent 70%),
+    linear-gradient(180deg, oklch(98.5% 0.006 248), oklch(96.5% 0.015 248));
+
+  &:where([dir="rtl"], [dir="rtl"] *) {
+    background:
+      radial-gradient(55% 75% at 12% 30%, oklch(90% 0.07 248 / 0.9), transparent 70%),
+      radial-gradient(45% 60% at 100% 100%, oklch(93% 0.06 200 / 0.8), transparent 70%),
+      linear-gradient(180deg, oklch(98.5% 0.006 248), oklch(96.5% 0.015 248));
+  }
+}
+
+@utility hero-dots {
+  background-image: radial-gradient(oklch(22% 0.05 256 / 0.12) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(180deg, #000 0%, transparent 85%);
 }
 
 body {

@@ -5,6 +5,7 @@ import {
   TEXT_FIELDS,
   type SiteContentField,
   type Flag,
+  type HeroChoiceField,
   type SiteContentRow,
 } from "@/lib/site-content-rules";
 import type { SiteSettingsData } from "@/lib/site-settings-rules";
@@ -17,8 +18,10 @@ export const SITE_CONTENT_ID = 1;
 export type SiteRow = SiteContentRow & SiteSettingsData;
 
 const SITE_CONTENT_SELECT = Object.fromEntries(
-  [...TEXT_FIELDS, "announcementLink", ...FLAGS, "contactEmail"].map((field) => [field, true]),
-) as Record<SiteContentField | Flag | keyof SiteSettingsData, true>;
+  [...TEXT_FIELDS, "announcementLink", ...FLAGS, "heroStyle", "heroPhoto", "contactEmail"].map(
+    (field) => [field, true],
+  ),
+) as Record<SiteContentField | Flag | HeroChoiceField | keyof SiteSettingsData, true>;
 
 // Throws on a database error. The admin editors use this one: showing an empty
 // form after a failed read would let the next save wipe the saved content.

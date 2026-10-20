@@ -61,7 +61,7 @@ export function CartLineItem({ line, locale, text }: CartLineItemProps) {
           <Link
             href={localizedPath(locale, productPath(product))}
             dir="auto"
-            className="break-words outline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-strong"
+            className="break-words outline-offset-2 transition-colors hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong"
           >
             {product.name}
           </Link>

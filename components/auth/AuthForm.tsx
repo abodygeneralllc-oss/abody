@@ -168,7 +168,7 @@ export function AuthForm({ mode, locale, next, text }: AuthFormProps) {
           {mode === "signIn" && (
             <Link
               href={localizedPath(locale, "/forgot-password")}
-              className="rounded-control text-sm font-medium text-primary-strong underline-offset-2 outline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-strong"
+              className="rounded-control text-sm font-medium text-primary-strong outline-offset-2 transition-colors hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong"
             >
               {text.forgotLink}
             </Link>
