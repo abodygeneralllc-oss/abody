@@ -2,13 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
-import {
-  BoltIcon,
-  CartIcon,
-  ChartIcon,
-  LockIcon,
-  UserIcon,
-} from "@/components/icons";
+import { CartIcon, SearchIcon, UserIcon } from "@/components/icons";
 import {
   LanguageSwitcher,
   LanguageSwitcherFallback,
@@ -16,8 +10,12 @@ import {
 import { MainNav, type NavItem } from "@/components/layout/MainNav";
 import { CART_COOKIE, cartItemCount, parseCart } from "@/lib/cart";
 import { localizedPath } from "@/lib/i18n/config";
+import { SEARCH_MAX_LENGTH } from "@/lib/listing";
 import { SESSION_COOKIE } from "@/lib/session-token";
 import { getDictionary, getLocale } from "@/lib/i18n/dictionaries";
+
+const FOCUS =
+  "outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary-strong";
 
 export async function SiteHeader() {
   const locale = await getLocale();
@@ -36,19 +34,12 @@ export async function SiteHeader() {
     { href: localizedPath(locale, "/about"), label: header.about },
     { href: localizedPath(locale, "/contact"), label: header.contact },
   ];
-  const trustItems = [
-    { icon: BoltIcon, text: header.trust.download },
-    { icon: LockIcon, text: header.trust.payment },
-    { icon: ChartIcon, text: header.trust.tracking },
-  ];
 
   return (
-    <header className="mx-auto w-full max-w-site px-4 pt-6 font-sans">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-3 rounded-t-panel bg-panel px-3 py-5 shadow-soft min-[600px]:gap-x-6 min-[600px]:px-6 min-[960px]:px-10">
-        <Link
-          href={localizedPath(locale, "/")}
-          className="rounded-control outline-offset-4 focus-visible:outline-2 focus-visible:outline-primary-strong"
-        >
+    <header className="border-b border-border bg-background font-sans">
+      {/* Below 900px the search drops to its own full-width row. */}
+      <div className="mx-auto flex w-full max-w-site flex-wrap items-center gap-x-2 gap-y-3 px-4 py-3 min-[700px]:px-8 min-[900px]:h-18 min-[900px]:flex-nowrap min-[900px]:gap-x-6 min-[900px]:py-0">
+        <Link href={localizedPath(locale, "/")} className={`shrink-0 rounded-control ${FOCUS}`}>
           {/* The logo is bilingual and is used as is in both languages. */}
           <Image
             src="/Logo-0.jpg"
@@ -56,17 +47,42 @@ export async function SiteHeader() {
             width={164}
             height={32}
             priority
-            className="h-7 w-auto min-[600px]:h-8.5"
+            className="h-7.5 w-auto"
           />
         </Link>
-        <MainNav label={header.nav} items={navItems} />
-        <div className="ms-auto flex items-center gap-1 min-[600px]:gap-2">
+        {/* A plain GET form: the products listing parses and limits q itself. */}
+        <form
+          role="search"
+          action={localizedPath(locale, "/products")}
+          className="order-last flex h-11 w-full overflow-hidden rounded-card border border-border-strong focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary-strong min-[900px]:order-none min-[900px]:max-w-140 min-[900px]:flex-1"
+        >
+          <label htmlFor="header-search" className="sr-only">
+            {header.search.label}
+          </label>
+          <input
+            id="header-search"
+            type="search"
+            name="q"
+            dir="auto"
+            maxLength={SEARCH_MAX_LENGTH}
+            placeholder={header.search.placeholder}
+            className="min-w-0 flex-1 bg-transparent px-4 text-sm text-foreground outline-none placeholder:text-faint"
+          />
+          <button
+            type="submit"
+            aria-label={header.search.submit}
+            className="grid w-12 shrink-0 place-items-center bg-foreground text-background hover:bg-ink-raised"
+          >
+            <SearchIcon className="h-5 w-5" />
+          </button>
+        </form>
+        <div className="ms-auto flex items-center gap-1">
           <Suspense fallback={<LanguageSwitcherFallback locale={locale} />}>
             <LanguageSwitcher locale={locale} />
           </Suspense>
           <Link
             href={localizedPath(locale, signedIn ? "/account" : "/login")}
-            className="flex h-11 items-center gap-2 rounded-card px-3 text-sm font-semibold text-foreground outline-offset-2 hover:bg-primary-soft hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong"
+            className={`flex h-10 items-center gap-2 rounded-card px-3 text-sm font-medium whitespace-nowrap text-muted hover:text-primary-strong ${FOCUS}`}
           >
             <UserIcon />
             {/* Below 600px the icon stays and the label is read by screen readers. */}
@@ -77,25 +93,16 @@ export async function SiteHeader() {
           <Link
             href={localizedPath(locale, "/cart")}
             aria-label={header.cartLabel(count)}
-            className="flex h-11 items-center gap-2 rounded-card bg-primary-soft px-3 text-sm font-semibold text-primary-strong outline-offset-2 hover:bg-tint-1 focus-visible:outline-2 focus-visible:outline-primary-strong sm:px-5"
+            className={`relative grid h-10 w-11 place-items-center rounded-card text-muted hover:text-primary-strong ${FOCUS}`}
           >
             <CartIcon />
-            {/* The icon and count fit narrow phones; the label names the link. */}
-            <span className="hidden sm:inline">{header.cart}</span>
-            <span className="grid h-5 min-w-5 place-items-center rounded-full bg-primary-strong px-1 text-xs text-white">
+            <span className="absolute end-0.5 top-0.5 grid h-4.5 min-w-4.5 place-items-center rounded-full bg-primary-strong px-1 text-[11px] font-bold text-white">
               {count}
             </span>
           </Link>
         </div>
       </div>
-      <ul className="flex flex-wrap justify-between gap-x-6 gap-y-2 rounded-b-panel bg-primary-soft px-5 py-4 text-sm font-medium text-primary-strong min-[600px]:px-6 min-[960px]:px-10">
-        {trustItems.map(({ icon: Icon, text }) => (
-          <li key={text} className="flex items-center gap-2">
-            <Icon className="size-[1.25em]" />
-            {text}
-          </li>
-        ))}
-      </ul>
+      <MainNav label={header.nav} items={navItems} />
     </header>
   );
 }

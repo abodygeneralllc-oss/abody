@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Tajawal } from "next/font/google";
+import { Tajawal } from "next/font/google";
 import { PageViewTracker } from "@/components/analytics/PageViewTracker";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -8,16 +8,6 @@ import { LOCALES, localeDirection } from "@/lib/i18n/config";
 import { getDictionary, getLocale } from "@/lib/i18n/dictionaries";
 import { defaultSocialImage, siteUrl } from "@/lib/seo";
 import "../globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const tajawal = Tajawal({
   variable: "--font-tajawal",
@@ -58,7 +48,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
     <html
       lang={locale}
       dir={localeDirection(locale)}
-      className={`${geistSans.variable} ${geistMono.variable} ${tajawal.variable} h-full antialiased`}
+      className={`${tajawal.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <AnnouncementBar />

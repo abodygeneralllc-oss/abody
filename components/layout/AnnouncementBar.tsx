@@ -14,12 +14,12 @@ export async function AnnouncementBar() {
   return (
     <aside
       aria-label={text.label}
-      className="bg-primary-strong px-4 py-2.5 text-center font-sans text-sm font-medium text-white"
+      className="bg-ink px-4 py-2 text-center font-sans text-sm text-ink-text"
     >
       {announcement.href ? (
         <Link
           href={announcement.href}
-          className="rounded-control underline underline-offset-2 outline-offset-2 hover:no-underline focus-visible:outline-2 focus-visible:outline-white"
+          className="rounded-control font-bold underline underline-offset-3 outline-offset-2 hover:no-underline focus-visible:outline-2 focus-visible:outline-ink-text"
         >
           {announcement.text}
         </Link>

@@ -561,6 +561,8 @@ Layouts, icons that point in a direction, and navigation mirror in Arabic.
 
 Use the Tajawal font for Arabic text.
 
+Redesign direction (build-plan 31): a Fiverr-inspired marketplace look on the Abody blue - flat white canvas, smaller radii, navy ink for the hero and dark bands, pill search and chips, dense product cards. English text uses Macan with a Helvetica/Arial fallback (Macan needs a webfont license before its files ship); Arabic stays Tajawal.
+
 Prices and order numbers keep the same format in both languages.
 
 The Abody logo is bilingual and is used as is in both languages.

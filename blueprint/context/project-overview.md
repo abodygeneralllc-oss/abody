@@ -1,6 +1,6 @@
 # Abody Digital Ecommerce Platform - Project Overview
 
-<!-- blueprint:source-hash ac72ff9305524de018308e075ab61b71dd4b2776b75852e90c47443b8e662585 -->
+<!-- blueprint:source-hash cb1ec427a6c9232726b1a098979fc0d6963a6eccc2e8982031bec401c189a419 -->
 
 > A bilingual (English and Arabic) storefront where customers buy Abody's
 > downloadable digital products and digital services with Stripe, plus an admin
@@ -34,7 +34,7 @@ no web request grants the role.
 
 ## Features
 
-In `build-plan.md` order. Everything through 29 is shipped; 30 is next.
+In `build-plan.md` order. Everything through 30 is shipped; 31 is next.
 
 1. **Product & Service Catalog** (done) - models and catalog API.
 2. **Product & Service Details** (done) - detail pages with purchase actions.
@@ -101,16 +101,22 @@ In `build-plan.md` order. Everything through 29 is shipped; 30 is next.
       (name, short description, category, English and Arabic) and `?sort=`
       (Newest default, price low to high, price high to low), combined with
       `?category=` in the URL; empty state with a clear-search link.
-30. **Listing Layout and Pagination** (next) - `/products` and `/services`.
-    - 30a **Roomier Listing Grid** - two cards per row on desktop beside the
-      280px category sidebar (today three, about 270px each, look cramped),
-      larger card images and more spacing, one per row on phones, both
-      languages, no sideways scroll at phone width.
-    - 30b **Listing Pagination** - 12 items per page via `?page=`, combined
-      with `q`, `sort`, and `category`; previous, next, and page-number links
-      keep the other parameters; changing search, sort, or category returns to
-      page 1; page 1 has no `?page=`; invalid or past-the-end pages fall back
-      safely; controls hidden on a single page; arrows mirror in RTL.
+30. **Listing Layout and Pagination** (done) - 30a two cards per row on
+    desktop listings; 30b 12 per page via `?page=` combined with `q`, `sort`,
+    `category`, page 1 unprefixed, bad pages fall back, arrows mirror in RTL.
+31. **Marketplace Redesign** (next) - visual restyle only (no data, route, or
+    behavior change) following `prototypes/redesign/`; RTL keeps working.
+    - 31a **Theme, Type, and Site Shell** - port `prototypes/redesign/theme.css`
+      into `app/globals.css`; English Macan with Helvetica/Arial fallback,
+      Arabic Tajawal; header (with search) and footer; logo `public/Logo-0.jpg`;
+      no Stripe mentions in customer-facing text.
+    - 31b **Home Page** - navy hero with pill search and chips, category icon
+      row, marketplace cards in Featured tabs, services band, steps, CTA.
+    - 31c **Listings and Detail Pages** - chip/filter bar, card grid,
+      pagination; gig-style detail: large cover, sticky purchase box,
+      included list, service steps, general store questions (no new data).
+    - 31d **Cart and Customer Account** - cart and summary; account pages.
+    - 31e **Admin Restyle** - admin dashboard, lists, forms; English only.
 
 ## Data model
 
@@ -286,6 +292,10 @@ existing Abody brand.
 - Navigation: Home, Products, Services, About, Contact, Login, Cart. Footer:
   Shop, Company, Legal columns.
 - Core flow: Discover, Understand, Purchase, Receive, Manage.
+- Redesign (31): Fiverr-inspired marketplace look on the brand blue - flat
+  white canvas, smaller radii, navy ink hero, pill search and chips, dense
+  cards. English Macan, Helvetica/Arial fallback (Macan needs a webfont
+  license before its files ship); Arabic stays Tajawal.
 - `prototypes/` (untracked) holds static mockups; the app never imports it.
 
 Routes. Customer pages live under `/en` or `/ar`; unprefixed customer URLs

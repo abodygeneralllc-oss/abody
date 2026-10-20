@@ -16,6 +16,13 @@ export const en = {
     services: "Services",
     about: "About",
     contact: "Contact",
+    // Distinct from the listing's "Search products" field and "Search"
+    // button names, which listing pages show alongside the header.
+    search: {
+      label: "Search digital products",
+      placeholder: "Search templates and guides",
+      submit: "Find products",
+    },
     trust: {
       download: "Instant download after payment",
       payment: "Encrypted checkout with all major cards",
@@ -653,7 +660,7 @@ export const en = {
         {
           heading: "How it works",
           paragraphs: [
-            "You pay securely through Stripe. Your downloads appear on your order page and stay in your account, and you can follow every service you buy from your account.",
+            "You pay securely by card at checkout. Your downloads appear on your order page and stay in your account, and you can follow every service you buy from your account.",
           ],
         },
         {
@@ -694,7 +701,7 @@ export const en = {
         {
           heading: "Orders and payment",
           paragraphs: [
-            "Prices are shown on each product and service page and at checkout. Payment is taken through Stripe Checkout, and your order is confirmed once Stripe confirms the payment.",
+            "Prices are shown on each product and service page and at checkout. Payment is taken at our secure checkout, and your order is confirmed once the payment is confirmed.",
             "Discount codes apply only to the items they are valid for and only while they are active.",
           ],
         },
@@ -754,7 +761,7 @@ export const en = {
         {
           heading: "Payments",
           paragraphs: [
-            "Payments are handled by Stripe. Abody never receives or stores your card details.",
+            "Payments are handled by our secure payment provider. Abody never receives or stores your card details.",
           ],
         },
         {
@@ -803,7 +810,7 @@ export const en = {
         {
           heading: "If a refund is approved",
           items: [
-            "The full order amount is refunded to your original payment method through Stripe.",
+            "The full order amount is refunded to your original payment method.",
             "The order's downloads are no longer available.",
           ],
         },

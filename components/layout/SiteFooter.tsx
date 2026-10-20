@@ -23,6 +23,7 @@ export async function SiteFooter() {
       links: [
         { href: localizedPath(locale, "/products"), label: header.products },
         { href: localizedPath(locale, "/services"), label: header.services },
+        { href: localizedPath(locale, "/cart"), label: header.cart },
       ],
     },
     {
@@ -43,10 +44,10 @@ export async function SiteFooter() {
   ];
 
   return (
-    <footer className="mt-auto border-t border-border bg-panel pt-12 pb-8 font-sans">
-      <div className="mx-auto w-full max-w-site px-4">
-        <div className="grid grid-cols-2 gap-8 min-[960px]:grid-cols-[1.6fr_repeat(3,1fr)]">
-          <div className="col-span-2 min-[960px]:col-span-1">
+    <footer className="mt-auto border-t border-border bg-background pt-12 pb-6 font-sans">
+      <div className="mx-auto w-full max-w-site px-4 min-[700px]:px-8">
+        <div className="grid grid-cols-2 gap-8 min-[800px]:grid-cols-[1.4fr_repeat(3,1fr)]">
+          <div className="col-span-2 min-[800px]:col-span-1">
             <Link
               href={localizedPath(locale, "/")}
               className="inline-flex rounded-control outline-offset-4 focus-visible:outline-2 focus-visible:outline-primary-strong"
@@ -56,10 +57,10 @@ export async function SiteFooter() {
                 alt={header.logoAlt}
                 width={164}
                 height={32}
-                className="h-8.5 w-auto"
+                className="h-7 w-auto"
               />
             </Link>
-            <p className="mt-4 max-w-[34ch] text-sm text-muted">
+            <p className="mt-3 max-w-[32ch] text-sm text-muted">
               {footer.blurb}
             </p>
             {contactEmail && (
@@ -79,13 +80,13 @@ export async function SiteFooter() {
           </div>
           {columns.map((column) => (
             <div key={column.heading}>
-              <h3 className="mb-4 text-sm font-semibold">{column.heading}</h3>
+              <h3 className="mb-4 text-base font-bold">{column.heading}</h3>
               <ul className="grid gap-2 text-sm text-muted">
                 {column.links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="rounded-control outline-offset-2 hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong"
+                      className="rounded-control outline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-primary-strong"
                     >
                       {link.label}
                     </Link>
@@ -95,7 +96,7 @@ export async function SiteFooter() {
             </div>
           ))}
         </div>
-        <div className="mt-10 flex flex-wrap justify-between gap-3 border-t border-border pt-6 text-sm text-muted">
+        <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6 text-sm text-faint">
           <span>{footer.rights(new Date().getFullYear())}</span>
           <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center gap-2">

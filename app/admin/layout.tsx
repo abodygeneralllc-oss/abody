@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Tajawal } from "next/font/google";
+import { Tajawal } from "next/font/google";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,18 +18,8 @@ import {
 } from "@/lib/sidebar";
 import "../globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-// Same font set as the storefront: --font-body needs every variable it names,
-// and Arabic customer names in admin tables need Tajawal.
+// Same font as the storefront: --font-body names it for Arabic, and Arabic
+// customer names in admin tables need Tajawal.
 const tajawal = Tajawal({
   variable: "--font-tajawal",
   subsets: ["arabic", "latin"],
@@ -87,7 +77,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
     <html
       lang="en"
       dir="ltr"
-      className={`${geistSans.variable} ${geistMono.variable} ${tajawal.variable} h-full antialiased`}
+      className={`${tajawal.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-canvas font-sans">
         {isAdmin ? (
