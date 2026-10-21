@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import Link from "next/link";
 import { AddToCartButton } from "@/components/catalog/AddToCartButton";
 import { ProductCover } from "@/components/catalog/ProductCover";
@@ -11,6 +10,7 @@ import {
   ClockIcon,
   DownloadIcon,
   LockIcon,
+  ShieldIcon,
 } from "@/components/icons";
 import {
   checklistLines,
@@ -22,35 +22,32 @@ import { localizedPath } from "@/lib/i18n/config";
 import { getDictionary, getLocale } from "@/lib/i18n/dictionaries";
 import { formatPriceCents } from "@/lib/money";
 
-const PANEL = "rounded-panel bg-panel shadow-soft";
-const CHIP =
-  "inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap";
+const CONTAINER = "mx-auto w-full max-w-site px-4 min-[700px]:px-8";
+const FOCUS =
+  "outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary-strong";
+const BLOCK = "border-b border-border py-6 last:border-b-0";
+const BLOCK_HEADING = "mb-4 text-xl font-bold";
+// How many included lines the purchase box repeats.
+const BUY_LIST_LIMIT = 3;
 
 interface ProductDetailProps {
   product: PublicProduct;
 }
 
-function Checklist({ lines }: { lines: string[] }) {
+function Checklist({ lines, columns }: { lines: string[]; columns?: boolean }) {
   return (
-    <ul className="grid gap-4">
+    <ul
+      className={`grid gap-x-5 gap-y-3 ${columns ? "min-[600px]:grid-cols-2" : ""}`}
+    >
       {lines.map((line, index) => (
         <li key={index} className="flex gap-3">
-          <CheckIcon className="mt-1 size-5 text-primary" />
+          <CheckIcon className="mt-1 size-4 shrink-0 text-success" />
           <span dir="auto" className="min-w-0 break-words">
             {line}
           </span>
         </li>
       ))}
     </ul>
-  );
-}
-
-function Fact({ term, children }: { term: string; children: ReactNode }) {
-  return (
-    <div className="flex justify-between gap-4">
-      <dt className="text-muted">{term}</dt>
-      <dd className="text-end font-semibold">{children}</dd>
-    </div>
   );
 }
 
@@ -70,203 +67,271 @@ export async function ProductDetail({ product }: ProductDetailProps) {
   const listing = isService
     ? { path: "/services", label: dictionary.header.services }
     : { path: "/products", label: dictionary.header.products };
+  const delivery = isService
+    ? (duration ?? text.startsAfterOnboarding)
+    : text.instantDownload;
+  const [refundBefore, refundAfter] = text.questions.items[2].answer.split("{link}");
 
   return (
-    <div className="flex-1 font-sans">
-      <main className="mx-auto grid w-full max-w-site gap-6 px-4 pt-6 pb-16">
-        <nav
-          aria-label={cart.breadcrumb}
-          className={`flex flex-wrap items-center gap-2 px-5 py-4 text-sm text-muted min-[600px]:px-6 min-[960px]:px-10 ${PANEL}`}
-        >
-          <Link
-            href={localizedPath(locale, "/")}
-            className="rounded-control outline-offset-2 hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong"
-          >
-            {dictionary.header.home}
-          </Link>
-          <ChevronIcon className="h-3 w-3 text-faint rtl:-scale-x-100" />
-          <Link
-            href={localizedPath(locale, listing.path)}
-            className="rounded-control outline-offset-2 hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong"
-          >
-            {listing.label}
-          </Link>
-          <ChevronIcon className="h-3 w-3 text-faint rtl:-scale-x-100" />
-          <span
-            aria-current="page"
-            dir="auto"
-            className="min-w-0 font-semibold break-words text-foreground"
-          >
-            {product.name}
-          </span>
-        </nav>
-
-        <section
-          className={`grid items-start gap-10 p-5 min-[600px]:p-6 min-[720px]:grid-cols-2 min-[960px]:p-10 min-[1100px]:grid-cols-[minmax(0,1.05fr)_minmax(0,1.2fr)_320px] ${PANEL}`}
-        >
-          <ProductCover
-            product={product}
-            locale={locale}
-            index={0}
-            alt={product.name}
-          />
-
-          <div className="grid min-w-0 gap-6">
-            <div>
-              <p className="text-xs font-semibold tracking-[0.06em] text-primary-strong uppercase rtl:tracking-normal">
-                {text.typeLabels[product.type]}
-                {" · "}
-                <span dir="auto">{product.categoryLabel}</span>
-              </p>
-              <h1
+    <main className="flex-1 font-sans">
+      <div
+        className={`${CONTAINER} grid items-start gap-x-10 pt-6 pb-10 min-[960px]:grid-cols-[minmax(0,1fr)_380px] min-[960px]:grid-rows-[auto_1fr]`}
+      >
+        <div className="min-w-0">
+          <nav aria-label={cart.breadcrumb}>
+            <ol className="flex flex-wrap items-center gap-2 text-sm text-muted">
+              <li>
+                <Link
+                  href={localizedPath(locale, "/")}
+                  className={`rounded-control hover:text-primary-strong ${FOCUS}`}
+                >
+                  {dictionary.header.home}
+                </Link>
+              </li>
+              <li aria-hidden="true">
+                <ChevronIcon className="h-3 w-3 text-faint rtl:-scale-x-100" />
+              </li>
+              <li>
+                <Link
+                  href={localizedPath(locale, listing.path)}
+                  className={`rounded-control hover:text-primary-strong ${FOCUS}`}
+                >
+                  {listing.label}
+                </Link>
+              </li>
+              <li aria-hidden="true">
+                <ChevronIcon className="h-3 w-3 text-faint rtl:-scale-x-100" />
+              </li>
+              <li
+                aria-current="page"
                 dir="auto"
-                className="mt-2 text-3xl font-semibold tracking-tight break-words rtl:tracking-normal"
+                className="min-w-0 break-words text-foreground"
               >
                 {product.name}
-              </h1>
-            </div>
-            <p dir="auto" className="text-lg break-words text-muted">
-              {product.shortDescription}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {isService ? (
-                <>
-                  {duration && (
-                    <span className={`${CHIP} bg-primary-soft text-primary-strong`}>
-                      <ClockIcon className="size-[1.25em]" />
-                      {duration}
-                    </span>
-                  )}
-                  <span className={`${CHIP} bg-surface text-muted`}>
-                    <ChartIcon className="size-[1.25em]" />
-                    {text.statusUpdates}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <span className={`${CHIP} bg-success-soft text-success`}>
-                    <BoltIcon className="size-[1.25em]" />
-                    {text.instantDownload}
-                  </span>
-                  <span className={`${CHIP} bg-surface text-muted`}>
-                    <DownloadIcon className="size-[1.25em]" />
-                    {text.keptInAccount}
-                  </span>
-                </>
-              )}
-            </div>
-            {included.length > 0 && (
-              <div>
-                <h2 className="mb-4 text-base font-semibold">{text.included}</h2>
-                <Checklist lines={included} />
-              </div>
-            )}
-          </div>
-
-          <aside
-            aria-label={text.purchase}
-            className="grid gap-5 rounded-panel border border-border bg-surface p-6 min-[720px]:col-span-full min-[1100px]:col-span-1"
-          >
-            <div>
-              <p className="text-xs font-semibold tracking-[0.06em] text-muted uppercase rtl:tracking-normal">
-                {text.price}
-              </p>
-              <p className="text-3xl leading-tight font-bold tracking-tight">
-                {formatPriceCents(product.priceCents)}
-                {duration && (
-                  <small className="ms-1 text-sm font-medium tracking-normal text-muted">
-                    / {duration}
-                  </small>
-                )}
-              </p>
-            </div>
-            <AddToCartButton
-              productId={product.id}
-              cartHref={localizedPath(locale, "/cart")}
-              text={{
-                addToCart: text.addToCart,
-                adding: text.adding,
-                added: text.added,
-                alreadyInCart: text.alreadyInCart,
-                maxQuantity: text.maxQuantity,
-                viewCart: text.viewCart,
-                errors: cart.errors,
-              }}
-            />
-            <p className="flex items-center justify-center gap-2 text-sm text-muted">
-              <LockIcon className="size-4" />
-              {text.securePayment}
-            </p>
-            <dl className="grid gap-3 border-t border-border pt-4 text-sm">
-              <Fact term={text.delivery}>
-                {isService ? text.startsAfterOnboarding : text.instantDownload}
-              </Fact>
-              {duration && <Fact term={text.duration}>{duration}</Fact>}
-              <Fact term={text.access}>{text.fromAccount}</Fact>
-            </dl>
-          </aside>
-        </section>
-
-        <section
-          className={`grid gap-10 p-5 min-[600px]:p-6 min-[720px]:grid-cols-2 min-[960px]:p-10 ${PANEL}`}
-        >
-          <div
-            className={
-              isService && requirements.length === 0 ? "col-span-full" : undefined
-            }
-          >
-            <h2 className="mb-4 text-xl font-semibold">{text.description}</h2>
-            <p
-              dir="auto"
-              className="leading-7 break-words whitespace-pre-line"
-            >
-              {product.description}
-            </p>
-          </div>
-          {isService ? (
-            requirements.length > 0 && (
-              <div>
-                <h2 className="mb-4 text-xl font-semibold">
-                  {text.requirements}
-                </h2>
-                <Checklist lines={requirements} />
-              </div>
-            )
-          ) : (
-            <div>
-              <h2 className="mb-4 text-xl font-semibold">{text.afterYouBuy}</h2>
-              <Checklist lines={text.afterYouBuySteps} />
-            </div>
-          )}
-        </section>
-
-        <section
-          aria-labelledby="how-it-works-heading"
-          className={`p-5 min-[600px]:p-6 min-[960px]:p-10 ${PANEL}`}
-        >
-          <h2 id="how-it-works-heading" className="mb-8 text-2xl font-semibold">
-            {text.howItWorks}
-          </h2>
-          <ol className="grid gap-6 min-[600px]:grid-cols-2 min-[960px]:grid-cols-3">
-            {text.steps[product.type].map((step, index) => (
-              <li
-                key={step}
-                className="flex items-center gap-4 rounded-card bg-surface p-5 font-medium"
-              >
-                <span
-                  aria-hidden="true"
-                  className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-strong text-sm font-semibold text-white"
-                >
-                  {index + 1}
-                </span>
-                {step}
               </li>
-            ))}
-          </ol>
-        </section>
+            </ol>
+          </nav>
+          <h1
+            dir="auto"
+            className="mt-3 max-w-[22ch] text-3xl font-bold tracking-tight break-words rtl:tracking-normal"
+          >
+            {product.name}
+          </h1>
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted">
+            <span className="inline-flex h-6 items-center rounded-control bg-primary-soft px-2 text-xs font-bold text-primary-strong">
+              {text.typeLabels[product.type]}
+            </span>
+            <span aria-hidden="true" className="h-4 w-px bg-border-strong" />
+            <span dir="auto" className="min-w-0 break-words">
+              {product.categoryLabel}
+            </span>
+            <span aria-hidden="true" className="h-4 w-px bg-border-strong" />
+            <span>{delivery}</span>
+          </div>
+          <div className="mt-5">
+            <ProductCover
+              product={product}
+              locale={locale}
+              index={0}
+              alt={product.name}
+              variant="hero"
+            />
+          </div>
+        </div>
 
-        <RelatedProducts product={product} />
-      </main>
-    </div>
+        <aside
+          aria-label={text.purchase}
+          className="mt-8 min-[960px]:sticky min-[960px]:top-6 min-[960px]:row-span-2 min-[960px]:mt-0"
+        >
+          <div className="overflow-hidden rounded-panel border border-border">
+            <div className="border-b border-border">
+              <span className="-mb-px inline-block border-b-3 border-primary px-5 py-4 font-bold">
+                {text.typeLabels[product.type]}
+              </span>
+            </div>
+            <div className="grid gap-4 p-5">
+              <p className="flex items-baseline justify-between gap-3">
+                <span className="text-muted">{text.price}</span>
+                <span>
+                  <strong className="text-2xl font-bold tracking-tight">
+                    {formatPriceCents(product.priceCents)}
+                  </strong>
+                  {duration && (
+                    <small className="ms-1 text-sm font-medium text-muted">
+                      / {duration}
+                    </small>
+                  )}
+                </span>
+              </p>
+              <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-bold">
+                {isService ? (
+                  <>
+                    {duration && (
+                      <span className="inline-flex items-center gap-2">
+                        <ClockIcon className="size-4" />
+                        {duration}
+                      </span>
+                    )}
+                    <span className="inline-flex items-center gap-2">
+                      <ChartIcon className="size-4" />
+                      {text.statusUpdates}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="inline-flex items-center gap-2">
+                      <BoltIcon className="size-4" />
+                      {text.instantDownload}
+                    </span>
+                    <span className="inline-flex items-center gap-2">
+                      <DownloadIcon className="size-4" />
+                      {text.keptInAccount}
+                    </span>
+                  </>
+                )}
+              </div>
+              {included.length > 0 && (
+                <ul className="grid gap-2 text-sm text-muted">
+                  {included.slice(0, BUY_LIST_LIMIT).map((line, index) => (
+                    <li key={index} className="flex gap-2">
+                      <CheckIcon className="mt-0.5 size-4 shrink-0 text-foreground" />
+                      <span dir="auto" className="min-w-0 break-words">
+                        {line}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <AddToCartButton
+                productId={product.id}
+                cartHref={localizedPath(locale, "/cart")}
+                text={{
+                  addToCart: text.addToCart,
+                  adding: text.adding,
+                  added: text.added,
+                  alreadyInCart: text.alreadyInCart,
+                  maxQuantity: text.maxQuantity,
+                  viewCart: text.viewCart,
+                  errors: cart.errors,
+                }}
+              />
+            </div>
+            <div className="grid gap-2 border-t border-border bg-surface px-5 py-4 text-sm text-muted">
+              <span className="flex items-center gap-2">
+                <LockIcon className="size-4 shrink-0" />
+                {text.securePayment}
+              </span>
+              <span className="flex items-center gap-2">
+                <ShieldIcon className="size-4 shrink-0" />
+                {text.fromAccount}
+              </span>
+            </div>
+          </div>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-panel border border-border px-5 py-4 text-sm">
+            <span>{text.contact.prompt}</span>
+            <Link
+              href={localizedPath(locale, "/contact")}
+              className={`inline-flex h-9 items-center rounded-full border border-border-strong px-4 font-semibold hover:border-foreground ${FOCUS}`}
+            >
+              {text.contact.action}
+            </Link>
+          </div>
+        </aside>
+
+        <div className="mt-4 min-w-0">
+          <section aria-labelledby="about-heading" className={BLOCK}>
+            <h2 id="about-heading" className={BLOCK_HEADING}>
+              {text.about[product.type]}
+            </h2>
+            <div className="grid max-w-[68ch] gap-3 leading-7 text-muted">
+              <p dir="auto" className="break-words">
+                {product.shortDescription}
+              </p>
+              <p dir="auto" className="break-words whitespace-pre-line">
+                {product.description}
+              </p>
+            </div>
+          </section>
+
+          {included.length > 0 && (
+            <section aria-labelledby="included-heading" className={BLOCK}>
+              <h2 id="included-heading" className={BLOCK_HEADING}>
+                {text.included}
+              </h2>
+              <Checklist lines={included} columns />
+            </section>
+          )}
+
+          {requirements.length > 0 && (
+            <section aria-labelledby="requirements-heading" className={BLOCK}>
+              <h2 id="requirements-heading" className={BLOCK_HEADING}>
+                {text.requirements}
+              </h2>
+              <Checklist lines={requirements} />
+            </section>
+          )}
+
+          <section aria-labelledby="after-heading" className={BLOCK}>
+            <h2 id="after-heading" className={BLOCK_HEADING}>
+              {text.afterPurchase.title}
+            </h2>
+            <ol className="grid gap-4 min-[960px]:grid-cols-3">
+              {text.afterPurchase.steps[product.type].map((step, index) => (
+                <li key={step.title} className="rounded-card bg-surface p-4">
+                  <span
+                    aria-hidden="true"
+                    className="mb-3 grid size-7 place-items-center rounded-full bg-ink text-sm font-bold text-ink-text"
+                  >
+                    {index + 1}
+                  </span>
+                  <strong className="mb-1 block">{step.title}</strong>
+                  <p className="text-sm text-muted">{step.body}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section aria-labelledby="questions-heading" className={BLOCK}>
+            <h2 id="questions-heading" className={BLOCK_HEADING}>
+              {text.questions.title}
+            </h2>
+            <div className="border-t border-border">
+              {text.questions.items.map((item, index) => (
+                <details
+                  key={item.question}
+                  open={index === 0}
+                  className="group border-b border-border"
+                >
+                  <summary
+                    className={`flex cursor-pointer list-none items-center justify-between gap-4 rounded-control py-4 font-bold [&::-webkit-details-marker]:hidden ${FOCUS}`}
+                  >
+                    {item.question}
+                    <ChevronIcon className="size-4 shrink-0 rotate-90 text-muted transition-transform group-open:-rotate-90 motion-reduce:transition-none" />
+                  </summary>
+                  <p className="max-w-[68ch] pb-4 text-muted">
+                    {index === 2 ? (
+                      <>
+                        {refundBefore}
+                        <Link
+                          href={localizedPath(locale, "/returns")}
+                          className={`rounded-control font-semibold text-primary-strong underline hover:text-primary-hover ${FOCUS}`}
+                        >
+                          {text.questions.returnLink}
+                        </Link>
+                        {refundAfter}
+                      </>
+                    ) : (
+                      item.answer
+                    )}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <RelatedProducts product={product} />
+    </main>
   );
 }

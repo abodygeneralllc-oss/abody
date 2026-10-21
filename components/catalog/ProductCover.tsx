@@ -16,14 +16,23 @@ interface ProductCoverProps {
   index: number;
   // Empty when a nearby heading already names the item.
   alt: string;
+  // "hero" is the wide detail-page cover; its meta row shows the duration.
+  variant?: "card" | "hero";
 }
 
-// The 4:3 cover shared by the store card and the detail page.
-export function ProductCover({ product, locale, index, alt }: ProductCoverProps) {
+// The 4:3 store card cover, or the 16:9 detail-page cover.
+export function ProductCover({
+  product,
+  locale,
+  index,
+  alt,
+  variant = "card",
+}: ProductCoverProps) {
+  const isHero = variant === "hero";
   const isService = product.type === ProductType.SERVICE;
   const src = publicImageSrc(product.image);
   const durationDays =
-    isService && product.durationDays && product.durationDays > 0
+    !isHero && isService && product.durationDays && product.durationDays > 0
       ? product.durationDays
       : null;
   const coverColor = isService
@@ -32,7 +41,7 @@ export function ProductCover({ product, locale, index, alt }: ProductCoverProps)
 
   return (
     <div
-      className={`relative isolate grid aspect-[4/3] place-items-center overflow-hidden rounded-card ${coverColor}`}
+      className={`relative isolate grid place-items-center overflow-hidden ${isHero ? "aspect-video rounded-panel" : "aspect-[4/3] rounded-card"} ${coverColor}`}
     >
       {src ? (
         // Same reason as ProductImage: image hosts are not configured yet.
@@ -41,7 +50,7 @@ export function ProductCover({ product, locale, index, alt }: ProductCoverProps)
       ) : isService ? (
         <span
           aria-hidden="true"
-          className="grid aspect-square w-[30%] place-items-center rounded-full bg-primary-strong text-white"
+          className={`grid aspect-square place-items-center ${isHero ? "w-[18%]" : "w-[30%]"} rounded-full bg-primary-strong text-white`}
         >
           <ChartIcon className="size-1/2" />
         </span>
@@ -50,7 +59,7 @@ export function ProductCover({ product, locale, index, alt }: ProductCoverProps)
         // behind it that fans out when the store card is hovered.
         <span
           aria-hidden="true"
-          className="relative grid h-[72%] aspect-[3/4] content-start gap-[7%] rounded-control bg-panel px-[10%] py-[11%] shadow-[0_14px_28px_-14px_oklch(22%_0.05_256/0.4)]"
+          className={`relative grid aspect-[3/4] ${isHero ? "h-[62%]" : "h-[72%]"} content-start gap-[7%] rounded-control bg-panel px-[10%] py-[11%] shadow-[0_14px_28px_-14px_oklch(22%_0.05_256/0.4)]`}
         >
           <span className="absolute inset-0 -z-10 translate-x-[16%] translate-y-[3%] rotate-[7deg] rounded-control bg-panel/60 shadow-[0_10px_22px_-14px_oklch(22%_0.05_256/0.35)] transition-[translate,rotate] duration-300 group-hover/card:translate-x-[22%] group-hover/card:translate-y-[2%] group-hover/card:rotate-[11deg] motion-reduce:transition-none rtl:-translate-x-[16%] rtl:-rotate-[7deg] rtl:group-hover/card:-translate-x-[22%] rtl:group-hover/card:-rotate-[11deg]" />
           <span className="block h-1.75 w-[60%] rounded-full bg-primary" />

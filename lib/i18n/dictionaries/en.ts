@@ -48,7 +48,6 @@ export const en = {
       DIGITAL_PRODUCT: "Digital product",
       SERVICE: "Service",
     },
-    duration: "Duration",
     addToCart: "Add to cart",
     adding: "Adding…",
     added: "Added to your cart.",
@@ -56,13 +55,65 @@ export const en = {
     maxQuantity: "You already have the maximum quantity of this item in your cart.",
     viewCart: "View cart",
     securePayment: "Secure payment",
-    description: "Description",
+    about: {
+      DIGITAL_PRODUCT: "About this product",
+      SERVICE: "About this service",
+    },
     included: "What's included",
     requirements: "What we need from you",
-    howItWorks: "How it works",
-    steps: {
-      DIGITAL_PRODUCT: ["Purchase", "Receive access", "Download"],
-      SERVICE: ["Purchase", "Tell us what we need", "We get started"],
+    afterPurchase: {
+      title: "What happens after you buy",
+      steps: {
+        DIGITAL_PRODUCT: [
+          { title: "Pay securely", body: "Check out as a guest or signed in." },
+          {
+            title: "Download right away",
+            body: "The download appears on your order confirmation page.",
+          },
+          {
+            title: "Keep it handy",
+            body: "It stays under Downloads in your account, and a receipt arrives by email.",
+          },
+        ],
+        SERVICE: [
+          {
+            title: "Send your brief",
+            body: "Answer a short form about your business after payment.",
+          },
+          {
+            title: "We get to work",
+            body: "Your service moves to In progress and you get an email.",
+          },
+          {
+            title: "Track and receive",
+            body: "Follow updates in your account until it's complete.",
+          },
+        ],
+      },
+    },
+    questions: {
+      title: "Common questions",
+      items: [
+        {
+          question: "How do I pay?",
+          answer:
+            "Payment is secure and handled at checkout. We never store your card details.",
+        },
+        {
+          question: "Can I buy without an account?",
+          answer:
+            "Yes, you can check out as a guest. Sign in before you buy to keep your downloads and services in your account.",
+        },
+        {
+          question: "What is the refund policy?",
+          answer: "See our {link} for when a refund applies.",
+        },
+      ],
+      returnLink: "Return Policy",
+    },
+    contact: {
+      prompt: "Have a question first?",
+      action: "Contact us",
     },
     related: "You might also like",
     viewAll: "View all",
@@ -70,17 +121,9 @@ export const en = {
     startsAfterOnboarding: "Starts after onboarding",
     keptInAccount: "Kept in your account",
     statusUpdates: "Status updates in your account",
+    fromAccount: "From your account",
     purchase: "Purchase",
     price: "Price",
-    delivery: "Delivery",
-    access: "Access",
-    fromAccount: "From your account",
-    afterYouBuy: "After you buy",
-    afterYouBuySteps: [
-      "The download appears on your order confirmation page.",
-      "It stays available under Downloads in your account.",
-      "You get a receipt by email.",
-    ],
   },
   listing: {
     catalogType: "Catalog type",
@@ -95,6 +138,7 @@ export const en = {
     },
     searchEmpty: "No results for",
     clearSearch: "Clear search",
+    showing: "Showing {from}–{to}",
     pagination: {
       label: "Pages",
       previous: "Previous",

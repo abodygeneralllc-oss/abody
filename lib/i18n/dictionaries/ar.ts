@@ -46,7 +46,6 @@ export const ar: Dictionary = {
       DIGITAL_PRODUCT: "منتج رقمي",
       SERVICE: "خدمة",
     },
-    duration: "المدة",
     addToCart: "أضف إلى السلة",
     adding: "جارٍ الإضافة…",
     added: "تمت الإضافة إلى سلتك.",
@@ -54,13 +53,52 @@ export const ar: Dictionary = {
     maxQuantity: "لديك بالفعل الحد الأقصى من هذا المنتج في سلتك.",
     viewCart: "عرض السلة",
     securePayment: "دفع آمن",
-    description: "الوصف",
+    about: {
+      DIGITAL_PRODUCT: "عن هذا المنتج",
+      SERVICE: "عن هذه الخدمة",
+    },
     included: "ماذا يتضمن",
     requirements: "ما نحتاجه منك",
-    howItWorks: "كيف تعمل المنصة",
-    steps: {
-      DIGITAL_PRODUCT: ["اشترِ", "احصل على الوصول", "تحميل"],
-      SERVICE: ["اشترِ", "أخبرنا بما نحتاجه", "نبدأ العمل"],
+    afterPurchase: {
+      title: "ماذا يحدث بعد الشراء",
+      steps: {
+        DIGITAL_PRODUCT: [
+          { title: "ادفع بأمان", body: "أكمل الشراء كضيف أو بعد تسجيل الدخول." },
+          { title: "حمّل فوراً", body: "يظهر رابط التحميل في صفحة تأكيد طلبك." },
+          {
+            title: "احتفظ به",
+            body: "يبقى في التنزيلات في حسابك، ويصلك إيصال بالبريد.",
+          },
+        ],
+        SERVICE: [
+          { title: "أرسل متطلباتك", body: "أجب عن نموذج قصير عن نشاطك بعد الدفع." },
+          { title: "نبدأ العمل", body: "تنتقل خدمتك إلى «قيد التنفيذ» ويصلك بريد." },
+          { title: "تابع واستلم", body: "تابع التحديثات في حسابك حتى الاكتمال." },
+        ],
+      },
+    },
+    questions: {
+      title: "أسئلة شائعة",
+      items: [
+        {
+          question: "كيف أدفع؟",
+          answer: "الدفع آمن ويتم عند إتمام الطلب. لا نحفظ بيانات بطاقتك.",
+        },
+        {
+          question: "هل يمكنني الشراء دون حساب؟",
+          answer:
+            "نعم، يمكنك الشراء كضيف. سجّل الدخول قبل الشراء لتبقى تنزيلاتك وخدماتك في حسابك.",
+        },
+        {
+          question: "ما سياسة الاسترداد؟",
+          answer: "راجع {link} لمعرفة متى يمكن استرداد المبلغ.",
+        },
+      ],
+      returnLink: "سياسة الإرجاع",
+    },
+    contact: {
+      prompt: "لديك سؤال قبل الشراء؟",
+      action: "تواصل معنا",
     },
     related: "قد يعجبك أيضاً",
     viewAll: "عرض الكل",
@@ -68,17 +106,9 @@ export const ar: Dictionary = {
     startsAfterOnboarding: "تبدأ بعد استلام بياناتك",
     keptInAccount: "يبقى محفوظاً في حسابك",
     statusUpdates: "تحديثات الحالة داخل حسابك",
+    fromAccount: "من حسابك",
     purchase: "الشراء",
     price: "السعر",
-    delivery: "التسليم",
-    access: "الوصول",
-    fromAccount: "من حسابك",
-    afterYouBuy: "بعد الشراء",
-    afterYouBuySteps: [
-      "يظهر رابط التحميل في صفحة تأكيد الطلب.",
-      "يبقى متاحاً ضمن التحميلات في حسابك.",
-      "يصلك إيصال عبر البريد الإلكتروني.",
-    ],
   },
   listing: {
     catalogType: "نوع المنتجات",
@@ -93,6 +123,7 @@ export const ar: Dictionary = {
     },
     searchEmpty: "لا توجد نتائج لـ",
     clearSearch: "مسح البحث",
+    showing: "عرض {from}–{to}",
     pagination: {
       label: "الصفحات",
       previous: "السابق",

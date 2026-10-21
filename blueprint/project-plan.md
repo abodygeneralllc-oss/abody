@@ -97,7 +97,7 @@ A dedicated store where customers can browse:
 - Services.
 - Product categories.
 
-The store listings give each product card enough room on desktop (two cards per row beside the category filter, not three) and split long results into pages of 12 items, which work together with search, sort, and the category filter.
+The store listings show three cards per row on desktop under a category chip bar, and split long results into pages of 12 items, which work together with search, sort, and the category filter.
 
 Each product should have:
 

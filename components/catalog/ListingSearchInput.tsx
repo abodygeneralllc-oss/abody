@@ -88,7 +88,7 @@ export function ListingSearchInput({
       <label htmlFor="listing-search" className="sr-only">
         {text.label}
       </label>
-      <SearchIcon className="pointer-events-none absolute start-3 top-1/2 h-5 w-5 -translate-y-1/2 text-faint" />
+      <SearchIcon className="pointer-events-none absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-faint" />
       <input
         ref={inputRef}
         id="listing-search"
@@ -113,14 +113,14 @@ export function ListingSearchInput({
         onKeyDown={(event) => {
           if (event.key === "Enter" && !composing.current) cancel();
         }}
-        className="h-11 w-full rounded-control border border-border bg-surface ps-10 pe-10 text-sm text-foreground outline-offset-2 placeholder:text-faint focus-visible:outline-2 focus-visible:outline-primary-strong [&::-webkit-search-cancel-button]:appearance-none"
+        className="h-9 w-full rounded-full border border-border-strong bg-panel ps-10 pe-9 text-sm text-foreground outline-offset-2 placeholder:text-faint focus-visible:outline-2 focus-visible:outline-primary-strong [&::-webkit-search-cancel-button]:appearance-none"
       />
       {value !== "" && (
         <button
           type="button"
           onClick={clear}
           aria-label={text.clear}
-          className="absolute end-1.5 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-control text-muted outline-offset-1 hover:bg-panel hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong"
+          className="absolute inset-e-1 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-full text-muted outline-offset-1 hover:bg-well hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong"
         >
           <CloseIcon className="h-4 w-4" />
         </button>

@@ -23,10 +23,10 @@ export async function RelatedProducts({ product }: RelatedProductsProps) {
   return (
     <section
       aria-labelledby="related-heading"
-      className="rounded-panel bg-panel p-5 shadow-soft min-[600px]:p-6 min-[960px]:p-10"
+      className="mx-auto w-full max-w-site px-4 pb-16 min-[700px]:px-8"
     >
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
-        <h2 id="related-heading" className="text-2xl font-semibold">
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+        <h2 id="related-heading" className="text-2xl font-bold">
           {text.related}
         </h2>
         <Link
