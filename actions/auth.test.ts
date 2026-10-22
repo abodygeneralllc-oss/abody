@@ -12,7 +12,9 @@ const {
   reserveRateLimit,
   after,
   sendPasswordResetEmail,
+  verifyTurnstile,
 } = vi.hoisted(() => ({
+  verifyTurnstile: vi.fn(),
   user: { create: vi.fn(), findUnique: vi.fn(), update: vi.fn() },
   passwordResetToken: { findUnique: vi.fn(), create: vi.fn(), deleteMany: vi.fn() },
   session: { deleteMany: vi.fn() },
@@ -38,6 +40,10 @@ vi.mock("next/headers", () => ({ headers: async () => new Headers() }));
 vi.mock("next/server", () => ({ after }));
 vi.mock("@/lib/rate-limit", () => ({ clientKey: () => "ip", reserveRateLimit }));
 vi.mock("@/lib/password-reset-notifications", () => ({ sendPasswordResetEmail }));
+vi.mock("@/lib/turnstile", () => ({
+  TURNSTILE_FIELD: "cf-turnstile-response",
+  verifyTurnstile,
+}));
 
 import { clearLoginFailures, LOGIN_MAX_ATTEMPTS } from "@/lib/auth";
 import { Prisma } from "@/lib/generated/prisma/client";
@@ -97,6 +103,7 @@ beforeEach(async () => {
     );
   after.mockReset();
   sendPasswordResetEmail.mockReset().mockResolvedValue(undefined);
+  verifyTurnstile.mockReset().mockResolvedValue("ok");
   clearLoginFailures("layla@example.com");
   vi.spyOn(console, "error").mockImplementation(() => {});
 });
@@ -190,6 +197,42 @@ describe("register", () => {
       error: "unexpected",
     });
     expect(user.create).not.toHaveBeenCalled();
+  });
+
+  it("verifies the bot check token for the visitor", async () => {
+    await expect(
+      register(null, form({ ...registerFields, "cf-turnstile-response": "tok_1" })),
+    ).rejects.toThrow("REDIRECT");
+
+    expect(verifyTurnstile).toHaveBeenCalledWith("tok_1", "ip");
+  });
+
+  it("stops a failed bot check before the limiter and the database", async () => {
+    verifyTurnstile.mockResolvedValue("failed");
+
+    expect(await register(null, form(registerFields))).toEqual({
+      success: false,
+      error: "bot_check_failed",
+      values: { name: "Layla", email: "layla@example.com" },
+    });
+    expect(reserveRateLimit).not.toHaveBeenCalled();
+    expect(user.create).not.toHaveBeenCalled();
+    expect(createSession).not.toHaveBeenCalled();
+  });
+
+  it("registers as before when the bot check is off", async () => {
+    verifyTurnstile.mockResolvedValue("off");
+
+    await expect(register(null, form(registerFields))).rejects.toThrow(
+      "REDIRECT /en/cart",
+    );
+    expect(user.create).toHaveBeenCalled();
+  });
+
+  it("does not run the bot check for invalid fields", async () => {
+    await register(null, form({ ...registerFields, confirm: "other" }));
+
+    expect(verifyTurnstile).not.toHaveBeenCalled();
   });
 });
 

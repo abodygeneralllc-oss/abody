@@ -4,6 +4,7 @@ import { AuthPanel } from "@/components/auth/AuthPanel";
 import { safeNextPath } from "@/lib/auth";
 import { getDictionary, getLocale } from "@/lib/i18n/dictionaries";
 import { getCurrentUser } from "@/lib/session";
+import { turnstileSiteKey } from "@/lib/turnstile";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { auth } = await getDictionary();
@@ -20,7 +21,13 @@ export default async function RegisterPage({
 
   return (
     <div className="flex-1">
-      <AuthPanel mode="register" locale={locale} next={next} text={auth} />
+      <AuthPanel
+        mode="register"
+        locale={locale}
+        next={next}
+        text={auth}
+        turnstileSiteKey={turnstileSiteKey()}
+      />
     </div>
   );
 }

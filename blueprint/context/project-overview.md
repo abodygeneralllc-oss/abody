@@ -1,6 +1,6 @@
 # Abody Digital Ecommerce Platform - Project Overview
 
-<!-- blueprint:source-hash 2dcb5af158335bcdc37ffed7292a4813312f3edae5aafd567d61a651d96db54c -->
+<!-- blueprint:source-hash ca721e7345a925bf9c67d43fa3db35828fc32e2d0a8452c9102c20abf099354c -->
 
 > A bilingual (English and Arabic) storefront where customers buy Abody's
 > downloadable digital products and digital services with Stripe, plus an admin
@@ -34,7 +34,7 @@ no web request grants the role.
 
 ## Features
 
-In `build-plan.md` order. All items are shipped; new work needs a plan
+In `build-plan.md` order. All shipped except 32; new work needs a plan
 addition (`/feature`) or a `/fix`.
 
 1. **Product & Service Catalog** (done) - models and catalog API.
@@ -119,6 +119,9 @@ addition (`/feature`) or a `/fix`.
       summary; account dashboard, orders, downloads, service progress.
     - 31e **Admin Restyle** (done) - admin dashboard, lists, forms in the new
       tokens; English only.
+32. **Bot Protection** - Turnstile on register and cart checkout, verified
+    server-side before the account or Stripe session; bilingual error keeps
+    input. Off without keys; live, missing keys are logged, forms still work.
 
 ## Data model
 
@@ -265,7 +268,8 @@ Vitest, Playwright (browser tests with a fake Stripe), ESLint, pnpm.
   server-side cart and checkout events; no third-party script
 - **Security** - verified webhook as payment authority, no card data stored,
   buyers-only file access, `requireAdmin()` on every admin page, action, and
-  route, input validation, rate limits, HSTS (production), `nosniff`, frame
+  route, input validation, rate limits, Turnstile on sign-up and checkout
+  (32), HSTS (production), `nosniff`, frame
   blocking, `Referrer-Policy`, `Permissions-Policy`; no CSP yet
 
 ## Monetization
@@ -329,7 +333,7 @@ disk) and Postgres is external. The deploy itself needs a separate yes.
 > `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `RESEND_API_KEY`, `EMAIL_FROM`,
 > `ADMIN_NOTIFICATION_EMAIL`, `RATE_LIMIT_IP_HEADER` (must be a header the host
 > sets, not the client), `S3_BUCKET`, `S3_REGION`, `S3_ACCESS_KEY_ID`,
-> `S3_SECRET_ACCESS_KEY`, `S3_ENDPOINT` (R2). The webhook needs a public
+> `S3_SECRET_ACCESS_KEY`, `S3_ENDPOINT` (R2), Turnstile keys (32). The webhook needs a public
 > endpoint; production runs `prisma migrate deploy`.
 
 ## Open questions
@@ -346,22 +350,19 @@ Plan-level gaps; resolve in the plans, then re-run `/overview`.
    dictionary text for information pages with no contact form.
 2. **Coupons conflict.** Build-plan 20 shipped simple percentage codes; the
    project plan lists coupons as future and advanced coupons as not v1.
-3. **Duplicate title.** Items 14 and 16 are both "Admin Service Management".
+3. **Duplicate title.** 14 and 16 are both "Admin Service Management".
 4. **Image upload.** The plan's admin form shows an image upload; products use
    an image URL field and no item owns upload.
-5. **Cart after sign-in.** Neither plan says whether the cookie cart moves to
-   the account.
+5. **Cart after sign-in.** Unstated whether the cookie cart moves to the
+   account.
 6. **Product reviews.** The detail sketch shows a star rating; no review
    feature or data exists.
-7. **Deployment.** Vercel is chosen in build-plan 25b but not recorded in the
-   project plan; the Postgres provider, domain, and production
-   `RATE_LIMIT_IP_HEADER` are open.
-8. **Legal copy.** Terms, Privacy, and Returns text is a draft for Abody to
-   review before launch; Privacy predates analytics (feature 23).
-9. **Heading typo.** Project-plan "9. Stripe Payment Flow" lacks its `##`.
-10. **Catalog discovery partly in the project plan.** Its Product Store
-    section now covers the four-per-row chip-bar listing and 12-item pages
-    and refers to search and sort, but the Homepage section still doesn't
-    mention the Featured products tabs (29a), and section 11's navigation
-    predates the header category strip. Shipped build-plan 30a still reads
-    "two cards per row"; the project plan's four per row supersedes it.
+7. **Deployment.** Vercel (25b) is not in the project plan; Postgres
+   provider, domain, and production `RATE_LIMIT_IP_HEADER` are open.
+8. **Legal copy.** Terms, Privacy, Returns are drafts for Abody to review;
+   Privacy predates analytics (23) and Turnstile (32).
+9. **Heading typo.** "9. Stripe Payment Flow" lacks its `##`.
+10. **Catalog discovery partly in the project plan.** Product Store covers
+    the four-per-row chip bar, 12-item pages, search, and sort; Homepage
+    omits the Featured tabs (29a); section 11 navigation predates the header
+    category strip. Build-plan 30a's "two cards per row" is superseded.

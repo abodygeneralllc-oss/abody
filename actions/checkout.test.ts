@@ -1,7 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { store, listPublishedProductsByIds, findUnique, createSession, redirect, createEvent } =
+const {
+  store,
+  listPublishedProductsByIds,
+  findUnique,
+  createSession,
+  redirect,
+  createEvent,
+  verifyTurnstile,
+} =
   vi.hoisted(() => ({
+    verifyTurnstile: vi.fn(),
     store: { get: vi.fn() },
     listPublishedProductsByIds: vi.fn(),
     findUnique: vi.fn(),
@@ -13,7 +22,15 @@ const { store, listPublishedProductsByIds, findUnique, createSession, redirect, 
     createEvent: vi.fn(),
   }));
 
-vi.mock("next/headers", () => ({ cookies: async () => store }));
+vi.mock("next/headers", () => ({
+  cookies: async () => store,
+  headers: async () => new Headers(),
+}));
+vi.mock("@/lib/rate-limit", () => ({ clientKey: () => "ip" }));
+vi.mock("@/lib/turnstile", () => ({
+  TURNSTILE_FIELD: "cf-turnstile-response",
+  verifyTurnstile,
+}));
 vi.mock("next/navigation", () => ({ redirect }));
 vi.mock("@/lib/catalog", () => ({ listPublishedProductsByIds }));
 vi.mock("@/lib/db", () => ({
@@ -60,7 +77,40 @@ beforeEach(() => {
   findUnique.mockReset().mockResolvedValue(coupon);
   createSession.mockReset().mockResolvedValue({ url: "https://checkout.stripe.test/s" });
   createEvent.mockReset().mockResolvedValue({});
+  verifyTurnstile.mockReset().mockResolvedValue("ok");
+  redirect.mockClear();
   vi.spyOn(console, "error").mockImplementation(() => {});
+});
+
+describe("startCheckout bot check", () => {
+  it("verifies the token for the visitor", async () => {
+    const data = form();
+    data.set("cf-turnstile-response", "tok_1");
+    await expect(startCheckout(null, data)).rejects.toThrow("redirect:");
+
+    expect(verifyTurnstile).toHaveBeenCalledWith("tok_1", "ip");
+  });
+
+  it("stops a failed check before any Stripe session or event", async () => {
+    verifyTurnstile.mockResolvedValue("failed");
+
+    expect(await startCheckout(null, form())).toEqual({
+      success: false,
+      error: "bot_check_failed",
+    });
+    expect(createSession).not.toHaveBeenCalled();
+    expect(createEvent).not.toHaveBeenCalled();
+    expect(redirect).not.toHaveBeenCalled();
+  });
+
+  it("starts checkout as before when the check is off", async () => {
+    verifyTurnstile.mockResolvedValue("off");
+
+    await expect(startCheckout(null, form())).rejects.toThrow(
+      "redirect:https://checkout.stripe.test/s",
+    );
+    expect(createSession).toHaveBeenCalled();
+  });
 });
 
 describe("startCheckout with a discount code", () => {

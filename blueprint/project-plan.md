@@ -740,6 +740,8 @@ Input validation.
 
 Rate limiting where appropriate.
 
+Bot protection on sign-up and checkout with Cloudflare Turnstile.
+
 Protected digital-file URLs.
 
 No sensitive Stripe/card information stored locally.

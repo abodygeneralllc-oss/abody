@@ -30,6 +30,7 @@ import {
 import { sendPasswordResetEmail } from "@/lib/password-reset-notifications";
 import { clientKey, reserveRateLimit } from "@/lib/rate-limit";
 import { createSession, deleteCurrentSession } from "@/lib/session";
+import { TURNSTILE_FIELD, verifyTurnstile } from "@/lib/turnstile";
 
 export type AuthActionError =
   | "invalid_input"
@@ -37,6 +38,7 @@ export type AuthActionError =
   | "email_taken"
   | "invalid_credentials"
   | "rate_limited"
+  | "bot_check_failed"
   | "unexpected";
 
 // Success never returns: the action redirects. Passwords are never echoed.
@@ -72,8 +74,13 @@ export async function register(
   const { name, email, password, next } = parsed.data;
 
   try {
+    const client = clientKey(await headers());
+    // Before the limiter, so bot attempts don't use up a shared IP's allowance.
+    if ((await verifyTurnstile(formData.get(TURNSTILE_FIELD), client)) === "failed") {
+      return { success: false, error: "bot_check_failed", values: { name, email } };
+    }
     // Counted before the costly hash; invalid forms above do not count.
-    if (!(await reserveRateLimit("register", clientKey(await headers())))) {
+    if (!(await reserveRateLimit("register", client))) {
       return { success: false, error: "rate_limited", values: { name, email } };
     }
     const user = await db.user.create({

@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { recordEvent } from "@/lib/analytics";
 import { buildCartView, CART_COOKIE, parseCart } from "@/lib/cart";
@@ -15,13 +15,16 @@ import {
 } from "@/lib/checkout";
 import { type AppliedCoupon, COUPON_COOKIE } from "@/lib/coupons";
 import { isLocale } from "@/lib/i18n/config";
+import { clientKey } from "@/lib/rate-limit";
 import { getCurrentUser } from "@/lib/session";
 import { getStripe } from "@/lib/stripe";
+import { TURNSTILE_FIELD, verifyTurnstile } from "@/lib/turnstile";
 
 export type CheckoutActionError =
   | "invalid_input"
   | "empty_cart"
   | "coupon_invalid"
+  | "bot_check_failed"
   | "unexpected";
 
 // Success never returns: the action redirects to Stripe.
@@ -40,6 +43,11 @@ export async function startCheckout(
 
   let url: string | null;
   try {
+    const client = clientKey(await headers());
+    if ((await verifyTurnstile(formData.get(TURNSTILE_FIELD), client)) === "failed") {
+      return { success: false, error: "bot_check_failed" };
+    }
+
     // The cookie is untrusted: lines, names, and prices come from the current
     // published products, exactly as the cart page shows them.
     const store = await cookies();

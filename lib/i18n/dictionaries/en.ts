@@ -286,6 +286,7 @@ export const en = {
       empty_cart:
         "The items in your cart are no longer available. Refresh the page to see your cart.",
       coupon_invalid: "Your discount code no longer applies. Remove it to continue.",
+      bot_check_failed: "We couldn't confirm you're not a bot. Please try again.",
       unexpected: "Checkout could not start. Please try again.",
     },
     coupon: {
@@ -411,6 +412,7 @@ export const en = {
       invalid_credentials: "Email or password is incorrect.",
       invalid_token: "This link is invalid or has expired. Ask for a new one.",
       rate_limited: "Too many attempts. Try again in a few minutes.",
+      bot_check_failed: "We couldn't confirm you're not a bot. Please try again.",
       unexpected: "Something went wrong. Please try again.",
     },
     fieldErrors: {

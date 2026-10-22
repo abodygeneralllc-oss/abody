@@ -19,6 +19,7 @@ import { COUPON_COOKIE } from "@/lib/coupons";
 import { localizedPath } from "@/lib/i18n/config";
 import { getDictionary, getLocale } from "@/lib/i18n/dictionaries";
 import { formatItemCount } from "@/lib/i18n/plural";
+import { turnstileSiteKey } from "@/lib/turnstile";
 
 const CONTAINER = "mx-auto w-full max-w-site px-4 min-[700px]:px-8";
 const FOCUS =
@@ -189,6 +190,7 @@ export default async function CartPage({
                   />
                 }
                 paymentCards={<PaymentCards label={footerText.acceptedCards} />}
+                turnstileSiteKey={turnstileSiteKey()}
                 text={{
                   ...text,
                   discount: text.coupon.discount,

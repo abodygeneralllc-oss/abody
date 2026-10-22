@@ -18,6 +18,7 @@ import {
   MailIcon,
   UserIcon,
 } from "@/components/icons";
+import { TurnstileWidget } from "@/components/security/TurnstileWidget";
 import type { AuthField, AuthFieldError } from "@/lib/auth";
 import { localizedPath, type Locale } from "@/lib/i18n/config";
 
@@ -43,6 +44,8 @@ interface AuthFormProps {
   locale: Locale;
   next: string;
   text: AuthFormText;
+  // Register only; null or missing when the bot check is off.
+  turnstileSiteKey?: string | null;
 }
 
 const FIELD_ORDER: AuthField[] = ["name", "email", "password", "confirm"];
@@ -60,7 +63,7 @@ const PASSWORD_INPUT = `${INPUT_BASE} ps-11 pe-12`;
 // room for the icon, which sits on the page's inline start.
 export const EMAIL_INPUT = `${INPUT_BASE} px-11 rtl:text-right`;
 
-export function AuthForm({ mode, locale, next, text }: AuthFormProps) {
+export function AuthForm({ mode, locale, next, text, turnstileSiteKey }: AuthFormProps) {
   const [state, action, pending] = useActionState(
     mode === "register" ? register : signIn,
     null,
@@ -68,6 +71,11 @@ export function AuthForm({ mode, locale, next, text }: AuthFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const alertRef = useRef<HTMLParagraphElement>(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [tokenReady, setTokenReady] = useState(false);
+  const [checkUnavailable, setCheckUnavailable] = useState(false);
+  const showBotCheck = mode === "register" && Boolean(turnstileSiteKey);
+  // An empty token always fails, so wait for the bot check (finding F-50).
+  const waiting = showBotCheck && !tokenReady && !checkUnavailable;
 
   // Errors belong to the last submit; a new submit clears them.
   const failed = !pending && state?.success === false ? state : null;
@@ -224,9 +232,19 @@ export function AuthForm({ mode, locale, next, text }: AuthFormProps) {
         </div>
       )}
 
+      {showBotCheck && turnstileSiteKey && (
+        <TurnstileWidget
+          siteKey={turnstileSiteKey}
+          locale={locale}
+          resetKey={state}
+          onTokenChange={setTokenReady}
+          onUnavailable={() => setCheckUnavailable(true)}
+        />
+      )}
+
       <button
         type="submit"
-        disabled={pending}
+        disabled={pending || waiting}
         className={SUBMIT}
       >
         {pending ? text.pending : text.submit}

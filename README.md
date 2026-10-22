@@ -71,6 +71,7 @@ Run `pnpm db:deploy` **before** deploying any commit that adds a migration under
 | `RATE_LIMIT_IP_HEADER` | `x-real-ip` (set by Vercel, not by clients) |
 | `S3_BUCKET`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` | The private bucket; R2 uses `S3_REGION=auto` |
 | `S3_ENDPOINT` | R2 only: `https://<account-id>.r2.cloudflarestorage.com` |
+| `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | Cloudflare → Turnstile → a widget for the site's domain. Bot check on sign-up and checkout; without both, the check is off and each request logs an error |
 
 Never set `STRIPE_API_BASE` in production; it is for the browser tests.
 

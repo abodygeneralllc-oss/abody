@@ -18,6 +18,8 @@ interface AuthPanelProps {
   text: Dictionary["auth"];
   // A confirmation shown above the form, such as after a password reset.
   notice?: string;
+  // Register only; null when the bot check is off.
+  turnstileSiteKey?: string | null;
 }
 
 // Segmented switch: the current tab is a raised white segment.
@@ -29,7 +31,14 @@ export const TEXT_LINK =
 
 // The sign-in and register pages share this panel; the tabs are links, so
 // each mode has its own URL and works without JavaScript.
-export function AuthPanel({ mode, locale, next, text, notice }: AuthPanelProps) {
+export function AuthPanel({
+  mode,
+  locale,
+  next,
+  text,
+  notice,
+  turnstileSiteKey,
+}: AuthPanelProps) {
   const isRegister = mode === "register";
   // Only a non-default next is carried, so plain links stay clean.
   const query =
@@ -80,6 +89,7 @@ export function AuthPanel({ mode, locale, next, text, notice }: AuthPanelProps) 
         mode={mode}
         locale={locale}
         next={next}
+        turnstileSiteKey={turnstileSiteKey}
         text={{
           name: text.name,
           email: text.email,

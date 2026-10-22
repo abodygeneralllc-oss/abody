@@ -18,6 +18,8 @@ interface CartSummaryProps {
   coupon: ReactNode;
   // The accepted card marks, under the secure note.
   paymentCards: ReactNode;
+  // null when the bot check is off.
+  turnstileSiteKey: string | null;
   text: {
     summary: string;
     subtotal: string;
@@ -35,6 +37,7 @@ export function CartSummary({
   locale,
   coupon,
   paymentCards,
+  turnstileSiteKey,
   text,
 }: CartSummaryProps) {
   return (
@@ -73,6 +76,7 @@ export function CartSummary({
       {/* Only plain strings cross to the client component. */}
       <CheckoutButton
         locale={locale}
+        turnstileSiteKey={turnstileSiteKey}
         text={{ checkout: text.checkout, redirecting: text.redirecting, errors: text.errors }}
       />
       <p className="text-center text-xs text-muted">{text.secureNote}</p>
