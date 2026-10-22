@@ -16,6 +16,8 @@ interface CartQuantityFormProps {
   productName: string;
   quantity: number;
   text: CartQuantityText;
+  // Services are one per order: the stepper shows but cannot change.
+  locked?: boolean;
 }
 
 const STEP_BUTTON =
@@ -26,6 +28,7 @@ export function CartQuantityForm({
   productName,
   quantity,
   text,
+  locked = false,
 }: CartQuantityFormProps) {
   const [state, action, pending] = useActionState(updateCartQuantity, null);
   const error = state?.success === false ? text.errors[state.error] : null;
@@ -40,7 +43,7 @@ export function CartQuantityForm({
           type="submit"
           name="quantity"
           value={quantity - 1}
-          disabled={pending || quantity <= 1}
+          disabled={locked || pending || quantity <= 1}
           className={STEP_BUTTON}
         >
           <MinusIcon />
@@ -57,7 +60,7 @@ export function CartQuantityForm({
           type="submit"
           name="quantity"
           value={quantity + 1}
-          disabled={pending || quantity >= MAX_QUANTITY}
+          disabled={locked || pending || quantity >= MAX_QUANTITY}
           className={STEP_BUTTON}
         >
           <PlusIcon />

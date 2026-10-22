@@ -46,12 +46,13 @@ export function FeaturedTabs({ head, label, dir, tabs }: FeaturedTabsProps) {
   return (
     <>
       {head}
-      {/* Underline tabs on a bottom rule; they scroll sideways if they overflow. */}
+      {/* Underline tabs on a bottom rule; they scroll sideways if they overflow.
+          The scrollbar is hidden so it never shows beside the tabs. */}
       <div
         role="tablist"
         aria-label={label}
         onKeyDown={onKeyDown}
-        className="mb-6 flex gap-6 overflow-x-auto border-b border-border"
+        className="mb-6 flex gap-6 overflow-x-auto overflow-y-hidden border-b border-border scrollbar-none [&::-webkit-scrollbar]:hidden"
       >
         {tabs.map((tab, index) => (
           <button

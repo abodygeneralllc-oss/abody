@@ -16,7 +16,6 @@ import { localizedPath, type Locale } from "@/lib/i18n/config";
 import { formatPriceCents } from "@/lib/money";
 
 export interface CartLineText extends CartQuantityText, RemoveFromCartText {
-  quantity: string;
   instantDownload: string;
   onboardingAfterPayment: string;
   typeLabel: string;
@@ -93,18 +92,13 @@ export function CartLineItem({ line, index, locale, text }: CartLineItemProps) {
           )}
         </p>
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
-          {isService ? (
-            <p className="text-sm text-muted">
-              {text.quantity}: {quantity}
-            </p>
-          ) : (
-            <CartQuantityForm
-              productId={product.id}
-              productName={product.name}
-              quantity={quantity}
-              text={quantityText}
-            />
-          )}
+          <CartQuantityForm
+            productId={product.id}
+            productName={product.name}
+            quantity={quantity}
+            text={quantityText}
+            locked={isService}
+          />
           <RemoveFromCartButton
             productId={product.id}
             productName={product.name}
