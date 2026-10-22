@@ -34,8 +34,8 @@ no web request grants the role.
 
 ## Features
 
-In `build-plan.md` order. Everything through 30 is shipped, plus 31a-31c;
-31d is in progress.
+In `build-plan.md` order. Everything through 30 is shipped, plus 31a-31d;
+31e is next.
 
 1. **Product & Service Catalog** (done) - models and catalog API.
 2. **Product & Service Details** (done) - detail pages with purchase actions.
@@ -115,8 +115,10 @@ In `build-plan.md` order. Everything through 30 is shipped, plus 31a-31c;
       replaces the sidebar, three cards per row on desktop (supersedes 30a's
       two), pagination; gig-style detail: large cover, sticky purchase box,
       included list, service steps, general store questions (no new data).
-    - 31d **Cart and Customer Account** (in progress) - cart and summary; account pages.
-    - 31e **Admin Restyle** - admin dashboard, lists, forms; English only.
+    - 31d **Cart and Customer Account** (done) - cart line items and sticky
+      summary; account dashboard, orders, downloads, service progress.
+    - 31e **Admin Restyle** (next) - admin dashboard, lists, forms in the new
+      tokens; English only.
 
 ## Data model
 

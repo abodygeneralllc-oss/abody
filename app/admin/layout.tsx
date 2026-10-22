@@ -40,17 +40,30 @@ export function generateMetadata(): Promise<Metadata> {
 // renders. Only pages that exist are linked; each admin feature adds its entry.
 const NAV_SECTIONS: SideNavSection[] = [
   {
-    label: "Admin",
+    label: "Overview",
+    links: [{ href: "/admin", label: "Dashboard", icon: "dashboard" }],
+  },
+  {
+    label: "Sales",
     links: [
-      { href: "/admin", label: "Dashboard", icon: "dashboard" },
-      { href: "/admin/analytics", label: "Analytics", icon: "chart" },
-      { href: "/admin/products", label: "Products", icon: "grid" },
-      { href: "/admin/services", label: "Services", icon: "megaphone" },
       { href: "/admin/orders", label: "Orders", icon: "box" },
       { href: "/admin/service-orders", label: "Service orders", icon: "clock" },
       { href: "/admin/customers", label: "Customers", icon: "users" },
       { href: "/admin/coupons", label: "Coupons", icon: "tag" },
+    ],
+  },
+  {
+    label: "Catalog",
+    links: [
+      { href: "/admin/products", label: "Products", icon: "grid" },
+      { href: "/admin/services", label: "Services", icon: "megaphone" },
+    ],
+  },
+  {
+    label: "Site",
+    links: [
       { href: "/admin/content", label: "Site content", icon: "layout" },
+      { href: "/admin/analytics", label: "Analytics", icon: "chart" },
       { href: "/admin/settings", label: "Settings", icon: "settings" },
     ],
   },
@@ -65,8 +78,16 @@ const NAV_SECTIONS: SideNavSection[] = [
   },
 ];
 
+// Every admin page, for the top-bar crumb.
+const ADMIN_PAGES = NAV_SECTIONS.filter((section) => !section.external).flatMap(
+  (section) => section.links,
+);
+
 const FOCUS =
   "outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary-strong";
+// Focus on the navy sidebar.
+const INK_FOCUS =
+  "outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink-text";
 
 // The admin area's own root layout: English-only, outside the language
 // prefix. Not an auth boundary: layouts do not re-render on navigation, so every
@@ -84,16 +105,18 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
       dir="ltr"
       className={`${geist.variable} ${tajawal.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-canvas font-sans">
+      <body
+        className={`flex min-h-full flex-col font-sans ${isAdmin ? "bg-surface" : "bg-canvas"}`}
+      >
         {isAdmin ? (
           <SidebarShell
             initialCollapsed={collapsed}
             crumbRoot="Admin"
-            pages={NAV_SECTIONS[0].links}
+            pages={ADMIN_PAGES}
             topbarEnd={
               <Link
                 href="/en"
-                className={`flex h-10 items-center gap-2 rounded-control border border-border bg-panel px-3 text-sm font-medium hover:bg-surface min-[600px]:px-4 ${FOCUS}`}
+                className={`flex h-10 items-center gap-2 rounded-control border border-border-strong bg-panel px-3 text-sm font-semibold hover:border-foreground min-[600px]:px-4 ${FOCUS}`}
               >
                 <span className="max-[599px]:sr-only">View store</span>
                 <ExternalIcon className="h-4 w-4" />
@@ -103,7 +126,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
               <>
                 <Link
                   href="/admin"
-                  className={`flex h-11 shrink-0 items-center gap-3 rounded-control px-2 ${RAIL_CENTER} ${FOCUS}`}
+                  className={`flex h-11 shrink-0 items-center gap-2.5 rounded-control px-2 ${RAIL_CENTER} ${INK_FOCUS}`}
                 >
                   {/* The rail shows only the logo mark; display toggles, so the
                       link has exactly one image name in either state. */}
@@ -113,7 +136,7 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
                     width={164}
                     height={32}
                     priority
-                    className="h-7 w-auto min-[960px]:group-data-collapsed/shell:hidden"
+                    className="h-8.5 w-auto rounded-[4px] bg-panel px-1.5 py-1 min-[960px]:group-data-collapsed/shell:hidden"
                   />
                   <Image
                     src="/android-chrome-192x192.png"
@@ -122,12 +145,12 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
                     height={36}
                     className="hidden h-9 w-9 min-[960px]:group-data-collapsed/shell:block"
                   />
-                  <span className="rounded-full bg-primary-soft px-2.5 py-0.5 text-xs font-semibold text-primary-strong min-[960px]:group-data-collapsed/shell:hidden">
+                  <span className="rounded-[4px] bg-ink-raised px-2 py-0.5 text-xs font-semibold text-ink-muted min-[960px]:group-data-collapsed/shell:hidden">
                     Admin
                   </span>
                 </Link>
                 <SideNav label="Admin navigation" sections={NAV_SECTIONS} />
-                <div className="mt-auto grid gap-2 border-t border-border pt-4">
+                <div className="mt-auto grid gap-2 border-t border-ink-line pt-4">
                   <div className={`flex items-center gap-3 p-2 ${RAIL_CENTER}`}>
                     <span
                       aria-hidden="true"
@@ -137,17 +160,20 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
                     </span>
                     {/* React text: the name and email never render as HTML. */}
                     <span className={`grid min-w-0 leading-snug ${RAIL_HIDE}`}>
-                      <strong className="truncate text-sm font-semibold" dir="auto">
+                      <strong
+                        className="truncate text-sm font-semibold text-ink-text"
+                        dir="auto"
+                      >
                         {user.name}
                       </strong>
-                      <span className="truncate text-xs text-faint">{user.email}</span>
+                      <span className="truncate text-xs text-ink-muted">{user.email}</span>
                     </span>
                   </div>
                   <form action={signOut}>
                     <input type="hidden" name="lang" value="en" />
                     <button
                       type="submit"
-                      className={`flex h-10 w-full items-center gap-3 rounded-control px-3 text-sm font-medium whitespace-nowrap text-muted hover:bg-danger-soft hover:text-danger ${RAIL_CENTER} ${FOCUS}`}
+                      className={`flex h-10 w-full items-center gap-3 rounded-control px-3 text-sm font-medium whitespace-nowrap text-ink-muted hover:bg-ink-raised hover:text-ink-text ${RAIL_CENTER} ${INK_FOCUS}`}
                     >
                       <LogoutIcon className="h-5 w-5" />
                       <span className={RAIL_HIDE}>Sign out</span>

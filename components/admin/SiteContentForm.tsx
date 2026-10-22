@@ -16,12 +16,13 @@ import {
   type TextField,
   type TextKey,
 } from "@/lib/site-content-rules";
+import { cn } from "@/lib/utils";
 
-const INPUT = `${INPUT_BASE} px-4`;
-const TEXTAREA = `${INPUT_BASE} h-auto px-4 py-3 leading-relaxed`;
+const INPUT = cn(INPUT_BASE, "border-border-strong bg-panel px-4");
+const TEXTAREA = cn(INPUT_BASE, "h-auto border-border-strong bg-panel px-4 py-3 leading-relaxed");
 const SUBMIT =
-  "h-11 rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
-const CARD = "grid gap-5 rounded-card border border-border bg-panel p-5 shadow-soft min-[600px]:p-6";
+  "h-11 rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
+const CARD = "grid gap-5 rounded-panel border border-border bg-panel p-5";
 const CHECKBOX = "size-4.5 shrink-0 accent-primary-strong";
 const RADIO = `${CHECKBOX} cursor-pointer`;
 const CHOICE =
@@ -195,7 +196,7 @@ export function SiteContentForm({
 
       <section aria-labelledby="site-hero" className={CARD}>
         <div className="grid gap-1">
-          <h2 id="site-hero" className="text-lg font-semibold">
+          <h2 id="site-hero" className="text-md font-semibold">
             Hero
           </h2>
           <p className="text-sm text-muted">
@@ -210,7 +211,7 @@ export function SiteContentForm({
           className="grid gap-3"
           aria-describedby={errors.heroStyle ? "site-heroStyle-error" : undefined}
         >
-          <legend className="mb-1.5 text-sm font-medium">Background</legend>
+          <legend className="mb-1.5 text-sm font-semibold">Background</legend>
           <div className="grid gap-3 min-[700px]:grid-cols-3">
             {HERO_STYLES.map(({ style, label, hint }) => (
               <label key={style} className={CHOICE}>
@@ -243,7 +244,7 @@ export function SiteContentForm({
             .filter(Boolean)
             .join(" ")}
         >
-          <legend className="mb-1.5 text-sm font-medium">Photo</legend>
+          <legend className="mb-1.5 text-sm font-semibold">Photo</legend>
           <p id="site-heroPhoto-hint" className="-mt-1.5 text-xs text-muted">
             Used when the background is Photo.
           </p>
@@ -282,7 +283,7 @@ export function SiteContentForm({
       </section>
 
       <fieldset className={CARD}>
-        <legend className="float-left text-lg font-semibold">Home sections</legend>
+        <legend className="float-left text-md font-semibold">Home sections</legend>
         <p className="clear-both text-sm text-muted">
           Unchecked sections are hidden from the home page in both languages. The hero always
           shows.
@@ -304,7 +305,7 @@ export function SiteContentForm({
 
       <section aria-labelledby="site-cta" className={CARD}>
         <div className="grid gap-1">
-          <h2 id="site-cta" className="text-lg font-semibold">
+          <h2 id="site-cta" className="text-md font-semibold">
             Call to action
           </h2>
           <p className="text-sm text-muted">The banner at the bottom of the home page.</p>
@@ -316,14 +317,14 @@ export function SiteContentForm({
 
       <section aria-labelledby="site-announcement" className={CARD}>
         <div className="grid gap-1">
-          <h2 id="site-announcement" className="text-lg font-semibold">
+          <h2 id="site-announcement" className="text-md font-semibold">
             Announcement bar
           </h2>
           <p className="text-sm text-muted">
             One line above the header on every store page. Turning it on needs both texts.
           </p>
         </div>
-        <label className="flex items-center gap-3 text-sm font-medium">
+        <label className="flex items-center gap-3 text-sm font-semibold">
           <input
             type="checkbox"
             name="announcementEnabled"

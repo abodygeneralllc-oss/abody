@@ -18,7 +18,7 @@ export function generateMetadata(): Promise<Metadata> {
 
 const FOCUS =
   "outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary-strong";
-const PAGE_LINK = `rounded-control text-sm font-semibold text-primary-strong hover:text-foreground ${FOCUS}`;
+const PAGE_LINK = `rounded-control text-sm font-semibold text-primary-strong hover:text-primary-hover ${FOCUS}`;
 
 export default async function AdminCustomersPage({
   searchParams,
@@ -39,13 +39,13 @@ export default async function AdminCustomersPage({
 
       <section
         aria-labelledby="customers-title"
-        className="min-w-0 overflow-hidden rounded-card border border-border bg-panel shadow-soft"
+        className="min-w-0 overflow-hidden rounded-panel border border-border bg-panel"
       >
         <h2 id="customers-title" className="sr-only">
           All customers
         </h2>
         {total === 0 ? (
-          <div className="p-5 min-[600px]:p-6">
+          <div className="p-5">
             {/* Not the shared EmptyState: admin links have no hover underline. */}
             <div className="rounded-card bg-surface p-5 text-sm">
               <p className="text-muted">No customers yet.</p>
@@ -89,7 +89,7 @@ export default async function AdminCustomersPage({
             {pageCount > 1 && (
               <nav
                 aria-label="Customer pages"
-                className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-4 min-[600px]:px-6"
+                className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-4"
               >
                 {page > 1 ? (
                   <Link href={`/admin/customers?page=${page - 1}`} className={PAGE_LINK}>

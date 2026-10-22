@@ -7,10 +7,10 @@ import { en } from "@/lib/i18n/dictionaries/en";
 export function ServiceStatus({ status }: { status: Status | null }) {
   if (status === null) {
     return (
-      <span className="inline-flex items-center rounded-full bg-surface px-3 py-1 text-xs font-semibold whitespace-nowrap text-muted">
+      <span className="inline-flex items-center rounded-control bg-warning-soft px-2 py-0.5 text-xs font-bold whitespace-nowrap text-warning">
         Awaiting details
       </span>
     );
   }
-  return <ServiceStatusChip status={status} text={en.account} />;
+  return <ServiceStatusChip status={status} text={en.account} badge />;
 }

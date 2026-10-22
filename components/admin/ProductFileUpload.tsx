@@ -11,7 +11,7 @@ type UploadState =
   | { kind: "error"; message: string };
 
 const BUTTON =
-  "h-11 justify-self-start rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
+  "h-11 justify-self-start rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
 
 const SERVER_ERRORS: Record<string, string> = {
   invalid_file_type: "The file is not a valid PDF or ZIP.",
@@ -144,7 +144,7 @@ export function ProductFileUpload({
           accept=".pdf,.zip,application/pdf,application/zip"
           aria-describedby="product-file-hint"
           disabled={uploading}
-          className="text-sm file:me-3 file:h-10 file:rounded-control file:border file:border-border file:bg-surface file:px-4 file:font-semibold file:text-foreground"
+          className="text-sm file:me-3 file:h-10 file:rounded-control file:border file:border-border-strong file:bg-panel file:px-4 file:font-semibold file:text-foreground"
         />
         <p id="product-file-hint" className="text-xs text-muted">
           PDF or ZIP, up to 25 MB. Customers who bought the product download the

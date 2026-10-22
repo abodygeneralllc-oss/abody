@@ -1,8 +1,8 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-// shadcn/ui table, restyled to the project tokens (the admin dashboard table
-// look: surface header, border rows, roomy cells). No client code needed.
+// shadcn/ui table, restyled to the project tokens (the redesign admin table:
+// gray uppercase header, ruled rows, gray row hover). No client code needed.
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
@@ -21,7 +21,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
     <thead
       data-slot="table-header"
       className={cn(
-        "bg-surface text-[0.6875rem] tracking-wider text-faint uppercase",
+        "bg-surface text-xs tracking-wider text-muted uppercase",
         className,
       )}
       {...props}
@@ -48,7 +48,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "border-t border-border transition-colors hover:bg-surface/60 [thead_&]:border-t-0 [thead_&]:hover:bg-transparent",
+        "border-b border-border transition-colors last:border-b-0 hover:bg-surface in-[thead]:last:border-b in-[thead]:hover:bg-transparent",
         className,
       )}
       {...props}
@@ -60,7 +60,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   return (
     <th
       data-slot="table-head"
-      className={cn("px-6 py-3 align-middle font-semibold whitespace-nowrap", className)}
+      className={cn("px-5 py-3 align-middle font-bold whitespace-nowrap", className)}
       {...props}
     />
   );
@@ -68,7 +68,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
 
 function TableCell({ className, ...props }: React.ComponentProps<"td">) {
   return (
-    <td data-slot="table-cell" className={cn("px-6 py-4 align-middle", className)} {...props} />
+    <td data-slot="table-cell" className={cn("px-5 py-3 align-middle", className)} {...props} />
   );
 }
 

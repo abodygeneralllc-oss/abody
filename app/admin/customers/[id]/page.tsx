@@ -32,13 +32,13 @@ export async function generateMetadata({
 }
 
 const CARD =
-  "grid content-start gap-4 rounded-card border border-border bg-panel p-5 shadow-soft min-[600px]:p-6";
+  "grid content-start gap-4 rounded-panel border border-border bg-panel p-5";
 const TABLE_CARD =
-  "min-w-0 overflow-hidden rounded-card border border-border bg-panel shadow-soft";
-const TABLE_TITLE = "px-5 pt-5 text-lg font-semibold min-[600px]:px-6";
+  "min-w-0 overflow-hidden rounded-panel border border-border bg-panel";
+const TABLE_TITLE = "px-5 pt-5 text-md font-semibold";
 const FOCUS =
   "outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary-strong";
-const BACK_LINK = `justify-self-start rounded-control text-sm font-medium text-primary-strong hover:text-foreground ${FOCUS}`;
+const BACK_LINK = `justify-self-start rounded-control text-sm font-medium text-primary-strong hover:text-primary-hover ${FOCUS}`;
 const ROW_LINK = `rounded-control font-semibold text-foreground hover:text-primary-strong ${FOCUS}`;
 
 function Detail({ label, children }: { label: string; children: ReactNode }) {
@@ -53,7 +53,7 @@ function Detail({ label, children }: { label: string; children: ReactNode }) {
 // Not the shared EmptyState: admin links have no hover underline.
 function Empty({ children }: { children: ReactNode }) {
   return (
-    <div className="p-5 pt-3 min-[600px]:p-6 min-[600px]:pt-3">
+    <div className="p-5 pt-3">
       <div className="rounded-card bg-surface p-5 text-sm">
         <p className="text-muted">{children}</p>
       </div>
@@ -137,7 +137,7 @@ export default async function AdminCustomerPage({
                         {paymentStatusLabel(order.status)}
                       </TableCell>
                       <TableCell>
-                        <StatusChip status={order.status} text={en.account} />
+                        <StatusChip status={order.status} text={en.account} badge />
                       </TableCell>
                       <TableCell className="whitespace-nowrap text-faint">
                         {formatDate(order.createdAt, "en")}
@@ -242,7 +242,7 @@ export default async function AdminCustomerPage({
         </div>
 
         <section aria-labelledby="customer-profile-title" className={CARD}>
-          <h2 id="customer-profile-title" className="text-lg font-semibold">
+          <h2 id="customer-profile-title" className="text-md font-semibold">
             Profile
           </h2>
           <dl className="grid gap-4">

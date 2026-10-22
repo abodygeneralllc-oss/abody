@@ -17,7 +17,7 @@ export async function generateMetadata({
 }
 
 const CARD =
-  "grid content-start gap-4 rounded-card border border-border bg-panel p-5 shadow-soft min-[600px]:p-6";
+  "grid content-start gap-4 rounded-panel border border-border bg-panel p-5";
 
 export default async function EditCouponPage({ params }: PageProps<"/admin/coupons/[id]">) {
   await requireAdmin();
@@ -53,13 +53,13 @@ export default async function EditCouponPage({ params }: PageProps<"/admin/coupo
 
         <div className="grid gap-6">
           <section aria-labelledby="coupon-status-title" className={CARD}>
-            <h2 id="coupon-status-title" className="text-lg font-semibold">
+            <h2 id="coupon-status-title" className="text-md font-semibold">
               Availability
             </h2>
             <CouponActiveControl id={coupon.id} active={coupon.active} />
           </section>
           <section aria-labelledby="coupon-usage-title" className={CARD}>
-            <h2 id="coupon-usage-title" className="text-lg font-semibold">
+            <h2 id="coupon-usage-title" className="text-md font-semibold">
               Usage
             </h2>
             <p className="text-sm text-muted">

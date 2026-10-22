@@ -76,7 +76,7 @@ export function SidebarShell({
         id="sidebar"
         ref={sidebarRef}
         onClick={closeOnLink}
-        className={`flex flex-col gap-6 overflow-hidden border-e border-border bg-panel px-3 py-4 max-[959px]:fixed max-[959px]:inset-y-0 max-[959px]:start-0 max-[959px]:z-30 max-[959px]:w-70 max-[959px]:shadow-raised max-[959px]:transition-[translate,visibility] max-[959px]:duration-200 motion-reduce:transition-none min-[960px]:sticky min-[960px]:top-0 min-[960px]:z-20 min-[960px]:h-dvh min-[960px]:group-data-collapsed/shell:overflow-visible ${
+        className={`flex flex-col gap-5 overflow-hidden bg-ink px-3 py-5 text-ink-muted max-[959px]:fixed max-[959px]:inset-y-0 max-[959px]:start-0 max-[959px]:z-30 max-[959px]:w-70 max-[959px]:shadow-raised max-[959px]:transition-[translate,visibility] max-[959px]:duration-200 motion-reduce:transition-none min-[960px]:sticky min-[960px]:top-0 min-[960px]:z-20 min-[960px]:h-dvh min-[960px]:group-data-collapsed/shell:overflow-visible ${
           drawerOpen ? "" : "max-[959px]:invisible max-[959px]:-translate-x-full"
         }`}
       >
@@ -91,7 +91,7 @@ export function SidebarShell({
       )}
 
       <div className="flex min-w-0 flex-col">
-        <header className="sticky top-0 z-10 flex h-17 items-center gap-3 border-b border-border bg-canvas/80 px-4 backdrop-blur min-[600px]:px-6">
+        <header className="sticky top-0 z-10 flex h-16 items-center gap-3 border-b border-border bg-panel px-4 min-[600px]:px-6">
           <button
             ref={menuButtonRef}
             type="button"
@@ -126,7 +126,7 @@ export function SidebarShell({
           </p>
           <div className="ms-auto">{topbarEnd}</div>
         </header>
-        <main className="grid w-full max-w-340 grid-cols-[minmax(0,1fr)] content-start gap-6 px-4 pt-8 pb-16 min-[600px]:px-6">
+        <main className="grid w-full max-w-340 grid-cols-[minmax(0,1fr)] content-start gap-5 px-4 pt-6 pb-16 min-[600px]:px-6">
           {children}
         </main>
       </div>

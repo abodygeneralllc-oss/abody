@@ -20,7 +20,7 @@ export function generateMetadata(): Promise<Metadata> {
 
 const FOCUS =
   "outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary-strong";
-const PAGE_LINK = `rounded-control text-sm font-semibold text-primary-strong hover:text-foreground ${FOCUS}`;
+const PAGE_LINK = `rounded-control text-sm font-semibold text-primary-strong hover:text-primary-hover ${FOCUS}`;
 const ROW_LINK = `rounded-control text-foreground hover:text-primary-strong ${FOCUS}`;
 
 export default async function AdminServiceOrdersPage({
@@ -42,13 +42,13 @@ export default async function AdminServiceOrdersPage({
 
       <section
         aria-labelledby="service-orders-title"
-        className="min-w-0 overflow-hidden rounded-card border border-border bg-panel shadow-soft"
+        className="min-w-0 overflow-hidden rounded-panel border border-border bg-panel"
       >
         <h2 id="service-orders-title" className="sr-only">
           All service orders
         </h2>
         {total === 0 ? (
-          <div className="p-5 min-[600px]:p-6">
+          <div className="p-5">
             {/* Not the shared EmptyState: admin links have no hover underline. */}
             <div className="rounded-card bg-surface p-5 text-sm">
               <p className="text-muted">No services have been bought yet.</p>
@@ -102,7 +102,7 @@ export default async function AdminServiceOrdersPage({
             {pageCount > 1 && (
               <nav
                 aria-label="Service order pages"
-                className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-4 min-[600px]:px-6"
+                className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-5 py-4"
               >
                 {page > 1 ? (
                   <Link href={`/admin/service-orders?page=${page - 1}`} className={PAGE_LINK}>

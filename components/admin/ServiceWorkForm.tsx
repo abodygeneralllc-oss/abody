@@ -5,10 +5,11 @@ import { saveServiceWork, type ServiceWorkResult } from "@/actions/admin-service
 import { INPUT_BASE } from "@/components/auth/AuthForm";
 import type { ServiceStatus } from "@/lib/generated/prisma/enums";
 import { ADMIN_NOTES_MAX_LENGTH } from "@/lib/service-work-rules";
+import { cn } from "@/lib/utils";
 
-const TEXTAREA = `${INPUT_BASE} h-auto px-4 py-3 leading-relaxed`;
+const TEXTAREA = cn(INPUT_BASE, "h-auto border-border-strong bg-panel px-4 py-3 leading-relaxed");
 const SUBMIT =
-  "h-11 justify-self-start rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
+  "h-11 justify-self-start rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
 
 // Labels only; the server whitelists the value.
 const OPTIONS: { value: ServiceStatus; label: string; hint: string }[] = [
@@ -69,11 +70,11 @@ export function ServiceWorkForm({
     <form onSubmit={submit} className="grid gap-5">
       <input type="hidden" name="id" value={serviceId} />
       <fieldset className="grid gap-2">
-        <legend className="mb-1 text-sm font-medium">Status</legend>
+        <legend className="mb-1 text-sm font-semibold">Status</legend>
         {OPTIONS.map((option) => (
           <label
             key={option.value}
-            className="flex cursor-pointer items-start gap-3 rounded-control border border-border bg-surface px-4 py-3 text-sm has-checked:border-primary has-checked:bg-primary-soft"
+            className="flex cursor-pointer items-start gap-3 rounded-control border border-border bg-panel px-4 py-3 text-sm hover:border-border-strong has-checked:border-primary has-checked:bg-primary-soft"
           >
             <input
               type="radio"

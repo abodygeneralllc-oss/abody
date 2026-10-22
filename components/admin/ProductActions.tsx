@@ -9,13 +9,14 @@ import {
   type ProductActionResult,
 } from "@/actions/admin-products";
 import type { ProductStatus, ProductType } from "@/lib/generated/prisma/enums";
+import { cn } from "@/lib/utils";
 
 const PRIMARY =
-  "h-11 justify-self-start rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-not-allowed disabled:opacity-60";
+  "h-11 justify-self-start rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-not-allowed disabled:opacity-60";
 const SECONDARY =
-  "h-11 justify-self-start rounded-control border border-border bg-surface px-5 text-sm font-semibold text-foreground outline-offset-2 hover:border-primary hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
+  "h-11 justify-self-start rounded-control border border-border-strong bg-panel px-5 text-sm font-semibold text-foreground outline-offset-2 hover:border-foreground focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
 const DANGER =
-  "h-11 justify-self-start rounded-control bg-danger px-5 text-sm font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-danger disabled:cursor-wait disabled:opacity-70";
+  "h-11 justify-self-start rounded-control bg-danger px-5 text-sm font-semibold text-white outline-offset-2 hover:bg-danger/90 focus-visible:outline-2 focus-visible:outline-danger disabled:cursor-wait disabled:opacity-70";
 const DANGER_OUTLINE =
   "h-11 justify-self-start rounded-control border border-danger/40 bg-panel px-5 text-sm font-semibold text-danger outline-offset-2 hover:bg-danger-soft focus-visible:outline-2 focus-visible:outline-danger";
 
@@ -137,21 +138,26 @@ export function DeleteProduct({ type, productId }: { type: ProductType; productI
       {confirming ? (
         <form
           action={action}
-          className="grid gap-3 rounded-control border border-danger/40 bg-danger-soft p-4"
+          className="grid gap-4 rounded-panel border border-border bg-panel p-5 shadow-float"
         >
           <input type="hidden" name="id" value={productId} />
-          <p className="text-sm font-medium text-danger">
+          <p className="text-sm font-semibold text-foreground">
             Delete this {noun} permanently? This cannot be undone.
           </p>
-          <div className="flex flex-wrap gap-3">
-            <button ref={confirmRef} type="submit" disabled={pending} className={DANGER}>
+          <div className="flex flex-wrap justify-end gap-2">
+            <button
+              ref={confirmRef}
+              type="submit"
+              disabled={pending}
+              className={cn(DANGER, "h-9 px-4")}
+            >
               {pending ? "Deleting…" : "Delete permanently"}
             </button>
             <button
               type="button"
               disabled={pending}
               onClick={() => setConfirming(false)}
-              className={SECONDARY}
+              className={cn(SECONDARY, "h-9 px-4")}
             >
               Cancel
             </button>

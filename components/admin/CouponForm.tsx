@@ -22,14 +22,15 @@ import {
   PERCENT_MIN,
   SCOPE_LABELS,
 } from "@/lib/coupons";
+import { cn } from "@/lib/utils";
 
-const INPUT = `${INPUT_BASE} px-4`;
+const INPUT = cn(INPUT_BASE, "border-border-strong bg-panel px-4");
 const SUBMIT =
-  "h-11 rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
+  "h-11 rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
 const SECONDARY =
-  "h-11 justify-self-start rounded-control border border-border bg-surface px-5 text-sm font-semibold text-foreground outline-offset-2 hover:border-primary hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
+  "h-11 justify-self-start rounded-control border border-border-strong bg-panel px-5 text-sm font-semibold text-foreground outline-offset-2 hover:border-foreground focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
 const PRIMARY = `justify-self-start ${SUBMIT}`;
-const CARD = "grid gap-5 rounded-card border border-border bg-panel p-5 shadow-soft min-[600px]:p-6";
+const CARD = "grid gap-5 rounded-panel border border-border bg-panel p-5";
 
 const FIELD_ERRORS: Record<CouponFieldError, string> = {
   required: "This field is required.",
@@ -135,7 +136,7 @@ export function CouponForm({ id, initial }: { id?: string; initial: CouponFormVa
       </div>
 
       <section aria-labelledby="coupon-details" className={CARD}>
-        <h2 id="coupon-details" className="text-lg font-semibold">
+        <h2 id="coupon-details" className="text-md font-semibold">
           Discount
         </h2>
         {!id && (
@@ -193,7 +194,7 @@ export function CouponForm({ id, initial }: { id?: string; initial: CouponFormVa
 
       <section aria-labelledby="coupon-limits" className={CARD}>
         <div className="grid gap-1">
-          <h2 id="coupon-limits" className="text-lg font-semibold">
+          <h2 id="coupon-limits" className="text-md font-semibold">
             Limits
           </h2>
           <p className="text-sm text-muted">Leave both empty for a code with no end.</p>

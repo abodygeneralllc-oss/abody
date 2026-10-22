@@ -26,7 +26,7 @@ export async function generateMetadata({
 }
 
 const CARD =
-  "grid content-start gap-4 rounded-card border border-border bg-panel p-5 shadow-soft min-[600px]:p-6";
+  "grid content-start gap-4 rounded-panel border border-border bg-panel p-5";
 const BACK_LINK =
   "justify-self-start rounded-control text-sm font-medium text-primary-strong outline-offset-2 hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong";
 
@@ -88,7 +88,7 @@ export default async function EditServicePage({ params }: PageProps<"/admin/serv
         <div className="grid gap-6">
           <section aria-labelledby="service-preview-title" className={CARD}>
             <div className="grid gap-1">
-              <h2 id="service-preview-title" className="text-lg font-semibold">
+              <h2 id="service-preview-title" className="text-md font-semibold">
                 Store card preview
               </h2>
               <p className="text-sm text-muted">Shows the last saved version.</p>
@@ -96,7 +96,7 @@ export default async function EditServicePage({ params }: PageProps<"/admin/serv
             <StoreCardPreview product={service} />
           </section>
           <section aria-labelledby="service-status-title" className={CARD}>
-            <h2 id="service-status-title" className="text-lg font-semibold">
+            <h2 id="service-status-title" className="text-md font-semibold">
               Visibility
             </h2>
             <ProductStatusControl
@@ -107,7 +107,7 @@ export default async function EditServicePage({ params }: PageProps<"/admin/serv
             />
           </section>
           <section aria-labelledby="service-delete-title" className={CARD}>
-            <h2 id="service-delete-title" className="text-lg font-semibold">
+            <h2 id="service-delete-title" className="text-md font-semibold">
               Delete
             </h2>
             <DeleteProduct type="SERVICE" productId={service.id} />

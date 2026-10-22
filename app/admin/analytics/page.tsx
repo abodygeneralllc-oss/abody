@@ -20,7 +20,7 @@ export function generateMetadata(): Promise<Metadata> {
 
 const FOCUS =
   "outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary-strong";
-const CARD = "rounded-card border border-border bg-panel shadow-soft";
+const CARD = "rounded-panel border border-border bg-panel";
 
 function percent(rate: number | null): string {
   return rate === null ? "—" : `${rate}%`;
@@ -72,7 +72,7 @@ export default async function AdminAnalyticsPage({
           </p>
         </div>
         <nav aria-label="Report period">
-          <ul className="flex gap-1 rounded-full border border-border bg-panel p-1">
+          <ul className="flex gap-0.5 rounded-control bg-well p-0.75">
             {RANGE_DAYS.map((option) => {
               const current = option === days;
               return (
@@ -80,10 +80,10 @@ export default async function AdminAnalyticsPage({
                   <Link
                     href={`/admin/analytics?range=${option}`}
                     aria-current={current ? "page" : undefined}
-                    className={`block rounded-full px-3 py-1.5 text-sm font-medium ${FOCUS} ${
+                    className={`flex h-8 items-center rounded-[4px] px-3 text-sm font-bold ${FOCUS} ${
                       current
-                        ? "bg-primary-strong text-white"
-                        : "text-muted hover:bg-surface hover:text-foreground"
+                        ? "bg-panel text-foreground shadow-soft"
+                        : "text-muted hover:text-foreground"
                     }`}
                   >
                     {option} days
@@ -104,8 +104,8 @@ export default async function AdminAnalyticsPage({
         <dl className="grid gap-4 min-[640px]:grid-cols-2 min-[1100px]:grid-cols-3">
           {totals.map(({ label, value }) => (
             <div key={label} className={`grid content-start gap-2 p-5 ${CARD}`}>
-              <dt className="text-sm font-medium text-muted">{label}</dt>
-              <dd className="text-[1.875rem] leading-tight font-semibold tracking-tight tabular-nums">
+              <dt className="text-sm text-muted">{label}</dt>
+              <dd className="text-2xl font-bold tracking-tight tabular-nums">
                 {value}
               </dd>
             </div>
@@ -113,9 +113,9 @@ export default async function AdminAnalyticsPage({
         </dl>
       </section>
 
-      <section aria-labelledby="rates-title" className={`grid gap-4 p-5 min-[600px]:p-6 ${CARD}`}>
+      <section aria-labelledby="rates-title" className={`grid gap-4 p-5 ${CARD}`}>
         <div className="grid gap-0.5">
-          <h2 id="rates-title" className="text-lg font-semibold">
+          <h2 id="rates-title" className="text-md font-semibold">
             Conversion
           </h2>
           <p className="text-xs text-faint">Share of each step that reached the next</p>
@@ -134,14 +134,14 @@ export default async function AdminAnalyticsPage({
         aria-labelledby="popular-title"
         className={`min-w-0 overflow-hidden ${CARD}`}
       >
-        <div className="grid gap-0.5 border-b border-border px-5 py-5 min-[600px]:px-6">
-          <h2 id="popular-title" className="text-lg font-semibold">
+        <div className="grid gap-0.5 border-b border-border px-5 py-4">
+          <h2 id="popular-title" className="text-md font-semibold">
             Popular products
           </h2>
           <p className="text-xs text-faint">Top 10 by units sold, then sales and views</p>
         </div>
         {report.popularProducts.length === 0 ? (
-          <div className="p-5 min-[600px]:p-6">
+          <div className="p-5">
             <EmptyState message="No product views or sales in this period." />
           </div>
         ) : (
@@ -190,14 +190,14 @@ export default async function AdminAnalyticsPage({
       </section>
 
       <section aria-labelledby="pages-title" className={`min-w-0 overflow-hidden ${CARD}`}>
-        <div className="grid gap-0.5 border-b border-border px-5 py-5 min-[600px]:px-6">
-          <h2 id="pages-title" className="text-lg font-semibold">
+        <div className="grid gap-0.5 border-b border-border px-5 py-4">
+          <h2 id="pages-title" className="text-md font-semibold">
             Top pages
           </h2>
           <p className="text-xs text-faint">Top 10 store pages by views</p>
         </div>
         {report.topPages.length === 0 ? (
-          <div className="p-5 min-[600px]:p-6">
+          <div className="p-5">
             <EmptyState message="No page views in this period." />
           </div>
         ) : (

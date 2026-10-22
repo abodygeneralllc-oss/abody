@@ -38,12 +38,13 @@ import {
   type ProductFormValues,
 } from "@/lib/admin-product-rules";
 import type { ProductType } from "@/lib/generated/prisma/enums";
+import { cn } from "@/lib/utils";
 
-const INPUT = `${INPUT_BASE} px-4`;
-const TEXTAREA = `${INPUT_BASE} h-auto px-4 py-3 leading-relaxed`;
+const INPUT = cn(INPUT_BASE, "border-border-strong bg-panel px-4");
+const TEXTAREA = cn(INPUT_BASE, "h-auto border-border-strong bg-panel px-4 py-3 leading-relaxed");
 const SUBMIT =
-  "h-11 rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
-const CARD = "grid gap-5 rounded-card border border-border bg-panel p-5 shadow-soft min-[600px]:p-6";
+  "h-11 rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
+const CARD = "grid gap-5 rounded-panel border border-border bg-panel p-5";
 
 const FIELD_ERRORS: Record<ProductFieldError, string> = {
   required: "This field is required.",
@@ -285,6 +286,7 @@ function CategoryField({
         >
           <SelectTrigger
             id={id}
+            className="border-border-strong bg-panel"
             aria-invalid={error && !isNew ? true : undefined}
             aria-describedby={describedBy}
           >
@@ -437,7 +439,7 @@ export function ProductForm({
       </div>
 
       <section aria-labelledby="product-english" className={CARD}>
-        <h2 id="product-english" className="text-lg font-semibold">
+        <h2 id="product-english" className="text-md font-semibold">
           Details
         </h2>
         {fields(specs.english)}
@@ -454,14 +456,14 @@ export function ProductForm({
       </section>
 
       <section aria-labelledby="product-pricing" className={CARD}>
-        <h2 id="product-pricing" className="text-lg font-semibold">
+        <h2 id="product-pricing" className="text-md font-semibold">
           {isService ? "Price, duration, and image" : "Price and image"}
         </h2>
         {fields(specs.pricing)}
       </section>
 
       <section aria-labelledby="product-home" className={CARD}>
-        <h2 id="product-home" className="text-lg font-semibold">
+        <h2 id="product-home" className="text-md font-semibold">
           Home page
         </h2>
         {fields(specs.home)}
@@ -469,7 +471,7 @@ export function ProductForm({
 
       <section aria-labelledby="product-arabic" className={CARD}>
         <div className="grid gap-1">
-          <h2 id="product-arabic" className="text-lg font-semibold">
+          <h2 id="product-arabic" className="text-md font-semibold">
             Arabic content
           </h2>
           <p className="text-sm text-muted">

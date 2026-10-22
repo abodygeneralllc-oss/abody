@@ -35,10 +35,10 @@ export async function generateMetadata({
 }
 
 const CARD =
-  "grid content-start gap-4 rounded-card border border-border bg-panel p-5 shadow-soft min-[600px]:p-6";
+  "grid content-start gap-4 rounded-panel border border-border bg-panel p-5";
 const FOCUS =
   "outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary-strong";
-const BACK_LINK = `justify-self-start rounded-control text-sm font-medium text-primary-strong hover:text-foreground ${FOCUS}`;
+const BACK_LINK = `justify-self-start rounded-control text-sm font-medium text-primary-strong hover:text-primary-hover ${FOCUS}`;
 
 function Detail({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -66,7 +66,7 @@ export default async function AdminOrderPage({ params }: PageProps<"/admin/order
           <h1 className="text-2xl font-semibold tracking-tight">
             Order <OrderNumber number={order.number} />
           </h1>
-          <StatusChip status={order.status} text={en.account} />
+          <StatusChip status={order.status} text={en.account} badge />
         </div>
         <p className="text-sm text-faint">Placed {formatDate(order.createdAt, "en")}</p>
       </div>
@@ -75,9 +75,9 @@ export default async function AdminOrderPage({ params }: PageProps<"/admin/order
         <div className="grid min-w-0 gap-6">
           <section
             aria-labelledby="order-items-title"
-            className="min-w-0 overflow-hidden rounded-card border border-border bg-panel shadow-soft"
+            className="min-w-0 overflow-hidden rounded-panel border border-border bg-panel"
           >
-            <h2 id="order-items-title" className="px-5 pt-5 text-lg font-semibold min-[600px]:px-6">
+            <h2 id="order-items-title" className="px-5 pt-5 text-md font-semibold">
               Items
             </h2>
             <Table className="mt-3 min-w-150">
@@ -164,7 +164,7 @@ export default async function AdminOrderPage({ params }: PageProps<"/admin/order
           </section>
 
           <section aria-labelledby="order-payment-title" className={CARD}>
-            <h2 id="order-payment-title" className="text-lg font-semibold">
+            <h2 id="order-payment-title" className="text-md font-semibold">
               Payment
             </h2>
             <dl className="grid gap-4 min-[600px]:grid-cols-2">
@@ -188,7 +188,7 @@ export default async function AdminOrderPage({ params }: PageProps<"/admin/order
 
         <div className="grid gap-6">
           <section aria-labelledby="order-customer-title" className={CARD}>
-            <h2 id="order-customer-title" className="text-lg font-semibold">
+            <h2 id="order-customer-title" className="text-md font-semibold">
               Customer
             </h2>
             <dl className="grid gap-4">
@@ -197,7 +197,7 @@ export default async function AdminOrderPage({ params }: PageProps<"/admin/order
                 {order.user?.role === "CUSTOMER" ? (
                   <Link
                     href={`/admin/customers/${order.user.id}`}
-                    className={`rounded-control font-semibold text-primary-strong hover:text-foreground ${FOCUS}`}
+                    className={`rounded-control font-semibold text-primary-strong hover:text-primary-hover ${FOCUS}`}
                     dir="auto"
                   >
                     {order.user.name || "No name"}
@@ -214,7 +214,7 @@ export default async function AdminOrderPage({ params }: PageProps<"/admin/order
           </section>
 
           <section aria-labelledby="order-status-title" className={CARD}>
-            <h2 id="order-status-title" className="text-lg font-semibold">
+            <h2 id="order-status-title" className="text-md font-semibold">
               Fulfilment
             </h2>
             {isFulfilmentStatus(order.status) ? (
@@ -230,7 +230,7 @@ export default async function AdminOrderPage({ params }: PageProps<"/admin/order
           {/* Only paid orders can be refunded; others follow Stripe. */}
           {isFulfilmentStatus(order.status) && (
             <section aria-labelledby="order-refund-title" className={CARD}>
-              <h2 id="order-refund-title" className="text-lg font-semibold">
+              <h2 id="order-refund-title" className="text-md font-semibold">
                 Refund
               </h2>
               {order.stripePaymentIntentId ? (

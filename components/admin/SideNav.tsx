@@ -65,12 +65,12 @@ export function SideNav({
           key={section.label}
           className={
             index > 0
-              ? "min-[960px]:group-data-collapsed/shell:border-t min-[960px]:group-data-collapsed/shell:border-border min-[960px]:group-data-collapsed/shell:pt-4"
+              ? "min-[960px]:group-data-collapsed/shell:border-t min-[960px]:group-data-collapsed/shell:border-ink-line min-[960px]:group-data-collapsed/shell:pt-4"
               : undefined
           }
         >
           <h2
-            className={`mb-1 px-3 text-[0.6875rem] font-semibold tracking-wider whitespace-nowrap text-faint uppercase ${RAIL_HIDE}`}
+            className={`mb-1.5 px-3 text-xs font-bold tracking-[.08em] whitespace-nowrap text-ink-muted uppercase ${RAIL_HIDE}`}
           >
             {section.label}
           </h2>
@@ -83,16 +83,16 @@ export function SideNav({
                   <Link
                     href={href}
                     aria-current={active ? "page" : undefined}
-                    className={`group/link relative flex h-10.5 items-center gap-3 rounded-control px-3 whitespace-nowrap outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary-strong ${RAIL_CENTER} ${
+                    className={`group/link relative flex h-10 items-center gap-3 rounded-control px-3 whitespace-nowrap outline-offset-2 focus-visible:outline-2 focus-visible:outline-ink-text ${RAIL_CENTER} ${
                       active
-                        ? "bg-primary-soft font-semibold text-primary-strong before:absolute before:inset-y-2.5 before:-start-3 before:w-0.75 before:rounded-e before:bg-primary-strong"
-                        : "text-muted hover:bg-surface hover:text-foreground"
+                        ? "bg-ink-raised font-semibold text-ink-text before:absolute before:inset-y-0 before:inset-s-0 before:w-0.75 before:rounded-s-control before:bg-primary"
+                        : "text-ink-muted hover:bg-ink-raised hover:text-ink-text"
                     }`}
                   >
                     <Icon className="h-5 w-5" />
                     <span className={LABEL}>{label}</span>
                     {section.external && (
-                      <ExternalIcon className="ms-auto h-4 w-4 text-faint min-[960px]:group-data-collapsed/shell:hidden" />
+                      <ExternalIcon className="ms-auto h-4 w-4 text-ink-muted min-[960px]:group-data-collapsed/shell:hidden" />
                     )}
                   </Link>
                 </li>

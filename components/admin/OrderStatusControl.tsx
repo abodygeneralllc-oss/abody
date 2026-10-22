@@ -5,7 +5,7 @@ import { setOrderStatus, type OrderActionResult } from "@/actions/admin-orders";
 import type { FulfilmentStatus } from "@/lib/admin-orders";
 
 const SUBMIT =
-  "h-11 justify-self-start rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
+  "h-11 justify-self-start rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
 
 // Labels only; the server whitelists the value.
 const OPTIONS: { value: FulfilmentStatus; label: string; hint: string }[] = [
@@ -47,11 +47,11 @@ export function OrderStatusControl({
     <form action={action} className="grid gap-4">
       <input type="hidden" name="id" value={orderId} />
       <fieldset className="grid gap-2">
-        <legend className="mb-1 text-sm font-medium">Order status</legend>
+        <legend className="mb-1 text-sm font-semibold">Order status</legend>
         {OPTIONS.map((option) => (
           <label
             key={option.value}
-            className="flex cursor-pointer items-start gap-3 rounded-control border border-border bg-surface px-4 py-3 text-sm has-checked:border-primary has-checked:bg-primary-soft"
+            className="flex cursor-pointer items-start gap-3 rounded-control border border-border bg-panel px-4 py-3 text-sm hover:border-border-strong has-checked:border-primary has-checked:bg-primary-soft"
           >
             <input
               type="radio"

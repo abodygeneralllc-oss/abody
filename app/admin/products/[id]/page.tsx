@@ -30,7 +30,7 @@ export async function generateMetadata({
 }
 
 const CARD =
-  "grid content-start gap-4 rounded-card border border-border bg-panel p-5 shadow-soft min-[600px]:p-6";
+  "grid content-start gap-4 rounded-panel border border-border bg-panel p-5";
 const BACK_LINK =
   "justify-self-start rounded-control text-sm font-medium text-primary-strong outline-offset-2 hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary-strong";
 
@@ -88,7 +88,7 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
 
         <div className="grid gap-6">
           <section aria-labelledby="product-file-title" className={CARD}>
-            <h2 id="product-file-title" className="text-lg font-semibold">
+            <h2 id="product-file-title" className="text-md font-semibold">
               Downloadable file
             </h2>
             <ProductFileUpload
@@ -99,7 +99,7 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
           </section>
           <section aria-labelledby="product-preview-title" className={CARD}>
             <div className="grid gap-1">
-              <h2 id="product-preview-title" className="text-lg font-semibold">
+              <h2 id="product-preview-title" className="text-md font-semibold">
                 Store card preview
               </h2>
               <p className="text-sm text-muted">Shows the last saved version.</p>
@@ -107,7 +107,7 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
             <StoreCardPreview product={product} />
           </section>
           <section aria-labelledby="product-status-title" className={CARD}>
-            <h2 id="product-status-title" className="text-lg font-semibold">
+            <h2 id="product-status-title" className="text-md font-semibold">
               Visibility
             </h2>
             <ProductStatusControl
@@ -118,7 +118,7 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
             />
           </section>
           <section aria-labelledby="product-delete-title" className={CARD}>
-            <h2 id="product-delete-title" className="text-lg font-semibold">
+            <h2 id="product-delete-title" className="text-md font-semibold">
               Delete
             </h2>
             <DeleteProduct type="DIGITAL_PRODUCT" productId={product.id} />

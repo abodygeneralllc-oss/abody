@@ -37,7 +37,7 @@ export default async function AdminServicesPage() {
         </div>
         <Link
           href="/admin/services/new"
-          className={`flex h-11 items-center gap-2 rounded-control bg-primary-strong px-5 text-sm font-semibold text-white hover:shadow-raised ${FOCUS}`}
+          className={`flex h-11 items-center gap-2 rounded-control bg-primary-strong px-5 text-sm font-semibold text-white hover:bg-primary-hover ${FOCUS}`}
         >
           <PlusIcon className="h-4 w-4" />
           New service
@@ -46,19 +46,19 @@ export default async function AdminServicesPage() {
 
       <section
         aria-labelledby="services-title"
-        className="min-w-0 overflow-hidden rounded-card border border-border bg-panel shadow-soft"
+        className="min-w-0 overflow-hidden rounded-panel border border-border bg-panel"
       >
         <h2 id="services-title" className="sr-only">
           All services
         </h2>
         {services.length === 0 ? (
-          <div className="p-5 min-[600px]:p-6">
+          <div className="p-5">
             {/* Not the shared EmptyState: admin links have no hover underline. */}
             <div className="grid justify-items-start gap-3 rounded-card bg-surface p-5 text-sm">
               <p className="text-muted">No services yet.</p>
               <Link
                 href="/admin/services/new"
-                className={`rounded-control font-semibold text-primary-strong hover:text-foreground ${FOCUS}`}
+                className={`rounded-control font-semibold text-primary-strong hover:text-primary-hover ${FOCUS}`}
               >
                 Create the first service
               </Link>
@@ -112,7 +112,9 @@ export default async function AdminServicesPage() {
                   </TableCell>
                   <TableCell className="whitespace-nowrap text-muted tabular-nums">
                     {service.featuredRank !== null ? (
-                      `#${service.featuredRank}`
+                      <span className="inline-grid h-6 w-6 place-items-center rounded-full bg-primary-soft text-xs font-bold text-primary-strong">
+                        {service.featuredRank}
+                      </span>
                     ) : (
                       <>
                         <span aria-hidden="true">—</span>

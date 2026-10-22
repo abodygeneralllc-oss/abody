@@ -36,7 +36,7 @@ export default async function AdminProductsPage() {
         </div>
         <Link
           href="/admin/products/new"
-          className={`flex h-11 items-center gap-2 rounded-control bg-primary-strong px-5 text-sm font-semibold text-white hover:shadow-raised ${FOCUS}`}
+          className={`flex h-11 items-center gap-2 rounded-control bg-primary-strong px-5 text-sm font-semibold text-white hover:bg-primary-hover ${FOCUS}`}
         >
           <PlusIcon className="h-4 w-4" />
           New product
@@ -45,19 +45,19 @@ export default async function AdminProductsPage() {
 
       <section
         aria-labelledby="products-title"
-        className="min-w-0 overflow-hidden rounded-card border border-border bg-panel shadow-soft"
+        className="min-w-0 overflow-hidden rounded-panel border border-border bg-panel"
       >
         <h2 id="products-title" className="sr-only">
           All products
         </h2>
         {products.length === 0 ? (
-          <div className="p-5 min-[600px]:p-6">
+          <div className="p-5">
             {/* Not the shared EmptyState: admin links have no hover underline. */}
             <div className="grid justify-items-start gap-3 rounded-card bg-surface p-5 text-sm">
               <p className="text-muted">No products yet.</p>
               <Link
                 href="/admin/products/new"
-                className={`rounded-control font-semibold text-primary-strong hover:text-foreground ${FOCUS}`}
+                className={`rounded-control font-semibold text-primary-strong hover:text-primary-hover ${FOCUS}`}
               >
                 Create the first product
               </Link>
@@ -101,7 +101,9 @@ export default async function AdminProductsPage() {
                   </TableCell>
                   <TableCell className="whitespace-nowrap text-muted tabular-nums">
                     {product.featuredRank !== null ? (
-                      `#${product.featuredRank}`
+                      <span className="inline-grid h-6 w-6 place-items-center rounded-full bg-primary-soft text-xs font-bold text-primary-strong">
+                        {product.featuredRank}
+                      </span>
                     ) : (
                       <>
                         <span aria-hidden="true">—</span>
@@ -111,9 +113,13 @@ export default async function AdminProductsPage() {
                   </TableCell>
                   <TableCell>
                     {product.hasFile ? (
-                      <span className="text-success">Attached</span>
+                      <span className="inline-flex items-center rounded-control bg-well px-2 py-0.5 text-xs font-bold whitespace-nowrap text-muted">
+                        Attached
+                      </span>
                     ) : (
-                      <span className="font-medium text-warning">Missing</span>
+                      <span className="inline-flex items-center rounded-control bg-warning-soft px-2 py-0.5 text-xs font-bold whitespace-nowrap text-warning">
+                        Missing
+                      </span>
                     )}
                   </TableCell>
                   <TableCell className="whitespace-nowrap text-faint">

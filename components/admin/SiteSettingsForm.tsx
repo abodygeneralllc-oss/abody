@@ -4,11 +4,12 @@ import { useActionState, useEffect, useRef } from "react";
 import { saveSiteSettings, type SiteSettingsActionResult } from "@/actions/admin-site-settings";
 import { INPUT_BASE } from "@/components/auth/AuthForm";
 import { CONTACT_EMAIL_MAX, type SiteSettingsFormValues } from "@/lib/site-settings-rules";
+import { cn } from "@/lib/utils";
 
-const INPUT = `${INPUT_BASE} px-4`;
+const INPUT = cn(INPUT_BASE, "border-border-strong bg-panel px-4");
 const SUBMIT =
-  "h-11 rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
-const CARD = "grid gap-5 rounded-card border border-border bg-panel p-5 shadow-soft min-[600px]:p-6";
+  "h-11 rounded-control bg-primary-strong px-5 text-sm font-semibold text-white outline-offset-2 hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
+const CARD = "grid gap-5 rounded-panel border border-border bg-panel p-5";
 
 const FORM_ERRORS: Record<Exclude<SiteSettingsActionResult, null | { success: true }>["error"], string> = {
   invalid_fields: "Some fields need attention. Fix them and save again.",
@@ -55,7 +56,7 @@ export function SiteSettingsForm({ initial }: { initial: SiteSettingsFormValues 
       </div>
 
       <section aria-labelledby="settings-contact" className={CARD}>
-        <h2 id="settings-contact" className="text-lg font-semibold">
+        <h2 id="settings-contact" className="text-md font-semibold">
           Contact
         </h2>
         <div className="grid content-start gap-1.5">

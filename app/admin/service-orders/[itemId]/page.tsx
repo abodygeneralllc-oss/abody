@@ -24,10 +24,10 @@ export async function generateMetadata({
 }
 
 const CARD =
-  "grid content-start gap-4 rounded-card border border-border bg-panel p-5 shadow-soft min-[600px]:p-6";
+  "grid content-start gap-4 rounded-panel border border-border bg-panel p-5";
 const FOCUS =
   "outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary-strong";
-const BACK_LINK = `justify-self-start rounded-control text-sm font-medium text-primary-strong hover:text-foreground ${FOCUS}`;
+const BACK_LINK = `justify-self-start rounded-control text-sm font-medium text-primary-strong hover:text-primary-hover ${FOCUS}`;
 const TEXT_LINK = `rounded-control font-semibold text-foreground hover:text-primary-strong ${FOCUS}`;
 
 function Detail({ label, children }: { label: string; children: ReactNode }) {
@@ -78,7 +78,7 @@ export default async function AdminServiceOrderPage({
       <div className="grid items-start gap-6 min-[1100px]:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="grid min-w-0 gap-6">
           <section aria-labelledby="service-details-title" className={CARD}>
-            <h2 id="service-details-title" className="text-lg font-semibold">
+            <h2 id="service-details-title" className="text-md font-semibold">
               Customer details
             </h2>
             {!service ? (
@@ -97,7 +97,7 @@ export default async function AdminServiceOrderPage({
 
           {service && (
             <section aria-labelledby="service-work-title" className={CARD}>
-              <h2 id="service-work-title" className="text-lg font-semibold">
+              <h2 id="service-work-title" className="text-md font-semibold">
                 Work
               </h2>
               <ServiceWorkForm
@@ -111,7 +111,7 @@ export default async function AdminServiceOrderPage({
 
         <div className="grid gap-6">
           <section aria-labelledby="service-customer-title" className={CARD}>
-            <h2 id="service-customer-title" className="text-lg font-semibold">
+            <h2 id="service-customer-title" className="text-md font-semibold">
               Customer
             </h2>
             <dl className="grid gap-4">
@@ -120,7 +120,7 @@ export default async function AdminServiceOrderPage({
                 {order.user?.role === "CUSTOMER" ? (
                   <Link
                     href={`/admin/customers/${order.user.id}`}
-                    className={`rounded-control font-semibold text-primary-strong hover:text-foreground ${FOCUS}`}
+                    className={`rounded-control font-semibold text-primary-strong hover:text-primary-hover ${FOCUS}`}
                     dir="auto"
                   >
                     {order.user.name || "No name"}
@@ -139,7 +139,7 @@ export default async function AdminServiceOrderPage({
           </section>
 
           <section aria-labelledby="service-summary-title" className={CARD}>
-            <h2 id="service-summary-title" className="text-lg font-semibold">
+            <h2 id="service-summary-title" className="text-md font-semibold">
               Service
             </h2>
             <dl className="grid gap-4">
