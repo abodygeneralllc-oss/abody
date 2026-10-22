@@ -76,7 +76,7 @@ export function SidebarShell({
         id="sidebar"
         ref={sidebarRef}
         onClick={closeOnLink}
-        className={`flex flex-col gap-5 overflow-hidden bg-ink px-3 py-5 text-ink-muted max-[959px]:fixed max-[959px]:inset-y-0 max-[959px]:start-0 max-[959px]:z-30 max-[959px]:w-70 max-[959px]:shadow-raised max-[959px]:transition-[translate,visibility] max-[959px]:duration-200 motion-reduce:transition-none min-[960px]:sticky min-[960px]:top-0 min-[960px]:z-20 min-[960px]:h-dvh min-[960px]:group-data-collapsed/shell:overflow-visible ${
+        className={`flex flex-col gap-5 overflow-x-hidden overflow-y-auto bg-ink px-3 py-5 text-ink-muted [scrollbar-color:var(--color-ink-line)_transparent] [scrollbar-width:thin] *:shrink-0 max-[959px]:fixed max-[959px]:inset-y-0 max-[959px]:start-0 max-[959px]:z-30 max-[959px]:w-70 max-[959px]:shadow-raised max-[959px]:transition-[translate,visibility] max-[959px]:duration-200 motion-reduce:transition-none min-[960px]:sticky min-[960px]:top-0 min-[960px]:z-20 min-[960px]:h-dvh min-[960px]:group-data-collapsed/shell:overflow-visible ${
           drawerOpen ? "" : "max-[959px]:invisible max-[959px]:-translate-x-full"
         }`}
       >

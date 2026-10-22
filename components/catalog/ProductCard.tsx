@@ -1,7 +1,16 @@
 import Link from "next/link";
 import { ProductCover } from "@/components/catalog/ProductCover";
-import { BoltIcon, ClockIcon } from "@/components/icons";
-import { productPath, type PublicProduct } from "@/lib/catalog";
+import {
+  BoltIcon,
+  ClockIcon,
+  DownloadIcon,
+  TagIcon,
+} from "@/components/icons";
+import {
+  formatDurationDays,
+  productPath,
+  type PublicProduct,
+} from "@/lib/catalog";
 import { ProductType } from "@/lib/generated/prisma/enums";
 import { localizedPath, type Locale } from "@/lib/i18n/config";
 import { formatPriceCents } from "@/lib/money";
@@ -21,6 +30,9 @@ interface ProductCardProps {
   linked?: boolean;
   // False on the navy services band and the hero, where the card has no frame line.
   bordered?: boolean;
+  // "compact" is the listing card: category, title, delivery, and price, with
+  // no description.
+  variant?: "full" | "compact";
 }
 
 // Shared store card. Callers load the products; the card only renders one.
@@ -33,8 +45,14 @@ export function ProductCard({
   headingLevel: Heading = "h3",
   linked = true,
   bordered = true,
+  variant = "full",
 }: ProductCardProps) {
   const isService = product.type === ProductType.SERVICE;
+  const compact = variant === "compact";
+  const durationDays =
+    isService && product.durationDays && product.durationDays > 0
+      ? product.durationDays
+      : null;
 
   // Framed card: on hover it lifts, the border turns light blue, and the title
   // turns blue. The cover's back sheet fans out (ProductCover).
@@ -49,14 +67,29 @@ export function ProductCard({
       } ${linked && bordered ? "hover:border-primary-line" : ""}`}
     >
       {/* The title names the card, so the cover image is decorative. */}
-      <ProductCover product={product} locale={locale} index={index} alt="" />
-      <div className="flex flex-1 flex-col gap-2 px-2 pt-2">
-        <p
-          dir="auto"
-          className="text-xs font-semibold tracking-[0.08em] break-words text-primary-strong uppercase [&:lang(ar)]:tracking-normal"
-        >
-          {product.categoryLabel}
-        </p>
+      <ProductCover
+        product={product}
+        locale={locale}
+        index={index}
+        alt=""
+        showDuration={!compact}
+      />
+      <div className={`flex flex-1 flex-col px-2 ${compact ? "gap-3" : "gap-2 pt-2"}`}>
+        {compact ? (
+          <p className="flex min-w-0 items-center gap-2 text-sm text-muted">
+            <TagIcon className="h-4 w-4" />
+            <span dir="auto" className="truncate">
+              {product.categoryLabel}
+            </span>
+          </p>
+        ) : (
+          <p
+            dir="auto"
+            className="text-xs font-semibold tracking-[0.08em] break-words text-primary-strong uppercase [&:lang(ar)]:tracking-normal"
+          >
+            {product.categoryLabel}
+          </p>
+        )}
         <Heading
           dir="auto"
           className={`line-clamp-2 text-md leading-[1.35] font-semibold tracking-[-0.01em] break-words ${
@@ -76,26 +109,51 @@ export function ProductCard({
             product.name
           )}
         </Heading>
-        <p dir="auto" className="line-clamp-2 text-sm break-words text-muted">
-          {product.shortDescription}
-        </p>
-        <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-4">
-          <p className="text-lg font-bold tracking-[-0.01em] tabular-nums">
-            {formatPriceCents(product.priceCents)}
-          </p>
-          <p
-            className={`inline-flex h-6.5 items-center gap-1 rounded-full px-2.5 text-xs font-bold whitespace-nowrap ${
-              isService ? "bg-primary-soft text-primary-strong" : "bg-success-soft text-success"
-            }`}
-          >
-            {isService ? (
-              <ClockIcon className="size-3.5 shrink-0" />
-            ) : (
-              <BoltIcon className="size-3.5 shrink-0" />
-            )}
-            {isService ? text.startsAfterOnboarding : text.instantDownload}
-          </p>
-        </div>
+        {compact ? (
+          <>
+            <p className="flex items-center gap-1 text-sm text-muted">
+              {isService ? (
+                <>
+                  <ClockIcon className="h-4 w-4" />
+                  {durationDays
+                    ? formatDurationDays(durationDays, locale)
+                    : text.startsAfterOnboarding}
+                </>
+              ) : (
+                <>
+                  <DownloadIcon className="h-4 w-4" />
+                  {text.instantDownload}
+                </>
+              )}
+            </p>
+            <p className="mt-auto text-lg font-bold tracking-[-0.01em] tabular-nums">
+              {formatPriceCents(product.priceCents)}
+            </p>
+          </>
+        ) : (
+          <>
+            <p dir="auto" className="line-clamp-2 text-sm break-words text-muted">
+              {product.shortDescription}
+            </p>
+            <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-4">
+              <p className="text-lg font-bold tracking-[-0.01em] tabular-nums">
+                {formatPriceCents(product.priceCents)}
+              </p>
+              <p
+                className={`inline-flex h-6.5 items-center gap-1 rounded-full px-2.5 text-xs font-bold whitespace-nowrap ${
+                  isService ? "bg-primary-soft text-primary-strong" : "bg-success-soft text-success"
+                }`}
+              >
+                {isService ? (
+                  <ClockIcon className="size-3.5 shrink-0" />
+                ) : (
+                  <BoltIcon className="size-3.5 shrink-0" />
+                )}
+                {isService ? text.startsAfterOnboarding : text.instantDownload}
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </article>
   );

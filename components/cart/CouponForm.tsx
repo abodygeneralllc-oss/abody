@@ -32,7 +32,7 @@ const ERROR_ID = "coupon-code-error";
 const FIELD =
   "h-10 min-w-0 flex-1 rounded-control border border-border-strong bg-panel px-3 font-mono text-sm uppercase outline-offset-2 placeholder:normal-case focus-visible:outline-2 focus-visible:outline-primary-strong aria-invalid:border-danger";
 const BUTTON =
-  "h-10 shrink-0 rounded-full border border-border-strong bg-panel px-4 text-sm font-semibold text-foreground outline-offset-2 hover:border-foreground focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
+  "h-10 shrink-0 rounded-card border border-border-strong bg-panel px-4 text-sm font-semibold text-foreground outline-offset-2 hover:border-foreground focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
 const LINK_BUTTON =
   "shrink-0 cursor-pointer rounded-control text-sm font-semibold text-primary-strong outline-offset-2 transition-colors hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
 

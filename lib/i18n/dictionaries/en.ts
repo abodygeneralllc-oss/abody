@@ -11,6 +11,7 @@ export const en = {
     // No plural forms: Arabic has several, so both languages use "items: N".
     cartLabel: (count: number) => `Cart, items: ${count}`,
     nav: "Main navigation",
+    categories: "Store categories",
     home: "Home",
     products: "Products",
     services: "Services",
@@ -358,6 +359,7 @@ export const en = {
     registerHeading: "Create your account",
     signInIntro: "Sign in to continue.",
     registerIntro: "It takes less than a minute.",
+    artEyebrow: "Your Abody account",
     artTitle: "Everything you buy, in one place",
     artBody: "Sign in to download your files and follow your services.",
     artCards: {

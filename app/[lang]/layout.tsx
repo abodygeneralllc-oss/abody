@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Tajawal } from "next/font/google";
+import { Geist, Inter, Tajawal } from "next/font/google";
 import { PageViewTracker } from "@/components/analytics/PageViewTracker";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -12,6 +12,13 @@ import "../globals.css";
 const geist = Geist({
   variable: "--font-geist",
   subsets: ["latin"],
+});
+
+// Fallback only: not preloaded, so it downloads just when Geist lacks a glyph.
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  preload: false,
 });
 
 const tajawal = Tajawal({
@@ -53,7 +60,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
     <html
       lang={locale}
       dir={localeDirection(locale)}
-      className={`${geist.variable} ${tajawal.variable} h-full antialiased`}
+      className={`${geist.variable} ${inter.variable} ${tajawal.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <AnnouncementBar />

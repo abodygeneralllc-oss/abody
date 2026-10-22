@@ -24,8 +24,8 @@ import { pageMetadata } from "@/lib/seo";
 const CONTAINER = "mx-auto w-full max-w-site px-4 min-[700px]:px-8";
 const FOCUS =
   "outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary-strong";
-const BUTTON = `h-9 shrink-0 rounded-full bg-primary-strong px-4 text-sm font-semibold text-white hover:bg-primary-hover ${FOCUS}`;
-const OUTLINE_BUTTON = `inline-flex h-10 items-center rounded-full border border-border-strong px-5 text-sm font-semibold hover:border-foreground ${FOCUS}`;
+const BUTTON = `h-9 shrink-0 rounded-card bg-primary-strong px-4 text-sm font-semibold text-white hover:bg-primary-hover ${FOCUS}`;
+const OUTLINE_BUTTON = `inline-flex h-10 items-center rounded-card border border-border-strong px-5 text-sm font-semibold hover:border-foreground ${FOCUS}`;
 const CHIP = `inline-flex h-9 items-center gap-2 rounded-full border border-border-strong bg-panel px-4 text-sm font-medium whitespace-nowrap hover:border-foreground aria-[current=true]:border-foreground aria-[current=true]:bg-foreground aria-[current=true]:text-background ${FOCUS}`;
 const PAGE_BASE =
   "flex h-10 min-w-10 items-center justify-center gap-2 px-3 font-semibold";
@@ -228,7 +228,7 @@ export async function StoreListing({
               <ListingSortSelect
                 value={sort}
                 options={sortOptions}
-                className={`field-sizing-content h-9 min-w-0 cursor-pointer rounded-full border border-border-strong bg-panel ps-4 pe-2 font-bold text-foreground hover:border-foreground ${FOCUS}`}
+                className={`field-sizing-content h-9 min-w-0 cursor-pointer rounded-card bg-transparent ps-1 pe-1 font-bold text-foreground hover:text-primary-strong ${FOCUS}`}
               />
             </label>
           </Form>
@@ -280,7 +280,7 @@ export async function StoreListing({
               )
             )}
           </p>
-          {view === "results" && paged.pageCount > 1 && <p>{showing}</p>}
+          {view === "results" && <p>{showing}</p>}
           {view === "search-empty" ? (
             <Link href={href({ category, q: null })} className={OUTLINE_BUTTON}>
               {listing.clearSearch}
@@ -294,7 +294,7 @@ export async function StoreListing({
 
         {view === "results" && (
           <>
-            <ul className="grid gap-5 min-[600px]:grid-cols-2 min-[960px]:grid-cols-3 min-[960px]:gap-6">
+            <ul className="grid gap-5 min-[520px]:grid-cols-2 min-[800px]:grid-cols-3 min-[1100px]:grid-cols-4">
               {paged.items.map((item, index) => (
                 <li key={item.id}>
                   <ProductCard
@@ -303,6 +303,7 @@ export async function StoreListing({
                     index={index}
                     text={dictionary.product}
                     headingLevel="h2"
+                    variant="compact"
                   />
                 </li>
               ))}

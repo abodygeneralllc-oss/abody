@@ -7,11 +7,19 @@ import {
   LanguageSwitcher,
   LanguageSwitcherFallback,
 } from "@/components/layout/LanguageSwitcher";
-import { MainNav, type NavItem } from "@/components/layout/MainNav";
+import {
+  HeaderNavLink,
+  MainNav,
+  MainNavFallback,
+  type NavItem,
+} from "@/components/layout/MainNav";
+import { initials } from "@/lib/account";
 import { CART_COOKIE, cartItemCount, parseCart } from "@/lib/cart";
+import { listNavCategories } from "@/lib/catalog";
+import { ProductType } from "@/lib/generated/prisma/enums";
 import { localizedPath } from "@/lib/i18n/config";
-import { SEARCH_MAX_LENGTH } from "@/lib/listing";
-import { SESSION_COOKIE } from "@/lib/session-token";
+import { listingHref, SEARCH_MAX_LENGTH } from "@/lib/listing";
+import { getCurrentUser } from "@/lib/session";
 import { getDictionary, getLocale } from "@/lib/i18n/dictionaries";
 
 const FOCUS =
@@ -23,17 +31,31 @@ export async function SiteHeader() {
   // Read straight from the cookie: the cart page and every write recheck items.
   const cookieStore = await cookies();
   const count = cartItemCount(parseCart(cookieStore.get(CART_COOKIE)?.value));
-  // Optimistic: a cookie is enough to offer the account link, so no database
-  // query runs on every page. The account page does the real check.
-  const signedIn = cookieStore.has(SESSION_COOKIE);
-  // Only pages that exist are linked; each feature adds its own entry.
+  // getCurrentUser reads the session only when a cookie is present, once per
+  // request; the account page does its own check.
+  const [user, categories] = await Promise.all([
+    getCurrentUser(),
+    listNavCategories(locale),
+  ]);
+  const productsHref = localizedPath(locale, "/products");
+  const servicesHref = localizedPath(locale, "/services");
+  // Products and Services sit in the top bar from 600px; below that they lead
+  // the strip. Each category opens its own listing, filtered.
   const navItems: NavItem[] = [
-    { href: localizedPath(locale, "/"), label: header.home },
-    { href: localizedPath(locale, "/products"), label: header.products },
-    { href: localizedPath(locale, "/services"), label: header.services },
+    { href: productsHref, label: header.products, phoneOnly: true },
+    { href: servicesHref, label: header.services, phoneOnly: true },
+    ...categories.map((item) => ({
+      href: listingHref(
+        item.type === ProductType.SERVICE ? servicesHref : productsHref,
+        { category: item.category, q: null, sort: "newest" },
+      ),
+      label: item.label,
+      category: item.category,
+    })),
     { href: localizedPath(locale, "/about"), label: header.about },
     { href: localizedPath(locale, "/contact"), label: header.contact },
   ];
+  const firstName = user?.name.trim().split(/\s+/)[0];
 
   return (
     <header className="border-b border-border bg-background font-sans">
@@ -76,20 +98,39 @@ export async function SiteHeader() {
             <SearchIcon className="h-5 w-5" />
           </button>
         </form>
-        <div className="ms-auto flex items-center gap-1">
+        <nav aria-label={header.nav} className="ms-auto flex items-center gap-1">
+          <HeaderNavLink href={productsHref} label={header.products} />
+          <HeaderNavLink href={servicesHref} label={header.services} />
           <Suspense fallback={<LanguageSwitcherFallback locale={locale} />}>
             <LanguageSwitcher locale={locale} />
           </Suspense>
-          <Link
-            href={localizedPath(locale, signedIn ? "/account" : "/login")}
-            className={`flex h-10 items-center gap-2 rounded-card px-3 text-sm font-medium whitespace-nowrap text-muted hover:text-primary-strong ${FOCUS}`}
-          >
-            <UserIcon />
-            {/* Below 600px the icon stays and the label is read by screen readers. */}
-            <span className="sr-only min-[600px]:not-sr-only">
-              {signedIn ? header.account : header.signIn}
-            </span>
-          </Link>
+          {user ? (
+            <Link
+              href={localizedPath(locale, "/account")}
+              className={`flex h-10 items-center gap-2 rounded-card px-2 font-medium whitespace-nowrap text-muted hover:text-primary-strong ${FOCUS}`}
+            >
+              <span
+                aria-hidden="true"
+                className="grid size-8 shrink-0 place-items-center rounded-full bg-ink text-xs font-bold text-ink-text"
+              >
+                {initials(user.name)}
+              </span>
+              {/* The name says whose account; "Account" says where it goes. */}
+              <span className="sr-only">{header.account}: </span>
+              <span dir="auto" className="hidden max-w-[12ch] truncate min-[600px]:block">
+                {firstName}
+              </span>
+            </Link>
+          ) : (
+            <Link
+              href={localizedPath(locale, "/login")}
+              className={`flex h-10 items-center gap-2 rounded-card px-3 font-medium whitespace-nowrap text-muted hover:text-primary-strong ${FOCUS}`}
+            >
+              {/* Below 600px the icon stays and the label is read by screen readers. */}
+              <UserIcon className="h-5 w-5 min-[600px]:hidden" />
+              <span className="sr-only min-[600px]:not-sr-only">{header.signIn}</span>
+            </Link>
+          )}
           <Link
             href={localizedPath(locale, "/cart")}
             aria-label={header.cartLabel(count)}
@@ -100,9 +141,11 @@ export async function SiteHeader() {
               {count}
             </span>
           </Link>
-        </div>
+        </nav>
       </div>
-      <MainNav label={header.nav} items={navItems} />
+      <Suspense fallback={<MainNavFallback label={header.categories} items={navItems} />}>
+        <MainNav label={header.categories} items={navItems} />
+      </Suspense>
     </header>
   );
 }

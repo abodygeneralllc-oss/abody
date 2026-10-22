@@ -1,6 +1,6 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
-import { ArrowIcon, DownloadIcon } from "@/components/icons";
+import type { ComponentType, ReactNode } from "react";
+import { ArrowIcon, BoxIcon, DownloadIcon } from "@/components/icons";
 import type { AccountDownload } from "@/lib/account";
 import { localizedName } from "@/lib/catalog";
 import { formatDate } from "@/lib/dates";
@@ -24,8 +24,8 @@ export const PANEL_BODY = "grid gap-4 p-5";
 export const TEXT_LINK =
   "cursor-pointer rounded-control font-semibold text-primary-strong outline-offset-2 transition-colors hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong";
 
-export const OUTLINE_PILL = `inline-flex h-9 items-center justify-center gap-2 rounded-full border border-border-strong bg-panel px-4 text-sm font-semibold text-foreground hover:border-foreground ${FOCUS}`;
-export const PRIMARY_PILL = `inline-flex h-10 items-center justify-center gap-2 rounded-full bg-primary-strong px-5 text-sm font-semibold text-white hover:bg-primary-hover ${FOCUS}`;
+export const OUTLINE_BUTTON = `inline-flex h-9 items-center justify-center gap-2 rounded-card border border-border-strong bg-panel px-4 text-sm font-semibold text-foreground hover:border-foreground ${FOCUS}`;
+export const PRIMARY_BUTTON = `inline-flex h-10 items-center justify-center gap-2 rounded-card bg-primary-strong px-5 text-sm font-semibold text-white hover:bg-primary-hover ${FOCUS}`;
 
 // The mockup's arrow link: bold brand text with a trailing arrow.
 export function ArrowLink({ href, children }: { href: string; children: ReactNode }) {
@@ -158,19 +158,27 @@ export function EmptyState({
   );
 }
 
-// An empty list inside an account panel.
+// An empty list inside an account panel: the store's empty-state pattern.
 export function AccountEmpty({
   message,
   action,
+  icon: Icon = BoxIcon,
 }: {
   message: string;
   action?: { href: string; label: string };
+  icon?: ComponentType<{ className?: string }>;
 }) {
   return (
-    <div className="grid justify-items-center gap-4 px-5 py-10 text-center text-sm">
-      <p className="max-w-[44ch] text-muted">{message}</p>
+    <div className="grid justify-items-center gap-3 px-5 py-10 text-center">
+      <span
+        aria-hidden="true"
+        className="grid size-14 place-items-center rounded-full bg-well text-muted"
+      >
+        <Icon className="size-6" />
+      </span>
+      <p className="max-w-[44ch] font-semibold">{message}</p>
       {action && (
-        <Link href={action.href} className={OUTLINE_PILL}>
+        <Link href={action.href} className={OUTLINE_BUTTON}>
           {action.label}
         </Link>
       )}
@@ -222,7 +230,7 @@ export function DownloadList({
             <a
               href={`/api/downloads/${encodeURIComponent(item.itemId)}?${query}`}
               download
-              className={`${OUTLINE_PILL} w-full min-[600px]:w-auto`}
+              className={`${OUTLINE_BUTTON} w-full min-[600px]:w-auto`}
             >
               <DownloadIcon className="h-4 w-4" />
               {/* The whole name lives in the sr-only span: splitting it around

@@ -151,7 +151,7 @@ export default async function AccountPage() {
           }
         />
         {downloads.length === 0 ? (
-          <AccountEmpty message={text.downloads.empty} />
+          <AccountEmpty message={text.downloads.empty} icon={DownloadIcon} />
         ) : (
           <DownloadList downloads={downloads} locale={locale} text={text} />
         )}

@@ -5,7 +5,7 @@ import {
   ACCOUNT_PANEL,
   OrderNumber,
   PANEL_BODY,
-  PRIMARY_PILL,
+  PRIMARY_BUTTON,
   SectionHead,
   ServiceStatusChip,
 } from "@/components/account/AccountParts";
@@ -104,7 +104,7 @@ export default async function AccountServicePage({
             {actionNeeded && (
               <Link
                 href={onboardingLink.href}
-                className={`justify-self-start ${PRIMARY_PILL}`}
+                className={`justify-self-start ${PRIMARY_BUTTON}`}
               >
                 {onboardingLink.label}
               </Link>

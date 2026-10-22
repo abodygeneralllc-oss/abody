@@ -12,6 +12,7 @@ export const ar: Dictionary = {
     account: "حسابي",
     cartLabel: (count: number) => `السلة، عدد العناصر: ${count}`,
     nav: "القائمة الرئيسية",
+    categories: "فئات المتجر",
     home: "الرئيسية",
     products: "المنتجات",
     services: "الخدمات",
@@ -333,6 +334,7 @@ export const ar: Dictionary = {
     registerHeading: "أنشئ حسابك",
     signInIntro: "سجّل الدخول للمتابعة.",
     registerIntro: "لن يستغرق الأمر أكثر من دقيقة.",
+    artEyebrow: "حسابك في عبودي",
     artTitle: "كل مشترياتك في مكان واحد",
     artBody: "سجّل الدخول لتنزيل ملفاتك ومتابعة خدماتك.",
     artCards: {

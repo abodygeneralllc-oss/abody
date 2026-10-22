@@ -181,7 +181,10 @@ export function isProductId(value: unknown): value is string {
 export interface AdminProductRow {
   id: string;
   name: string;
+  nameAr: string | null;
   slug: string;
+  type: ProductType;
+  image: string | null;
   category: string;
   priceCents: number;
   status: ProductStatus;
@@ -198,7 +201,10 @@ export async function listAdminProducts(type: ProductType): Promise<AdminProduct
     select: {
       id: true,
       name: true,
+      nameAr: true,
       slug: true,
+      type: true,
+      image: true,
       category: true,
       priceCents: true,
       status: true,

@@ -7,7 +7,7 @@ import {
   RemoveFromCartButton,
   type RemoveFromCartText,
 } from "@/components/cart/RemoveFromCartButton";
-import { ProductImage } from "@/components/catalog/ProductImage";
+import { ProductCover } from "@/components/catalog/ProductCover";
 import { BoltIcon, ClockIcon } from "@/components/icons";
 import type { CartLine } from "@/lib/cart";
 import { formatDurationDays, productPath } from "@/lib/catalog";
@@ -24,13 +24,15 @@ export interface CartLineText extends CartQuantityText, RemoveFromCartText {
 
 interface CartLineItemProps {
   line: CartLine;
+  // Position in the cart; picks the placeholder tint.
+  index: number;
   locale: Locale;
   text: CartLineText;
 }
 
 const FACT = "inline-flex items-center gap-1";
 
-export function CartLineItem({ line, locale, text }: CartLineItemProps) {
+export function CartLineItem({ line, index, locale, text }: CartLineItemProps) {
   const { product, quantity, lineTotalCents } = line;
   const isService = product.type === ProductType.SERVICE;
   const durationDays =
@@ -48,8 +50,14 @@ export function CartLineItem({ line, locale, text }: CartLineItemProps) {
 
   return (
     <li className="grid grid-cols-[88px_minmax(0,1fr)] gap-x-4 gap-y-2 border-b border-border py-5 min-[600px]:grid-cols-[120px_minmax(0,1fr)_auto] min-[600px]:gap-x-5">
-      <div className="self-start overflow-hidden rounded-card">
-        <ProductImage image={product.image} alt="" />
+      <div className="self-start">
+        <ProductCover
+          product={product}
+          locale={locale}
+          index={index}
+          alt=""
+          showDuration={false}
+        />
       </div>
 
       <div className="min-w-0">

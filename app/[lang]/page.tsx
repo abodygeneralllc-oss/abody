@@ -338,7 +338,7 @@ export default async function Home() {
                 title={home.categories}
                 link={{ href: productsPath, label: home.viewAll }}
               />
-              <ul className="grid grid-cols-2 gap-4 min-[600px]:grid-cols-3 min-[960px]:grid-cols-5">
+              <ul className="grid grid-cols-2 gap-4 min-[600px]:grid-cols-[repeat(auto-fit,minmax(170px,1fr))]">
                 {categories.map(({ type, category, label, count }) => (
                   <li key={`${type}-${category}`}>
                     <Link

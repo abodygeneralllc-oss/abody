@@ -97,7 +97,7 @@ A dedicated store where customers can browse:
 - Services.
 - Product categories.
 
-The store listings show three cards per row on desktop under a category chip bar, and split long results into pages of 12 items, which work together with search, sort, and the category filter.
+The store listings show four cards per row on desktop under a category chip bar, and split long results into pages of 12 items, which work together with search, sort, and the category filter.
 
 Each product should have:
 
@@ -561,7 +561,7 @@ Layouts, icons that point in a direction, and navigation mirror in Arabic.
 
 Use the Tajawal font for Arabic text.
 
-Redesign direction (build-plan 31): a Fiverr-inspired marketplace look on the Abody blue - flat white canvas, smaller radii, navy ink for the hero and dark bands, pill search and chips, dense product cards. English text uses Inter (open SIL OFL license, loaded through `next/font/google`) with a Helvetica/Arial fallback; Arabic stays Tajawal.
+Redesign direction (build-plan 31): a Fiverr-inspired marketplace look on the Abody blue - flat white canvas, smaller radii, navy ink for the hero and dark bands, pill search and chips, dense product cards. English text uses Geist (open SIL OFL license, loaded through `next/font/google`) with an Inter fallback; Arabic stays Tajawal.
 
 Prices and order numbers keep the same format in both languages.
 

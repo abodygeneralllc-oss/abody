@@ -33,7 +33,7 @@ export function CheckoutButton({ locale, text }: CheckoutButtonProps) {
         type="submit"
         disabled={pending}
         aria-describedby={error ? ERROR_ID : undefined}
-        className="flex h-13 w-full items-center justify-center gap-2 rounded-full bg-primary-strong px-6 text-md font-semibold text-white outline-offset-2 hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-60"
+        className="flex h-13 w-full items-center justify-center gap-2 rounded-card bg-primary-strong px-6 text-md font-semibold text-white outline-offset-2 hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-60"
       >
         {!pending && <LockIcon className="h-5 w-5" />}
         {pending ? text.redirecting : text.checkout}

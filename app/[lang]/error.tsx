@@ -21,7 +21,7 @@ export default function ErrorScreen({ retry }: ErrorScreenProps) {
       <button
         type="button"
         onClick={() => retry()}
-        className="mt-6 rounded-full bg-primary-strong px-6 py-3 font-semibold text-white outline-offset-2 hover:bg-primary focus-visible:outline-2 focus-visible:outline-primary-strong"
+        className="mt-6 inline-flex h-11 items-center rounded-card bg-primary-strong px-6 py-3 font-semibold text-white outline-offset-2 hover:bg-primary focus-visible:outline-2 focus-visible:outline-primary-strong"
       >
         {messages.retry}
       </button>

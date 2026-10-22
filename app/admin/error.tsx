@@ -14,7 +14,7 @@ export default function AdminErrorScreen({ retry }: ErrorScreenProps) {
       <button
         type="button"
         onClick={() => retry()}
-        className="mt-4 rounded-full bg-primary-strong px-6 py-3 font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong"
+        className="mt-4 inline-flex h-11 items-center rounded-card bg-primary-strong px-6 font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong"
       >
         Try again
       </button>

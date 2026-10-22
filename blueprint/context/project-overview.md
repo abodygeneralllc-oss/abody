@@ -1,6 +1,6 @@
 # Abody Digital Ecommerce Platform - Project Overview
 
-<!-- blueprint:source-hash 08a8e3cb957e77a3e7af216724d39332e536251bbcc40c6a4754de1c88693061 -->
+<!-- blueprint:source-hash 2dcb5af158335bcdc37ffed7292a4813312f3edae5aafd567d61a651d96db54c -->
 
 > A bilingual (English and Arabic) storefront where customers buy Abody's
 > downloadable digital products and digital services with Stripe, plus an admin
@@ -34,8 +34,8 @@ no web request grants the role.
 
 ## Features
 
-In `build-plan.md` order. Everything through 30 is shipped, plus 31a-31d;
-31e is next.
+In `build-plan.md` order. All items are shipped; new work needs a plan
+addition (`/feature`) or a `/fix`.
 
 1. **Product & Service Catalog** (done) - models and catalog API.
 2. **Product & Service Details** (done) - detail pages with purchase actions.
@@ -101,23 +101,23 @@ In `build-plan.md` order. Everything through 30 is shipped, plus 31a-31d;
 30. **Listing Layout and Pagination** (done) - 30a two cards per row on
     desktop listings; 30b 12 per page via `?page=` combined with `q`, `sort`,
     `category`, page 1 unprefixed, bad pages fall back, arrows mirror in RTL.
-31. **Marketplace Redesign** (in progress) - visual restyle only (no data,
+31. **Marketplace Redesign** (done) - visual restyle only (no data,
     route, or behavior change) following `prototypes/redesign/`; RTL keeps
     working.
     - 31a **Theme, Type, and Site Shell** (done) - port `prototypes/redesign/theme.css`
-      into `app/globals.css`; English Inter with Helvetica/Arial fallback,
+      into `app/globals.css`; English Geist with Inter fallback,
       Arabic Tajawal; header (with search) and footer; logo `public/Logo-0.jpg`;
       no Stripe mentions in customer-facing text.
     - 31b **Home Page** (done) - navy hero with pill search and chips,
       category icon row, marketplace cards in Featured tabs, services band,
       steps, CTA.
     - 31c **Listings and Detail Pages** (done) - category chip bar
-      replaces the sidebar, three cards per row on desktop (supersedes 30a's
+      replaces the sidebar, four cards per row on desktop (supersedes 30a's
       two), pagination; gig-style detail: large cover, sticky purchase box,
       included list, service steps, general store questions (no new data).
     - 31d **Cart and Customer Account** (done) - cart line items and sticky
       summary; account dashboard, orders, downloads, service progress.
-    - 31e **Admin Restyle** (next) - admin dashboard, lists, forms in the new
+    - 31e **Admin Restyle** (done) - admin dashboard, lists, forms in the new
       tokens; English only.
 
 ## Data model
@@ -296,7 +296,7 @@ existing Abody brand.
 - Core flow: Discover, Understand, Purchase, Receive, Manage.
 - Redesign (31): Fiverr-inspired marketplace look on the brand blue - flat
   white canvas, smaller radii, navy ink hero, pill search and chips, dense
-  cards. English Inter (SIL OFL, `next/font/google`), Helvetica/Arial
+  cards. English Geist (SIL OFL, `next/font/google`), Inter
   fallback; Arabic stays Tajawal.
 - `prototypes/` (untracked) holds static mockups; the app never imports it.
 
@@ -360,9 +360,8 @@ Plan-level gaps; resolve in the plans, then re-run `/overview`.
    review before launch; Privacy predates analytics (feature 23).
 9. **Heading typo.** Project-plan "9. Stripe Payment Flow" lacks its `##`.
 10. **Catalog discovery partly in the project plan.** Its Product Store
-    section now covers the three-per-row chip-bar listing and 12-item pages
+    section now covers the four-per-row chip-bar listing and 12-item pages
     and refers to search and sort, but the Homepage section still doesn't
-    mention the Featured products tabs (29a). Shipped build-plan 30a still
-    reads "two cards per row"; 31c supersedes it.
-11. **English font conflict.** Build-plan 31a still says Macan; the project
-    plan and the shipped fix say Inter. The overview follows Inter.
+    mention the Featured products tabs (29a), and section 11's navigation
+    predates the header category strip. Shipped build-plan 30a still reads
+    "two cards per row"; the project plan's four per row supersedes it.

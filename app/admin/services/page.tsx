@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ProductStatusChip } from "@/components/admin/ProductStatusChip";
-import { PlusIcon } from "@/components/icons";
+import { ProductCover } from "@/components/catalog/ProductCover";
+import { EditIcon, PlusIcon } from "@/components/icons";
 import {
   Table,
   TableBody,
@@ -75,21 +76,37 @@ export default async function AdminServicesPage() {
                 <TableHead scope="col">Status</TableHead>
                 <TableHead scope="col">Featured</TableHead>
                 <TableHead scope="col">Updated</TableHead>
+                <TableHead scope="col">
+                  <span className="sr-only">Actions</span>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {services.map((service) => (
+              {services.map((service, index) => (
                 <TableRow key={service.id}>
                   <TableCell>
-                    {/* React text: admin-entered names never render as HTML. */}
-                    <Link
-                      href={`/admin/services/${service.id}`}
-                      className={`rounded-control font-semibold text-foreground hover:text-primary-strong ${FOCUS}`}
-                      dir="auto"
-                    >
-                      {service.name}
-                    </Link>
-                    <span className="block text-xs text-faint">{service.slug}</span>
+                    <div className="flex items-center gap-3">
+                      <ProductCover product={service} locale="en" index={index} alt="" variant="thumb" />
+                      <div className="min-w-0">
+                        {/* React text: admin-entered names never render as HTML. */}
+                        <Link
+                          href={`/admin/services/${service.id}`}
+                          className={`rounded-control font-semibold text-foreground hover:text-primary-strong ${FOCUS}`}
+                          dir="auto"
+                        >
+                          {service.name}
+                        </Link>
+                        {service.nameAr ? (
+                          <span lang="ar" dir="rtl" className="block text-left text-sm text-muted">
+                            {service.nameAr}
+                          </span>
+                        ) : (
+                          <span className="block text-xs text-faint">
+                            No Arabic name yet · shows English
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </TableCell>
                   <TableCell className="text-muted" dir="auto">
                     {service.category}
@@ -124,6 +141,15 @@ export default async function AdminServicesPage() {
                   </TableCell>
                   <TableCell className="whitespace-nowrap text-faint">
                     {formatDate(service.updatedAt, "en")}
+                  </TableCell>
+                  <TableCell className="text-end">
+                    <Link
+                      href={`/admin/services/${service.id}`}
+                      aria-label={`Edit ${service.name}`}
+                      className={`inline-grid size-8 place-items-center rounded-full border border-border-strong text-muted hover:border-foreground hover:text-foreground ${FOCUS}`}
+                    >
+                      <EditIcon className="h-4 w-4" />
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}

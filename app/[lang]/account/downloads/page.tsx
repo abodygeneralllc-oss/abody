@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { DownloadIcon } from "@/components/icons";
 import {
   ACCOUNT_PANEL,
   AccountEmpty,
@@ -33,6 +34,7 @@ export default async function AccountDownloadsPage() {
         {downloads.length === 0 ? (
           <AccountEmpty
             message={text.downloads.empty}
+            icon={DownloadIcon}
             action={{ href: localizedPath(locale, "/products"), label: text.browseProducts }}
           />
         ) : (

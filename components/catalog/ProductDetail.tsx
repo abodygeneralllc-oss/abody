@@ -231,7 +231,7 @@ export async function ProductDetail({ product }: ProductDetailProps) {
             <span>{text.contact.prompt}</span>
             <Link
               href={localizedPath(locale, "/contact")}
-              className={`inline-flex h-9 items-center rounded-full border border-border-strong px-4 font-semibold hover:border-foreground ${FOCUS}`}
+              className={`inline-flex h-9 items-center rounded-card border border-border-strong px-4 font-semibold hover:border-foreground ${FOCUS}`}
             >
               {text.contact.action}
             </Link>

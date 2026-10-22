@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { MegaphoneIcon } from "@/components/icons";
 import {
   ACCOUNT_PANEL,
   AccountEmpty,
@@ -40,6 +41,7 @@ export default async function AccountServicesPage() {
         {services.length === 0 ? (
           <AccountEmpty
             message={text.services.empty}
+            icon={MegaphoneIcon}
             action={{ href: localizedPath(locale, "/services"), label: text.browseServices }}
           />
         ) : (

@@ -4,6 +4,7 @@ import {
   LISTING_PAGE_SIZE,
   listingHref,
   matchesSearch,
+  navCategories,
   paginate,
   parseCategoryParam,
   parsePageParam,
@@ -44,6 +45,40 @@ describe("summarizeCategories", () => {
 
   it("returns nothing for an empty list", () => {
     expect(summarizeCategories([])).toEqual([]);
+  });
+});
+
+describe("navCategories", () => {
+  const items = [
+    { type: "SERVICE", category: "Marketing Services", categoryLabel: "خدمات تسويقية" },
+    { type: "DIGITAL", category: "Templates", categoryLabel: "قوالب" },
+    { type: "DIGITAL", category: "Guides", categoryLabel: "أدلة" },
+    { type: "SERVICE", category: "Account Management", categoryLabel: "إدارة الحسابات" },
+    { type: "DIGITAL", category: "Templates", categoryLabel: "قوالب قديمة" },
+  ];
+
+  it("lists each type's categories in listing order, types in the given order", () => {
+    expect(navCategories(items, ["DIGITAL", "SERVICE"])).toEqual([
+      { type: "DIGITAL", category: "Guides", label: "أدلة", count: 1 },
+      { type: "DIGITAL", category: "Templates", label: "قوالب", count: 2 },
+      { type: "SERVICE", category: "Account Management", label: "إدارة الحسابات", count: 1 },
+      { type: "SERVICE", category: "Marketing Services", label: "خدمات تسويقية", count: 1 },
+    ]);
+  });
+
+  it("keeps a category shared by both types once per type", () => {
+    const shared = [
+      { type: "SERVICE", category: "Guides", categoryLabel: "Guides" },
+      { type: "DIGITAL", category: "Guides", categoryLabel: "Guides" },
+    ];
+    expect(navCategories(shared, ["DIGITAL", "SERVICE"]).map((c) => c.type)).toEqual([
+      "DIGITAL",
+      "SERVICE",
+    ]);
+  });
+
+  it("returns nothing when no item is published", () => {
+    expect(navCategories([], ["DIGITAL", "SERVICE"])).toEqual([]);
   });
 });
 

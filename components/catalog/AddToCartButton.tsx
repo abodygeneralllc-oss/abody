@@ -7,7 +7,7 @@ import {
   type CartActionError,
   type CartActionOutcome,
 } from "@/actions/cart";
-import { CartIcon } from "@/components/icons";
+import { ArrowIcon } from "@/components/icons";
 
 export interface AddToCartText {
   addToCart: string;
@@ -50,10 +50,10 @@ export function AddToCartButton({
       <button
         type="submit"
         disabled={pending}
-        className="flex h-13 w-full items-center justify-center gap-2 rounded-full bg-primary-strong px-6 text-base font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-60"
+        className="group/add flex h-13 w-full items-center justify-center gap-2 rounded-card bg-primary-strong px-6 text-md font-bold text-white outline-offset-2 hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-60"
       >
-        <CartIcon />
         {pending ? text.adding : text.addToCart}
+        <ArrowIcon className="h-5 w-5 transition-transform duration-200 rtl:-scale-x-100 motion-safe:group-hover/add:translate-x-[3px] motion-safe:rtl:group-hover/add:-translate-x-[3px] motion-reduce:transition-none" />
       </button>
       <p role="status" className="mt-2 text-sm text-success empty:mt-0">
         {!pending && notice && (

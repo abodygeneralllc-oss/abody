@@ -3,7 +3,7 @@ import { PAID_ORDER_STATUSES } from "@/lib/delivery";
 import type { Prisma } from "@/lib/generated/prisma/client";
 import { ProductStatus, ProductType } from "@/lib/generated/prisma/enums";
 import type { Locale } from "@/lib/i18n/config";
-import { matchesSearch } from "@/lib/listing";
+import { matchesSearch, type NavCategory, navCategories } from "@/lib/listing";
 
 // The only fields public code may read. digitalFile and status stay out of the
 // query itself so a private file reference can never reach a response.
@@ -209,6 +209,27 @@ export async function listPublishedProducts(options: {
       )
     : rows;
   return matched.map((row) => toPublicProduct(row, options.locale));
+}
+
+// The header strip's one query: published categories with their localized
+// names, digital products first, newest item naming each category.
+export async function listNavCategories(
+  locale: Locale,
+): Promise<NavCategory<ProductType>[]> {
+  const rows = await db.product.findMany({
+    where: { status: ProductStatus.PUBLISHED },
+    orderBy: [{ createdAt: "desc" }, { id: "asc" }],
+    select: { type: true, category: true, categoryAr: true },
+  });
+  return navCategories(
+    rows.map((row) => ({
+      type: row.type,
+      category: row.category,
+      categoryLabel:
+        locale === "ar" && hasText(row.categoryAr) ? row.categoryAr : row.category,
+    })),
+    [ProductType.DIGITAL_PRODUCT, ProductType.SERVICE],
+  );
 }
 
 export type HomeProduct = PublicProduct & { featuredRank: number | null };

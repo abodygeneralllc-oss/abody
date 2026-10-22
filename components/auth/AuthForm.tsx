@@ -11,6 +11,7 @@ import {
 } from "react";
 import { register, signIn, type AuthActionError } from "@/actions/auth";
 import {
+  ArrowIcon,
   EyeIcon,
   EyeOffIcon,
   LockIcon,
@@ -46,7 +47,12 @@ interface AuthFormProps {
 
 const FIELD_ORDER: AuthField[] = ["name", "email", "password", "confirm"];
 export const INPUT_BASE =
-  "h-11.5 w-full rounded-control border border-border bg-surface text-foreground outline-offset-1 placeholder:text-faint focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-primary-strong aria-invalid:border-danger";
+  "h-12 w-full rounded-card border border-border-strong bg-panel text-foreground outline-offset-1 transition-colors placeholder:text-faint hover:border-muted focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-primary-strong aria-invalid:border-danger";
+// The full-width primary submit with a trailing arrow that nudges forward.
+export const SUBMIT =
+  "group/submit flex h-12.5 w-full items-center justify-center gap-2 rounded-card bg-primary-strong px-5 font-semibold text-white shadow-[0_8px_20px_-12px_oklch(48%_0.13_248/0.8)] outline-offset-2 hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
+export const SUBMIT_ARROW =
+  "h-5 w-5 transition-transform duration-200 rtl:-scale-x-100 motion-safe:group-hover/submit:translate-x-[3px] motion-safe:rtl:group-hover/submit:-translate-x-[3px] motion-reduce:transition-none";
 // Room for the leading icon, plus the show/hide button on password fields.
 export const INPUT = `${INPUT_BASE} ps-11 pe-4`;
 const PASSWORD_INPUT = `${INPUT_BASE} ps-11 pe-12`;
@@ -221,9 +227,10 @@ export function AuthForm({ mode, locale, next, text }: AuthFormProps) {
       <button
         type="submit"
         disabled={pending}
-        className="h-12 w-full rounded-control bg-primary-strong px-5 font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70"
+        className={SUBMIT}
       >
         {pending ? text.pending : text.submit}
+        <ArrowIcon className={SUBMIT_ARROW} />
       </button>
     </form>
   );

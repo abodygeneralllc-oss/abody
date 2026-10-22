@@ -45,6 +45,7 @@ export async function RelatedProducts({ product }: RelatedProductsProps) {
               locale={locale}
               index={index}
               text={text}
+              variant="compact"
             />
           </li>
         ))}

@@ -35,7 +35,7 @@ function SwitcherLink({
       lang={target}
       hrefLang={target}
       onClick={saveChoice}
-      className="flex h-10 items-center gap-2 rounded-card px-3 text-sm font-medium text-muted outline-offset-2 hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong"
+      className="flex h-10 items-center gap-2 rounded-card px-3 font-medium text-muted outline-offset-2 hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong"
     >
       <GlobeIcon />
       {/* Hidden on phones but still the link's accessible name. */}

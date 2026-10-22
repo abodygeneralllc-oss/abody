@@ -2,7 +2,12 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import { resetPassword, type ResetPasswordError } from "@/actions/auth";
-import { PasswordInput } from "@/components/auth/AuthForm";
+import {
+  PasswordInput,
+  SUBMIT,
+  SUBMIT_ARROW,
+} from "@/components/auth/AuthForm";
+import { ArrowIcon } from "@/components/icons";
 import type { AuthField, AuthFieldError } from "@/lib/auth";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -127,9 +132,10 @@ export function ResetPasswordForm({
       <button
         type="submit"
         disabled={pending}
-        className="h-12 w-full rounded-control bg-primary-strong px-5 font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70"
+        className={SUBMIT}
       >
         {pending ? text.pending : text.submit}
+        <ArrowIcon className={SUBMIT_ARROW} />
       </button>
     </form>
   );

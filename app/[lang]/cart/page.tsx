@@ -145,17 +145,18 @@ export default async function CartPage({
                 <p className="mb-2 max-w-[44ch] text-muted">{text.emptyBody}</p>
                 <Link
                   href={localizedPath(locale, "/products")}
-                  className={`inline-flex h-11 items-center rounded-full bg-primary-strong px-6 font-semibold text-white hover:bg-primary-hover ${FOCUS}`}
+                  className={`inline-flex h-11 items-center rounded-card bg-primary-strong px-6 font-semibold text-white hover:bg-primary-hover ${FOCUS}`}
                 >
                   {text.browseStore}
                 </Link>
               </>
             ) : (
               <ul className="border-t border-border">
-                {view.lines.map((line) => (
+                {view.lines.map((line, index) => (
                   <CartLineItem
                     key={line.product.id}
                     line={line}
+                    index={index}
                     locale={locale}
                     text={{
                       ...text,
@@ -220,6 +221,7 @@ export default async function CartPage({
                     locale={locale}
                     index={index}
                     text={productText}
+                    variant="compact"
                   />
                 </li>
               ))}

@@ -38,9 +38,9 @@ interface FormProps {
 const LABEL = "text-sm font-medium";
 const HINT = "text-xs text-muted";
 const SUBMIT =
-  "h-11 cursor-pointer rounded-full bg-primary-strong px-6 text-sm font-semibold text-white outline-offset-2 hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70 justify-self-start";
+  "h-11 cursor-pointer rounded-card bg-primary-strong px-6 text-sm font-semibold text-white outline-offset-2 hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70 justify-self-start";
 const SECONDARY =
-  "h-11 cursor-pointer rounded-full border border-border-strong bg-panel px-6 text-sm font-semibold text-foreground outline-offset-2 hover:border-foreground focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70 justify-self-start";
+  "h-11 cursor-pointer rounded-card border border-border-strong bg-panel px-6 text-sm font-semibold text-foreground outline-offset-2 hover:border-foreground focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70 justify-self-start";
 
 // Messages and focus for one settings form. Results belong to the last
 // submit, so a new submit clears them.

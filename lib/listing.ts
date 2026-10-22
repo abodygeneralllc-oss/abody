@@ -31,6 +31,23 @@ export function summarizeCategories(
   );
 }
 
+export interface NavCategory<T extends string = string> extends CategorySummary {
+  type: T;
+}
+
+// The header's category strip: each type's categories in listing order, the
+// types in the order given, so each link can open its own listing.
+export function navCategories<T extends string>(
+  items: { type: T; category: string; categoryLabel: string }[],
+  typeOrder: readonly T[],
+): NavCategory<T>[] {
+  return typeOrder.flatMap((type) =>
+    summarizeCategories(items.filter((item) => item.type === type)).map(
+      (summary) => ({ ...summary, type }),
+    ),
+  );
+}
+
 export function filterByCategory<T extends { category: string }>(
   products: T[],
   category: string | null,
@@ -88,7 +105,7 @@ export function sortProducts<T extends { priceCents: number }>(
   );
 }
 
-// 12 fills complete rows of two or three cards.
+// 12 fills complete rows of two, three, or four cards.
 export const LISTING_PAGE_SIZE = 12;
 
 // The `page` query value. Only a single run of digits naming page 1 or later

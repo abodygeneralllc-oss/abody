@@ -79,12 +79,12 @@
   --font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
 }
 
-/* English uses Geist (SIL OFL, loaded by next/font in the root layouts). Geist
-   has no Arabic letters, so Arabic names in English pages fall to Tajawal. */
+/* English uses Geist with Inter as its fallback (both SIL OFL, loaded by
+   next/font in the root layouts). Neither has Arabic letters, so Arabic names
+   in English pages fall to Tajawal. */
 :root {
   --font-body:
-    var(--font-geist), var(--font-tajawal), "Helvetica Neue", Helvetica, Arial,
-    sans-serif;
+    var(--font-geist), var(--font-inter), var(--font-tajawal), sans-serif;
 }
 
 :root:lang(ar) {
