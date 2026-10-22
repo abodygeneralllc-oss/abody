@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import {
+  AccountEmpty,
   AccountSection,
-  ACCOUNT_PANEL,
   DownloadList,
-  EmptyState,
   OrderNumber,
   SectionHead,
   StatusChip,
@@ -24,6 +23,10 @@ import { getCurrentUser } from "@/lib/session";
 
 const RECENT_ORDERS = 5;
 const RECENT_DOWNLOADS = 3;
+
+const TH =
+  "border-b border-border bg-surface px-5 py-3 text-xs font-bold tracking-wider whitespace-nowrap text-muted uppercase rtl:tracking-normal";
+const TD = "px-5 py-3";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { account } = await getDictionary();
@@ -52,33 +55,30 @@ export default async function AccountPage() {
 
   return (
     <>
-      <section className={ACCOUNT_PANEL}>
-        <div className="grid gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight wrap-break-word">
-            {/* React text: the name never renders as HTML. */}
-            {text.welcome.replace("{name}", () => user.name)}
-          </h1>
-          <p className="text-muted">{text.intro}</p>
-        </div>
-        <ul className="grid gap-4 min-[600px]:grid-cols-3">
-          {stats.map(({ label, value, Icon }) => (
-            <li
-              key={label}
-              className="flex items-center gap-4 rounded-card bg-surface p-5"
-            >
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-card bg-primary-soft text-primary-strong">
-                <Icon className="h-5 w-5" />
-              </span>
-              <span className="grid">
-                <strong className="text-2xl leading-tight font-semibold">
-                  {value}
-                </strong>
-                <span className="text-sm text-muted">{label}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <div className="grid gap-2">
+        <h1 className="text-2xl font-bold tracking-tight wrap-break-word rtl:tracking-normal">
+          {/* React text: the name never renders as HTML. */}
+          {text.welcome.replace("{name}", () => user.name)}
+        </h1>
+        <p className="text-muted">{text.intro}</p>
+      </div>
+
+      <ul className="grid gap-4 min-[600px]:grid-cols-3">
+        {stats.map(({ label, value, Icon }) => (
+          <li
+            key={label}
+            className="flex items-center gap-4 rounded-panel border border-border bg-panel p-5"
+          >
+            <span className="grid size-11 shrink-0 place-items-center rounded-card bg-primary-soft text-primary-strong">
+              <Icon className="h-5 w-5" />
+            </span>
+            <span className="grid">
+              <span className="text-sm text-muted">{label}</span>
+              <strong className="text-xl leading-tight font-bold">{value}</strong>
+            </span>
+          </li>
+        ))}
+      </ul>
 
       <AccountSection labelledBy="orders-heading">
         <SectionHead
@@ -91,7 +91,7 @@ export default async function AccountPage() {
           }
         />
         {orders.length === 0 ? (
-          <EmptyState
+          <AccountEmpty
             message={text.orders.empty}
             action={{ href: localizedPath(locale, "/products"), label: text.browseProducts }}
           />
@@ -99,32 +99,35 @@ export default async function AccountPage() {
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
-                <tr className="text-xs font-semibold tracking-wider text-muted uppercase rtl:tracking-normal">
-                  <th scope="col" className="px-3 pb-4 text-start">{text.columns.order}</th>
-                  <th scope="col" className="px-3 pb-4 text-start">{text.columns.date}</th>
-                  <th scope="col" className="px-3 pb-4 text-start">{text.columns.items}</th>
-                  <th scope="col" className="px-3 pb-4 text-start">{text.columns.status}</th>
-                  <th scope="col" className="px-3 pb-4 text-end">{text.columns.total}</th>
+                <tr>
+                  <th scope="col" className={`${TH} text-start`}>{text.columns.order}</th>
+                  <th scope="col" className={`${TH} text-start`}>{text.columns.date}</th>
+                  <th scope="col" className={`${TH} text-start`}>{text.columns.items}</th>
+                  <th scope="col" className={`${TH} text-start`}>{text.columns.status}</th>
+                  <th scope="col" className={`${TH} text-end`}>{text.columns.total}</th>
                 </tr>
               </thead>
               <tbody>
                 {orders.map((order) => (
-                  <tr key={order.id} className="border-t border-border">
-                    <td className="px-3 py-5 whitespace-nowrap">
+                  <tr
+                    key={order.id}
+                    className="border-b border-border last:border-b-0 hover:bg-surface"
+                  >
+                    <td className={`${TD} whitespace-nowrap`}>
                       <OrderNumber number={order.number} />
                     </td>
-                    <td className="px-3 py-5 whitespace-nowrap">
+                    <td className={`${TD} whitespace-nowrap`}>
                       {formatDate(order.createdAt, locale)}
                     </td>
-                    <td className="min-w-48 px-3 py-5" dir="auto">
+                    <td className={`${TD} min-w-48`} dir="auto">
                       {order.items
                         .map((item) => localizedName(item, locale))
                         .join(text.itemSeparator)}
                     </td>
-                    <td className="px-3 py-5">
-                      <StatusChip status={order.status} text={text} />
+                    <td className={TD}>
+                      <StatusChip status={order.status} text={text} badge />
                     </td>
-                    <td className="px-3 py-5 text-end whitespace-nowrap">
+                    <td className={`${TD} text-end whitespace-nowrap tabular-nums`}>
                       <strong dir="ltr" className="font-semibold">
                         {formatPriceCents(order.totalCents)}
                       </strong>
@@ -148,7 +151,7 @@ export default async function AccountPage() {
           }
         />
         {downloads.length === 0 ? (
-          <EmptyState message={text.downloads.empty} />
+          <AccountEmpty message={text.downloads.empty} />
         ) : (
           <DownloadList downloads={downloads} locale={locale} text={text} />
         )}

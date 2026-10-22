@@ -15,8 +15,8 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: settings.title, robots: { index: false, follow: false } };
 }
 
-const PANEL =
-  "grid gap-5 rounded-panel bg-panel p-5 shadow-soft min-[600px]:p-6 min-[960px]:p-8";
+const PANEL = "grid gap-5 rounded-panel border border-border bg-panel p-5 min-[600px]:p-6";
+const HEADING = "text-md font-bold tracking-normal";
 
 // Rendered inside the account layout, which supplies main and the side nav.
 export default async function AccountSettingsPage() {
@@ -33,14 +33,14 @@ export default async function AccountSettingsPage() {
       <PageHead title={text.heading} intro={text.intro} />
 
       <section aria-labelledby="profile-heading" className={PANEL}>
-        <h2 id="profile-heading" className="text-xl font-semibold">
+        <h2 id="profile-heading" className={HEADING}>
           {text.profile.heading}
         </h2>
         <ProfileForm {...formProps} name={user.name} email={user.email} />
       </section>
 
       <section aria-labelledby="password-heading" className={PANEL}>
-        <h2 id="password-heading" className="text-xl font-semibold">
+        <h2 id="password-heading" className={HEADING}>
           {text.password.heading}
         </h2>
         <PasswordForm {...formProps} />
@@ -48,7 +48,7 @@ export default async function AccountSettingsPage() {
 
       <section aria-labelledby="sessions-heading" className={PANEL}>
         <div className="grid gap-2">
-          <h2 id="sessions-heading" className="text-xl font-semibold">
+          <h2 id="sessions-heading" className={HEADING}>
             {text.sessions.heading}
           </h2>
           <p className="text-sm text-muted">{text.sessions.intro}</p>

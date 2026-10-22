@@ -266,6 +266,7 @@ export const en = {
     emptyBody:
       "Add a product or a service and it will show up here, ready for checkout.",
     browseStore: "Browse the store",
+    continueShopping: "Continue shopping",
     itemsRemoved: "Some items are no longer available and are not shown.",
     instantDownload: "Instant download",
     onboardingAfterPayment: "Onboarding form after payment",

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import {
   ACCOUNT_PANEL,
-  EmptyState,
+  AccountEmpty,
   OrderNumber,
   PageHead,
   StatusChip,
@@ -14,6 +14,8 @@ import { localizedPath } from "@/lib/i18n/config";
 import { getDictionary, getLocale } from "@/lib/i18n/dictionaries";
 import { formatPriceCents } from "@/lib/money";
 import { getCurrentUser } from "@/lib/session";
+
+const ROW = "flex flex-wrap justify-between gap-x-4 gap-y-1 border-b border-border px-5 py-3";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { account } = await getDictionary();
@@ -37,40 +39,40 @@ export default async function AccountOrdersPage() {
       <PageHead title={text.orders.title} intro={text.orders.intro} />
       {orders.length === 0 ? (
         <section className={ACCOUNT_PANEL}>
-          <EmptyState
+          <AccountEmpty
             message={text.orders.empty}
             action={{ href: localizedPath(locale, "/products"), label: text.browseProducts }}
           />
         </section>
       ) : (
-        <ul className="grid gap-6">
+        <ul className="grid gap-5">
           {orders.map((order) => (
             <li key={order.id}>
               <article
                 aria-labelledby={`order-${order.id}`}
                 className={ACCOUNT_PANEL}
               >
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="grid gap-1">
-                    <h2 id={`order-${order.id}`} className="text-lg font-semibold">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-surface px-5 py-4">
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <h2
+                      id={`order-${order.id}`}
+                      className="text-md font-bold tracking-normal"
+                    >
                       {text.orderLabel} <OrderNumber number={order.number} />
                     </h2>
                     <p className="text-sm text-muted">
                       {formatDate(order.createdAt, locale)}
                     </p>
                   </div>
-                  <StatusChip status={order.status} text={text} />
+                  <StatusChip status={order.status} text={text} badge />
                 </div>
-                <ul className="grid">
+                <ul>
                   {order.items.map((item) => (
-                    <li
-                      key={item.id}
-                      className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-border py-4 text-sm"
-                    >
-                      <span className="min-w-0 font-medium wrap-break-word" dir="auto">
+                    <li key={item.id} className={`${ROW} items-baseline text-sm`}>
+                      <span className="min-w-0 font-semibold wrap-break-word" dir="auto">
                         {localizedName(item, locale)}
                       </span>
-                      <span className="text-muted">
+                      <span className="text-muted tabular-nums">
                         {text.orders.quantity.replace("{count}", String(item.quantity))}
                         {" · "}
                         {eachBefore}
@@ -81,7 +83,7 @@ export default async function AccountOrdersPage() {
                   ))}
                 </ul>
                 {order.discountCents > 0 && (
-                  <p className="flex justify-between gap-4 border-t border-border py-4 text-sm text-success">
+                  <p className={`${ROW} text-sm text-success`}>
                     <span>
                       {text.orders.discount}
                       {order.couponCode && (
@@ -94,14 +96,14 @@ export default async function AccountOrdersPage() {
                         </>
                       )}
                     </span>
-                    <span dir="ltr" className="font-semibold">
+                    <span dir="ltr" className="font-semibold tabular-nums">
                       −{formatPriceCents(order.discountCents)}
                     </span>
                   </p>
                 )}
-                <p className="flex justify-between gap-4 border-t border-border pt-4">
-                  <span className="font-semibold">{text.columns.total}</span>
-                  <strong dir="ltr" className="font-semibold">
+                <p className="flex justify-between gap-4 px-5 py-4 font-bold">
+                  <span>{text.columns.total}</span>
+                  <strong dir="ltr" className="text-md tabular-nums">
                     {formatPriceCents(order.totalCents)}
                   </strong>
                 </p>

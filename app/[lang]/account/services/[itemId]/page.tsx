@@ -4,12 +4,13 @@ import { notFound, redirect } from "next/navigation";
 import {
   ACCOUNT_PANEL,
   OrderNumber,
+  PANEL_BODY,
+  PRIMARY_PILL,
   SectionHead,
   ServiceStatusChip,
-  TEXT_LINK,
 } from "@/components/account/AccountParts";
 import { ServiceProgress } from "@/components/account/ServiceProgress";
-import { ChevronIcon } from "@/components/icons";
+import { ArrowIcon } from "@/components/icons";
 import { OnboardingAnswers } from "@/components/onboarding/OnboardingAnswers";
 import { findAccountService } from "@/lib/account";
 import { localizedName } from "@/lib/catalog";
@@ -67,19 +68,19 @@ export default async function AccountServicePage({
       <div className="grid gap-3">
         <Link
           href={localizedPath(locale, "/account/services")}
-          className={`inline-flex items-center gap-2 justify-self-start text-sm ${TEXT_LINK}`}
+          className="inline-flex items-center gap-1 justify-self-start rounded-control text-sm font-bold text-primary-strong outline-offset-2 hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong"
         >
-          <ChevronIcon className="h-3 w-3 -scale-x-100 rtl:scale-x-100" />
+          <ArrowIcon className="h-4 w-4 -scale-x-100 rtl:scale-x-100" />
           {text.back}
         </Link>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h1
             dir="auto"
-            className="text-2xl font-semibold tracking-tight wrap-break-word"
+            className="text-2xl font-bold tracking-tight wrap-break-word rtl:tracking-normal"
           >
             {localizedName(item, locale)}
           </h1>
-          <ServiceStatusChip status={progress.status} text={account} />
+          <ServiceStatusChip status={progress.status} text={account} badge />
         </div>
         <p className="text-sm text-muted">
           {account.purchased.replace("{date}", formatDate(item.purchasedAt, locale))}
@@ -90,24 +91,26 @@ export default async function AccountServicePage({
 
       <section aria-labelledby="service-progress" className={ACCOUNT_PANEL}>
         <SectionHead id="service-progress" title={text.progress} />
-        <div className="grid gap-2">
-          <p>{text.messages[progress.status ?? "none"]}</p>
-          {actionNeeded && (
-            <Link
-              href={onboardingLink.href}
-              className={`justify-self-start ${TEXT_LINK}`}
-            >
-              {onboardingLink.label}
-            </Link>
-          )}
-          <p className="text-sm text-muted">
-            {text.lastUpdated.replace(
-              "{date}",
-              formatDate(progress.lastUpdated, locale),
+        <div className="grid gap-5 p-5">
+          <ServiceProgress steps={progress.steps} locale={locale} text={text} />
+          <div className="grid gap-3 rounded-card bg-surface p-4 text-sm">
+            <p>{text.messages[progress.status ?? "none"]}</p>
+            <p className="text-muted">
+              {text.lastUpdated.replace(
+                "{date}",
+                formatDate(progress.lastUpdated, locale),
+              )}
+            </p>
+            {actionNeeded && (
+              <Link
+                href={onboardingLink.href}
+                className={`justify-self-start ${PRIMARY_PILL}`}
+              >
+                {onboardingLink.label}
+              </Link>
             )}
-          </p>
+          </div>
         </div>
-        <ServiceProgress steps={progress.steps} locale={locale} text={text} />
       </section>
 
       <section aria-labelledby="service-details" className={ACCOUNT_PANEL}>
@@ -116,11 +119,13 @@ export default async function AccountServicePage({
           title={text.details}
           link={editable ? onboardingLink : undefined}
         />
-        {saved ? (
-          <OnboardingAnswers answers={saved} text={onboarding} />
-        ) : (
-          <p className="text-muted">{text.noDetails}</p>
-        )}
+        <div className={PANEL_BODY}>
+          {saved ? (
+            <OnboardingAnswers answers={saved} text={onboarding} />
+          ) : (
+            <p className="text-muted">{text.noDetails}</p>
+          )}
+        </div>
       </section>
     </>
   );

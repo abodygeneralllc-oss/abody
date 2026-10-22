@@ -4,7 +4,8 @@ import Link from "next/link";
 import { CartLineItem } from "@/components/cart/CartLineItem";
 import { CartSummary } from "@/components/cart/CartSummary";
 import { CouponForm, type SavedCoupon } from "@/components/cart/CouponForm";
-import { CartIcon, ChevronIcon } from "@/components/icons";
+import { ArrowIcon, CartIcon, ChevronIcon } from "@/components/icons";
+import { PaymentCards } from "@/components/layout/PaymentCards";
 import {
   buildCartView,
   CART_COOKIE,
@@ -19,8 +20,9 @@ import { localizedPath } from "@/lib/i18n/config";
 import { getDictionary, getLocale } from "@/lib/i18n/dictionaries";
 import { formatItemCount } from "@/lib/i18n/plural";
 
-const PANEL =
-  "rounded-panel bg-panel p-5 shadow-soft min-[600px]:p-6 min-[960px]:p-10";
+const CONTAINER = "mx-auto w-full max-w-site px-4 min-[700px]:px-8";
+const FOCUS =
+  "outline-offset-2 focus-visible:outline-2 focus-visible:outline-primary-strong";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { cart } = await getDictionary();
@@ -36,6 +38,7 @@ export default async function CartPage({
     cart: text,
     header: headerText,
     product: productText,
+    footer: footerText,
   } = await getDictionary();
   const cookieStore = await cookies();
   const entries = parseCart(cookieStore.get(CART_COOKIE)?.value);
@@ -67,35 +70,38 @@ export default async function CartPage({
   const cancelled = !isEmpty && (await searchParams).checkout === "cancelled";
 
   return (
-    <div className="flex-1 font-sans">
-      <main className="mx-auto grid w-full max-w-site gap-6 px-4 pt-6 pb-16">
-        <nav
-          aria-label={text.breadcrumb}
-          className="flex flex-wrap items-center gap-2 rounded-panel bg-panel px-5 py-4 text-sm text-muted shadow-soft min-[600px]:px-6 min-[960px]:px-10"
-        >
-          <Link
-            href={localizedPath(locale, "/")}
-            className="rounded-control outline-offset-2 hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong"
-          >
-            {text.home}
-          </Link>
-          <ChevronIcon className="h-3 w-3 text-faint rtl:-scale-x-100" />
-          <span aria-current="page" className="font-semibold text-foreground">
-            {headerText.cart}
-          </span>
+    <main className="flex-1 font-sans">
+      <div className={`${CONTAINER} grid gap-5 pt-6 pb-16`}>
+        <nav aria-label={text.breadcrumb}>
+          <ol className="flex flex-wrap items-center gap-2 text-sm text-muted">
+            <li>
+              <Link
+                href={localizedPath(locale, "/")}
+                className={`rounded-control hover:text-primary-strong ${FOCUS}`}
+              >
+                {text.home}
+              </Link>
+            </li>
+            <li aria-hidden="true">
+              <ChevronIcon className="h-3 w-3 text-faint rtl:-scale-x-100" />
+            </li>
+            <li aria-current="page" className="text-foreground">
+              {headerText.cart}
+            </li>
+          </ol>
         </nav>
 
         {cancelled && (
           <p
             role="status"
-            className="rounded-panel bg-primary-soft px-5 py-4 text-sm text-primary-strong min-[600px]:px-6 min-[960px]:px-10"
+            className="rounded-card bg-primary-soft px-4 py-3 text-sm text-primary-strong"
           >
             {text.checkoutCancelled}
           </p>
         )}
 
         {view.removedCount > 0 && (
-          <p className="rounded-panel bg-warning-soft px-5 py-4 text-sm text-warning min-[600px]:px-6 min-[960px]:px-10">
+          <p className="rounded-card bg-warning-soft px-4 py-3 text-sm text-warning">
             {text.itemsRemoved}
           </p>
         )}
@@ -106,50 +112,46 @@ export default async function CartPage({
           className={
             isEmpty
               ? undefined
-              : "grid items-start gap-6 min-[960px]:grid-cols-[minmax(0,1fr)_360px]"
+              : "grid items-start gap-8 min-[960px]:grid-cols-[minmax(0,1fr)_380px] min-[960px]:gap-10"
           }
         >
           <section
             aria-labelledby={CART_HEADING_ID}
             className={
               isEmpty
-                ? "grid justify-items-center gap-4 rounded-panel bg-panel px-5 py-16 text-center shadow-soft"
-                : PANEL
+                ? "grid justify-items-center gap-3 rounded-panel border border-border px-5 py-16 text-center"
+                : "min-w-0"
             }
           >
-            <div
-              className={
-                isEmpty
-                  ? "contents"
-                  : "mb-8 flex flex-wrap items-baseline justify-between gap-3"
-              }
-            >
+            <div className={isEmpty ? "contents" : "mb-6 grid gap-2"}>
               {isEmpty && (
-                <span className="grid h-18 w-18 place-items-center rounded-full bg-primary-soft text-primary-strong">
-                  <CartIcon className="h-8 w-8" />
+                <span className="mb-1 grid size-14 place-items-center rounded-full bg-well text-muted">
+                  <CartIcon className="h-6 w-6" />
                 </span>
               )}
               <h1
                 id={CART_HEADING_ID}
                 tabIndex={-1}
-                className="text-2xl font-semibold tracking-tight outline-none"
+                className={`font-bold tracking-tight outline-none rtl:tracking-normal ${
+                  isEmpty ? "text-lg" : "text-3xl"
+                }`}
               >
                 {isEmpty ? text.emptyTitle : text.title}
               </h1>
-              {!isEmpty && <span className="text-muted">{itemCountLabel}</span>}
+              {!isEmpty && <p className="text-muted">{itemCountLabel}</p>}
             </div>
             {isEmpty ? (
               <>
-                <p className="max-w-[44ch] text-muted">{text.emptyBody}</p>
+                <p className="mb-2 max-w-[44ch] text-muted">{text.emptyBody}</p>
                 <Link
                   href={localizedPath(locale, "/products")}
-                  className="inline-flex h-13 items-center rounded-card bg-primary-strong px-6 font-semibold text-white outline-offset-2 hover:shadow-raised focus-visible:outline-2 focus-visible:outline-primary-strong"
+                  className={`inline-flex h-11 items-center rounded-full bg-primary-strong px-6 font-semibold text-white hover:bg-primary-hover ${FOCUS}`}
                 >
                   {text.browseStore}
                 </Link>
               </>
             ) : (
-              <ul className="grid gap-4">
+              <ul className="border-t border-border">
                 {view.lines.map((line) => (
                   <CartLineItem
                     key={line.product.id}
@@ -165,37 +167,49 @@ export default async function CartPage({
             )}
           </section>
           {!isEmpty && (
-            <CartSummary
-              subtotalCents={view.subtotalCents}
-              totalCents={applied ? applied.totalCents : view.totalCents}
-              discount={
-                applied ? { code: applied.code, cents: applied.discountCents } : null
-              }
-              itemCountLabel={itemCountLabel}
-              locale={locale}
-              coupon={
-                <CouponForm
-                  saved={savedCoupon}
-                  text={{
-                    ...text.coupon,
-                    appliedNote: applied
-                      ? text.coupon.appliedNote(applied.percentOff)
-                      : null,
-                  }}
-                />
-              }
-              text={{
-                ...text,
-                discount: text.coupon.discount,
-                errors: text.checkoutErrors,
-              }}
-            />
+            <div className="grid gap-4 min-[960px]:sticky min-[960px]:top-6">
+              <CartSummary
+                subtotalCents={view.subtotalCents}
+                totalCents={applied ? applied.totalCents : view.totalCents}
+                discount={
+                  applied ? { code: applied.code, cents: applied.discountCents } : null
+                }
+                itemCountLabel={itemCountLabel}
+                locale={locale}
+                coupon={
+                  <CouponForm
+                    saved={savedCoupon}
+                    text={{
+                      ...text.coupon,
+                      appliedNote: applied
+                        ? text.coupon.appliedNote(applied.percentOff)
+                        : null,
+                    }}
+                  />
+                }
+                paymentCards={<PaymentCards label={footerText.acceptedCards} />}
+                text={{
+                  ...text,
+                  discount: text.coupon.discount,
+                  errors: text.checkoutErrors,
+                }}
+              />
+              <p className="text-center text-sm">
+                <Link
+                  href={localizedPath(locale, "/products")}
+                  className={`inline-flex items-center gap-1 rounded-control font-bold text-primary-strong hover:text-primary-hover ${FOCUS}`}
+                >
+                  {text.continueShopping}
+                  <ArrowIcon className="h-4 w-4 rtl:-scale-x-100" />
+                </Link>
+              </p>
+            </div>
           )}
         </div>
 
         {suggestions.length > 0 && (
-          <section aria-labelledby="more-heading" className={PANEL}>
-            <h2 id="more-heading" className="mb-8 text-2xl font-semibold">
+          <section aria-labelledby="more-heading" className="pt-8">
+            <h2 id="more-heading" className="mb-5 text-xl font-bold">
               {productText.related}
             </h2>
             <ul className="grid gap-5 min-[600px]:grid-cols-2 min-[960px]:grid-cols-4">
@@ -212,7 +226,7 @@ export default async function CartPage({
             </ul>
           </section>
         )}
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

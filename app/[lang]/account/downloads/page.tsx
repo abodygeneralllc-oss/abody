@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import {
   ACCOUNT_PANEL,
+  AccountEmpty,
   DownloadList,
-  EmptyState,
   PageHead,
 } from "@/components/account/AccountParts";
 import { listAccountDownloads } from "@/lib/account";
@@ -31,7 +31,7 @@ export default async function AccountDownloadsPage() {
       <PageHead title={text.downloads.title} intro={text.downloads.intro} />
       <section className={ACCOUNT_PANEL}>
         {downloads.length === 0 ? (
-          <EmptyState
+          <AccountEmpty
             message={text.downloads.empty}
             action={{ href: localizedPath(locale, "/products"), label: text.browseProducts }}
           />

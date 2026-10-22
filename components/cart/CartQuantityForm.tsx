@@ -19,7 +19,7 @@ interface CartQuantityFormProps {
 }
 
 const STEP_BUTTON =
-  "grid h-9 w-9 place-items-center rounded-control text-muted outline-offset-2 hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-not-allowed disabled:opacity-40";
+  "grid size-[34px] place-items-center rounded-full text-foreground outline-offset-2 hover:bg-well focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent";
 
 export function CartQuantityForm({
   productId,
@@ -34,7 +34,7 @@ export function CartQuantityForm({
     // "contents" lets the line's controls row lay out the stepper and the error.
     <form action={action} className="contents">
       <input type="hidden" name="productId" value={productId} />
-      <span className="inline-flex items-center rounded-control border border-border bg-panel">
+      <span className="inline-flex h-9 items-center rounded-full border border-border-strong bg-panel">
         {/* Each button submits the new quantity. Removing is the trash button's job. */}
         <button
           type="submit"
@@ -50,7 +50,7 @@ export function CartQuantityForm({
             <span dir="auto">{productName}</span>
           </span>
         </button>
-        <output className="min-w-7 text-center text-sm font-semibold">
+        <output className="min-w-7 text-center text-sm font-bold tabular-nums">
           {quantity}
         </output>
         <button
@@ -70,7 +70,7 @@ export function CartQuantityForm({
       </span>
       <p
         role="alert"
-        className="order-last w-0 min-w-full text-end text-sm text-danger empty:hidden"
+        className="order-last w-0 min-w-full text-sm text-danger empty:hidden"
       >
         {!pending && error}
       </p>

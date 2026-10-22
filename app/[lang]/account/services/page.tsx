@@ -3,11 +3,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
   ACCOUNT_PANEL,
-  EmptyState,
+  AccountEmpty,
   OrderNumber,
   PageHead,
   ServiceStatusChip,
-  TEXT_LINK,
 } from "@/components/account/AccountParts";
 import { OnboardingStatus } from "@/components/onboarding/OnboardingStatus";
 import { listAccountServices } from "@/lib/account";
@@ -39,28 +38,28 @@ export default async function AccountServicesPage() {
       <PageHead title={text.services.title} intro={text.services.intro} />
       <section className={ACCOUNT_PANEL}>
         {services.length === 0 ? (
-          <EmptyState
+          <AccountEmpty
             message={text.services.empty}
             action={{ href: localizedPath(locale, "/services"), label: text.browseServices }}
           />
         ) : (
-          <ul className="grid gap-4">
+          <ul>
             {services.map((service) => {
               const name = localizedName(service, locale);
               return (
                 <li
                   key={service.itemId}
-                  className="flex flex-wrap items-center justify-between gap-4 rounded-card border border-border p-4"
+                  className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2 border-b border-border px-5 py-4 last:border-b-0"
                 >
                   <div className="grid min-w-0 flex-1 gap-1">
-                    <strong className="font-semibold wrap-break-word">
+                    <strong className="font-bold wrap-break-word">
                       <Link
                         href={localizedPath(
                           locale,
                           `/account/services/${encodeURIComponent(service.itemId)}`,
                         )}
                         dir="auto"
-                        className={TEXT_LINK}
+                        className="rounded-control outline-offset-2 hover:text-primary-strong hover:underline focus-visible:outline-2 focus-visible:outline-primary-strong"
                       >
                         {name}
                       </Link>
@@ -84,7 +83,7 @@ export default async function AccountServicesPage() {
                       showState={false}
                     />
                   </div>
-                  <ServiceStatusChip status={service.serviceStatus} text={text} />
+                  <ServiceStatusChip status={service.serviceStatus} text={text} badge />
                 </li>
               );
             })}

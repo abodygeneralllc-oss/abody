@@ -30,9 +30,9 @@ export type SavedCoupon =
 const INPUT_ID = "coupon-code";
 const ERROR_ID = "coupon-code-error";
 const FIELD =
-  "h-11 min-w-0 flex-1 rounded-control border border-border bg-surface px-3 font-mono text-sm uppercase outline-offset-2 placeholder:normal-case focus-visible:outline-2 focus-visible:outline-primary-strong aria-invalid:border-danger";
+  "h-10 min-w-0 flex-1 rounded-control border border-border-strong bg-panel px-3 font-mono text-sm uppercase outline-offset-2 placeholder:normal-case focus-visible:outline-2 focus-visible:outline-primary-strong aria-invalid:border-danger";
 const BUTTON =
-  "h-11 shrink-0 rounded-control border border-border bg-surface px-4 text-sm font-semibold text-foreground outline-offset-2 hover:border-primary hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
+  "h-10 shrink-0 rounded-full border border-border-strong bg-panel px-4 text-sm font-semibold text-foreground outline-offset-2 hover:border-foreground focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
 const LINK_BUTTON =
   "shrink-0 cursor-pointer rounded-control text-sm font-semibold text-primary-strong outline-offset-2 transition-colors hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-70";
 
@@ -56,12 +56,12 @@ export function CouponForm({ saved, text }: { saved: SavedCoupon; text: CouponFo
   }, [removed]);
 
   return (
-    <div className="mb-5 grid gap-2">
+    <div className="grid gap-2">
       {/* Present before any change, so the applied code is announced. */}
       <div role="status" className="empty:hidden">
         {saved && (
           <div
-            className={`flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-control px-4 py-3 text-sm ${
+            className={`flex flex-wrap items-center justify-between gap-x-4 gap-y-1 rounded-card px-3 py-2 text-sm font-semibold ${
               saved.ok ? "bg-success-soft text-success" : "bg-warning-soft text-warning"
             }`}
           >
@@ -82,7 +82,7 @@ export function CouponForm({ saved, text }: { saved: SavedCoupon; text: CouponFo
       </div>
       {!saved && (
         <form action={apply} className="grid grid-cols-1 gap-1.5">
-          <label htmlFor={INPUT_ID} className="text-sm font-medium">
+          <label htmlFor={INPUT_ID} className="text-sm font-bold">
             {text.label}
           </label>
           <div className="flex gap-2">

@@ -34,8 +34,8 @@ no web request grants the role.
 
 ## Features
 
-In `build-plan.md` order. Everything through 30 is shipped, plus 31a and 31b;
-31c is in progress.
+In `build-plan.md` order. Everything through 30 is shipped, plus 31a-31c;
+31d is in progress.
 
 1. **Product & Service Catalog** (done) - models and catalog API.
 2. **Product & Service Details** (done) - detail pages with purchase actions.
@@ -111,11 +111,11 @@ In `build-plan.md` order. Everything through 30 is shipped, plus 31a and 31b;
     - 31b **Home Page** (done) - navy hero with pill search and chips,
       category icon row, marketplace cards in Featured tabs, services band,
       steps, CTA.
-    - 31c **Listings and Detail Pages** (in progress) - category chip bar
+    - 31c **Listings and Detail Pages** (done) - category chip bar
       replaces the sidebar, three cards per row on desktop (supersedes 30a's
       two), pagination; gig-style detail: large cover, sticky purchase box,
       included list, service steps, general store questions (no new data).
-    - 31d **Cart and Customer Account** - cart and summary; account pages.
+    - 31d **Cart and Customer Account** (in progress) - cart and summary; account pages.
     - 31e **Admin Restyle** - admin dashboard, lists, forms; English only.
 
 ## Data model

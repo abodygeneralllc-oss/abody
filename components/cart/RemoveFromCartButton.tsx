@@ -50,9 +50,12 @@ export function RemoveFromCartButton({
       <button
         type="submit"
         disabled={pending}
-        className="grid h-9 w-9 place-items-center rounded-control text-muted outline-offset-2 hover:bg-danger-soft hover:text-danger focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-60"
+        className="inline-flex cursor-pointer items-center gap-1 rounded-control text-sm text-muted outline-offset-2 hover:text-danger hover:underline focus-visible:outline-2 focus-visible:outline-primary-strong disabled:cursor-wait disabled:opacity-60"
       >
-        <TrashIcon />
+        <TrashIcon className="h-4 w-4" />
+        {/* The whole name lives in the sr-only span: splitting it around the
+            visible word adds a space before ":" in the accessible name. */}
+        <span aria-hidden="true">{text.remove}</span>
         <span className="sr-only">
           {text.remove}
           {": "}
@@ -61,7 +64,7 @@ export function RemoveFromCartButton({
       </button>
       <p
         role="alert"
-        className="order-last w-0 min-w-full text-end text-sm text-danger empty:hidden"
+        className="order-last w-0 min-w-full text-sm text-danger empty:hidden"
       >
         {!pending && error}
       </p>

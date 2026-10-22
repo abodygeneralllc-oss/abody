@@ -3,7 +3,6 @@ import {
   CheckoutButton,
   type CheckoutButtonText,
 } from "@/components/cart/CheckoutButton";
-import { LockIcon } from "@/components/icons";
 import type { Locale } from "@/lib/i18n/config";
 import { formatPriceCents } from "@/lib/money";
 
@@ -15,8 +14,10 @@ interface CartSummaryProps {
   // Already pluralized, for example "3 items".
   itemCountLabel: string;
   locale: Locale;
-  // The discount code field, above the checkout button.
+  // The discount code field, above the totals.
   coupon: ReactNode;
+  // The accepted card marks, under the secure note.
+  paymentCards: ReactNode;
   text: {
     summary: string;
     subtotal: string;
@@ -33,25 +34,27 @@ export function CartSummary({
   itemCountLabel,
   locale,
   coupon,
+  paymentCards,
   text,
 }: CartSummaryProps) {
   return (
     <section
       aria-labelledby="cart-summary-heading"
-      className="rounded-panel border border-primary bg-panel p-5 shadow-soft min-[600px]:p-6 min-[960px]:sticky min-[960px]:top-6 min-[960px]:p-10"
+      className="grid gap-4 rounded-panel border border-border bg-panel p-5"
     >
-      <h2 id="cart-summary-heading" className="text-xl font-semibold">
+      <h2 id="cart-summary-heading" className="text-lg font-bold tracking-normal">
         {text.summary}
       </h2>
-      <dl className="my-5 grid gap-3 text-sm">
-        <div className="flex justify-between gap-4">
-          <dt className="text-muted">
+      {coupon}
+      <dl className="grid gap-2 text-sm tabular-nums">
+        <div className="flex justify-between gap-3">
+          <dt>
             {text.subtotal} ({itemCountLabel})
           </dt>
-          <dd className="font-semibold">{formatPriceCents(subtotalCents)}</dd>
+          <dd>{formatPriceCents(subtotalCents)}</dd>
         </div>
         {discount && (
-          <div className="flex justify-between gap-4 text-success">
+          <div className="flex justify-between gap-3 text-success">
             <dt>
               {text.discount} (
               <span dir="ltr" className="font-mono">
@@ -59,26 +62,21 @@ export function CartSummary({
               </span>
               )
             </dt>
-            <dd className="font-semibold" dir="ltr">
-              −{formatPriceCents(discount.cents)}
-            </dd>
+            <dd dir="ltr">−{formatPriceCents(discount.cents)}</dd>
           </div>
         )}
-        <div className="flex justify-between gap-4 border-t border-border pt-4 text-lg font-semibold">
-          <dt>{text.total}</dt>
-          <dd>{formatPriceCents(totalCents)}</dd>
+        <div className="mt-2 flex items-baseline justify-between gap-3 border-t border-border pt-4 font-bold">
+          <dt className="text-base">{text.total}</dt>
+          <dd className="text-2xl tracking-tight">{formatPriceCents(totalCents)}</dd>
         </div>
       </dl>
-      {coupon}
       {/* Only plain strings cross to the client component. */}
       <CheckoutButton
         locale={locale}
         text={{ checkout: text.checkout, redirecting: text.redirecting, errors: text.errors }}
       />
-      <p className="mt-4 flex items-center justify-center gap-2 text-sm text-muted">
-        <LockIcon className="h-4 w-4" />
-        {text.secureNote}
-      </p>
+      <p className="text-center text-xs text-muted">{text.secureNote}</p>
+      <div className="flex justify-center">{paymentCards}</div>
     </section>
   );
 }

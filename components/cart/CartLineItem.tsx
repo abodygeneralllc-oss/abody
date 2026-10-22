@@ -28,8 +28,7 @@ interface CartLineItemProps {
   text: CartLineText;
 }
 
-const CHIP =
-  "inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold";
+const FACT = "inline-flex items-center gap-1";
 
 export function CartLineItem({ line, locale, text }: CartLineItemProps) {
   const { product, quantity, lineTotalCents } = line;
@@ -48,50 +47,44 @@ export function CartLineItem({ line, locale, text }: CartLineItemProps) {
   const removeText: RemoveFromCartText = { remove: text.remove, errors: text.errors };
 
   return (
-    <li className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-4 rounded-card bg-surface p-5 min-[600px]:grid-cols-[auto_minmax(0,1fr)_auto] min-[600px]:gap-6">
-      <div className="w-16 min-[600px]:w-24">
+    <li className="grid grid-cols-[88px_minmax(0,1fr)] gap-x-4 gap-y-2 border-b border-border py-5 min-[600px]:grid-cols-[120px_minmax(0,1fr)_auto] min-[600px]:gap-x-5">
+      <div className="self-start overflow-hidden rounded-card">
         <ProductImage image={product.image} alt="" />
       </div>
 
       <div className="min-w-0">
         <p className="text-xs font-semibold tracking-[0.06em] text-primary-strong uppercase rtl:tracking-normal">
-          {text.typeLabel} · <span dir="auto">{product.categoryLabel}</span>
+          {text.typeLabel}
         </p>
-        <h2 className="mt-1 text-lg font-semibold">
+        <h2 className="mt-1 text-base leading-snug font-bold tracking-normal">
           <Link
             href={localizedPath(locale, productPath(product))}
             dir="auto"
-            className="break-words outline-offset-2 transition-colors hover:text-primary-strong focus-visible:outline-2 focus-visible:outline-primary-strong"
+            className="rounded-control break-words outline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-strong"
           >
             {product.name}
           </Link>
         </h2>
-        <p className="mt-3 flex flex-wrap items-center gap-2">
+        <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted">
+          <span dir="auto">{product.categoryLabel}</span>
           {isService ? (
             <>
               {durationDays && (
-                <span className={`${CHIP} bg-primary-soft text-primary-strong`}>
+                <span className={FACT}>
                   <ClockIcon className="h-4 w-4" />
                   {formatDurationDays(durationDays, locale)}
                 </span>
               )}
-              <span className={`${CHIP} bg-panel text-muted`}>
-                {text.onboardingAfterPayment}
-              </span>
+              <span>{text.onboardingAfterPayment}</span>
             </>
           ) : (
-            <span className={`${CHIP} bg-success-soft text-success`}>
+            <span className={FACT}>
               <BoltIcon className="h-4 w-4" />
               {text.instantDownload}
             </span>
           )}
         </p>
-      </div>
-
-      {/* Below 600px this column moves under the details as one row. */}
-      <div className="col-span-full flex items-center justify-between gap-3 min-[600px]:col-span-1 min-[600px]:flex-col min-[600px]:items-end">
-        <p className="text-lg font-bold">{formatPriceCents(lineTotalCents)}</p>
-        <div className="flex flex-wrap items-center justify-end gap-2">
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
           {isService ? (
             <p className="text-sm text-muted">
               {text.quantity}: {quantity}
@@ -111,6 +104,11 @@ export function CartLineItem({ line, locale, text }: CartLineItemProps) {
           />
         </div>
       </div>
+
+      {/* Below 600px the price moves under the details in the same column. */}
+      <p className="col-start-2 text-md font-bold tabular-nums min-[600px]:col-start-3 min-[600px]:row-start-1 min-[600px]:text-end">
+        {formatPriceCents(lineTotalCents)}
+      </p>
     </li>
   );
 }

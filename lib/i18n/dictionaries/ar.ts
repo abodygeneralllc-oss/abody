@@ -243,6 +243,7 @@ export const ar: Dictionary = {
     emptyTitle: "سلتك فارغة",
     emptyBody: "أضف منتجاً أو خدمة وستظهر هنا جاهزة لإتمام الشراء.",
     browseStore: "تصفح المتجر",
+    continueShopping: "متابعة التسوق",
     itemsRemoved: "بعض العناصر لم تعد متاحة ولا تظهر هنا.",
     instantDownload: "تحميل فوري",
     onboardingAfterPayment: "نموذج بيانات الخدمة بعد الدفع",
